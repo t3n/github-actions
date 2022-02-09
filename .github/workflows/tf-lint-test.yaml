@@ -59,12 +59,6 @@ jobs:
 
       - name: Comment on PR
         uses: actions/github-script@v5
-        with:
-          script: |
-
-
-      - name: Comment on PR
-        uses: actions/github-script@v5
         env:
           format_out: ${{ steps.fmt.outputs.stdout }}
           format_err: ${{ steps.fmt.outputs.stderr }}
