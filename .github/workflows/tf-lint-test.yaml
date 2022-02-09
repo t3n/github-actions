@@ -164,5 +164,5 @@ jobs:
           steps.init.outcome != 'success' ||
           steps.validate.outcome != 'success' ||
           steps.workspace.outcome != 'success' ||
-          steps.plan.outcome != 'success' }}
+          steps.plan.outcome != 'success'
         run: exit 1
