@@ -1,4 +1,4 @@
-name: Terraform Lint and Test
+name: Terraform PR - Lint and Test
 
 on:
   workflow_call:
@@ -51,6 +51,7 @@ jobs:
         run: terraform validate -no-color
 
       - name: Terraform Select Workspace
+        id: workspace
         run: terraform workspace new ${{ inputs.environment }} || terraform workspace select ${{ inputs.environment }}
 
       - name: Terraform Plan
@@ -64,6 +65,8 @@ jobs:
           format_err: ${{ steps.fmt.outputs.stderr }}
           init_out: ${{ steps.init.outputs.stdout }}
           init_err: ${{ steps.init.outputs.stderr }}
+          workspace_out: ${{ steps.workspace.outputs.stdout }}
+          workspace_err: ${{ steps.workspace.outputs.stderr }}
           validate_out: ${{ steps.validate.outputs.stdout }}
           validate_err: ${{ steps.validate.outputs.stderr }}
           plan: "${{ steps.plan.outputs.stdout }}"
@@ -74,6 +77,7 @@ jobs:
             const fmt_result = '${{ steps.fmt.outcome }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
             const init_result = '${{ steps.init.outcome }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
             const validate_result = '${{ steps.validate.outcome }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
+            const workspace_result = '${{ steps.workspace.outcome }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
             const plan_result = '${{ steps.plan.outcome }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
 
             const output = `
@@ -122,6 +126,21 @@ jobs:
             ${ CODE_BLOCK }
             </details> <!-- End Validate Logs -->
 
+            ### ${ workspace_result } Terraform select Workspace 👈
+            <details><summary>Logs</summary>
+            Output
+            
+            ${ CODE_BLOCK }
+            ${ process.env.workspace_out }
+            ${ CODE_BLOCK }
+            
+            Errors
+            
+            ${ CODE_BLOCK }
+            ${ process.env.workspace_err }
+            ${ CODE_BLOCK }
+            </details> <!-- End Workspace Logs -->
+
             ### ${ plan_result } Terraform Plan 📖
             <details><summary>Logs</summary>
             
@@ -140,5 +159,10 @@ jobs:
             })
 
       - name: Terraform errored
-        if: steps.plan.outcome != 'success' || steps.validate.outcome != 'success' || steps.fmt.outcome != 'success'
+        if: |
+          steps.fmt.outcome != 'success' ||
+          steps.init.outcome != 'success' ||
+          steps.validate.outcome != 'success' ||
+          steps.workspace.outcome != 'success' ||
+          steps.plan.outcome =! 'success' }}
         run: exit 1
