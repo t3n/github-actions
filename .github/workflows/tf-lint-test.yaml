@@ -14,6 +14,9 @@ on:
       GOOGLE_APPLICATION_CREDENTIALS:
         required: true
 
+env:
+  TF_WORKSPACE: ${{ inputs.environment }}
+
 jobs:
   lint-and-test:
     runs-on: ubuntu-20.04
@@ -42,9 +45,9 @@ jobs:
         id: fmt
         run: terraform fmt -check -diff
 
-      - name: Terraform Init
-        id: init
-        run: terraform init -no-color
+      # - name: Terraform Init
+      #   id: init
+      #   run: terraform init -no-color
 
       - name: Terraform Validate
         id: validate
@@ -160,11 +163,11 @@ jobs:
 
       - name: Terraform errored
         if: |
-          steps.fmt.outcome != 'success' ||
-          steps.init.outcome != 'success' ||
-          steps.validate.outcome != 'success' ||
-          steps.workspace.outcome != 'success' ||
-          steps.plan.outcome != 'success'
+          steps.fmt.outcome == 'failure' ||
+          steps.init.outcome == 'failure' ||
+          steps.validate.outcome == 'failure' ||
+          steps.workspace.outcome == 'failure' ||
+          steps.plan.outcome == 'failure'
         run: exit 1
 
       - name: Upload artifact
