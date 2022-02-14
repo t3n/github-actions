@@ -173,5 +173,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
+          name: plan_${{ inputs.environment }}.out
           path: ./plan_${{ inputs.environment }}.out
           if-no-files-found: error
