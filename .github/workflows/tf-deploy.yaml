@@ -24,10 +24,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - uses: actions/download-artifact@v2
-        with:
-          name: plan_${{ inputs.environment }}.out
-
       - name: Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v0
