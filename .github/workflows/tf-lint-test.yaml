@@ -45,17 +45,17 @@ jobs:
         id: fmt
         run: terraform fmt -check -diff
 
-      # - name: Terraform Init
-      #   id: init
-      #   run: terraform init -no-color
+      - name: Terraform Init
+        id: init
+        run: terraform init -no-color
 
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
 
-      - name: Terraform Select Workspace
-        id: workspace
-        run: terraform workspace new ${{ inputs.environment }} || terraform workspace select ${{ inputs.environment }}
+      # - name: Terraform Select Workspace
+      #   id: workspace
+      #   run: terraform workspace new ${{ inputs.environment }} || terraform workspace select ${{ inputs.environment }}
 
       - name: Terraform Plan
         id: plan
