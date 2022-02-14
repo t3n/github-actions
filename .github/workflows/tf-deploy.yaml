@@ -22,6 +22,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repository
+        uses: actions/checkout@v2
 
       - uses: actions/download-artifact@v2
         with:
@@ -58,4 +59,26 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          
+
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          dry_run: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_branches: main
+          create_annotated_tag: true
+          custom_release_rules: >
+            hotfix:patch:Fix,
+            fix:patch:Fix,
+            patch:patch:Fix,
+            bug:patch:Fix,
+            security:patch:Security,
+            feat:minor:Feature,
+            feature:minor:Feature,
+            minor:minor:Feature,
+            breaking:major:BREAKING,
+            break:major:BREAKING,
+            major:major:BREAKING,
+            stable:major:BREAKING,
+            release:major:BREAKING
