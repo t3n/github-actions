@@ -51,8 +51,8 @@ jobs:
         run: terraform apply -no-color -lock-timeout=20s plan_${{ inputs.environment }}.out
 
   create_issue:
+    if: env.TF_WORKSPACE == 'stage'
     needs: [deploy]
-    if: ${{ env.TF_WORKSPACE == 'stage' }}
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repository
