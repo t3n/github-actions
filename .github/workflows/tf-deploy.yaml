@@ -52,7 +52,7 @@ jobs:
 
   create_issue:
     needs: [deploy]
-    if: env.TF_WORKSPACE == 'stage'
+    if: ${{ env.TF_WORKSPACE == 'stage' }}
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repository
