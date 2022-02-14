@@ -43,7 +43,7 @@ jobs:
 
       - name: Terraform Fmt
         id: fmt
-        run: terraform fmt -check -diff
+        run: terraformr fmt -check -diff
 
       - name: Terraform Init
         id: init
@@ -52,10 +52,6 @@ jobs:
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
-
-      # - name: Terraform Select Workspace
-      #   id: workspace
-      #   run: terraform workspace new ${{ inputs.environment }} || terraform workspace select ${{ inputs.environment }}
 
       - name: Terraform Plan
         id: plan
