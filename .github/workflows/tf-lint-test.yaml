@@ -165,10 +165,3 @@ jobs:
           steps.workspace.outcome == 'failure' ||
           steps.plan.outcome == 'failure'
         run: exit 1
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: plan_${{ inputs.environment }}.out
-          path: ./plan_${{ inputs.environment }}.out
-          if-no-files-found: error
