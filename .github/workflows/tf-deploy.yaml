@@ -18,8 +18,35 @@ env:
   TF_WORKSPACE: ${{ inputs.environment }}
 
 jobs:
+  parse:
+    if: inputs.environment == 'live'
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Comment on Issue
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: 'Deployment Initiated 🚀'
+
+      - name: Get Issue Data
+        uses: peter-murray/issue-body-parser-action@v1
+        id: issue_body_parser
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_id: ${{ github.event.issue.number }}         
+          payload: yaml
+
+      - name: Remove isue tag
+        uses: actions-ecosystem/action-remove-labels@v1
+        if: ${{ startsWith(github.event.comment.body, '/approve') }}
+        with:
+          labels: |
+            wait-for-approval
+
   deploy:
     runs-on: ubuntu-20.04
+    needs: [parse]
+    if: ${{ always() }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -50,21 +77,11 @@ jobs:
         id: apply
         run: terraform apply -no-color -lock-timeout=20s plan_${{ inputs.environment }}.out
 
-  create_issue:
-    if: inputs.environment == 'stage'
-    needs: [deploy]
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Bump version and push tag
+      - name: Bump version and push tag (stage)
+        if: inputs.environment == 'stage'
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.0
         with:
-          dry_run: true
           github_token: ${{ secrets.GITHUB_TOKEN }}
           release_branches: main
           create_annotated_tag: true
@@ -82,3 +99,27 @@ jobs:
             major:major:BREAKING,
             stable:major:BREAKING,
             release:major:BREAKING
+          
+      - name: Create issue for approval
+        if: inputs.environment == 'stage'
+        id: create_issue
+        uses: JasonEtco/create-an-issue@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.tag_version.outputs.new_tag }}
+          CHANGELOG: ${{ steps.tag_version.outputs.changelog }}
+        with:
+          filename: .github/approve-deployment.md
+
+      - name: Close issue after live deployment
+        if: inputs.environment == 'stage'
+        uses: peter-evans/close-issue@v1.0.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          comment: 'Deployment Completed 🌟'
+
+  tf-lint-test:
+    runs-on: ubuntu-20.04
+    needs: [deploy]
+    if: inputs.environment == 'live'
+          
