@@ -26,27 +26,22 @@ jobs:
         env:
           format_out: ${{ needs.lint-and-test.outputs.format_out }}
           format_err: ${{ needs.lint-and-test.outputs.format_err }}
-          format_result: ${{ needs.lint-and-test.outputs.format_result }}
           init_out: ${{ needs.lint-and-test.outputs.init_out }}
           init_err: ${{ needs.lint-and-test.outputs.init_err }}
-          init_result: ${{ needs.lint-and-test.outputs.init_result }}
-          workspace_out: ${{ needs.lint-and-test.outputs.workspace_out }}
           workspace_err: ${{ needs.lint-and-test.outputs.workspace_err }}
           workspace_result: ${{ needs.lint-and-test.outputs.workspace_result }}
           validate_out: ${{ needs.lint-and-test.outputs.validate_out }}
           validate_err: ${{ needs.lint-and-test.outputs.validate_err }}
-          validate_result: ${{ needs.lint-and-test.outputs.validate_result }}
           plan: "${{ needs.lint-and-test.outputs.plan }}"
-          plan_result: ${{ needs.lint-and-test.outputs.plan_result }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const CODE_BLOCK = '```';
-            const fmt_result = '${{ env.format_result }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
-            const init_result = '${{ env.init_result }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
-            const validate_result = '${{ env.validate_result }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
-            const workspace_result = '${{ env.workspace_result }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
-            const plan_result = '${{ env.plan_result }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
+            const fmt_result = '${{ needs.lint-and-test.outputs.format_result }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
+            const init_result = '${{ needs.lint-and-test.outputs.init_result }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
+            const validate_result = '${{ needs.lint-and-test.outputs.validate_result }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
+            const workspace_result = '${{ needs.lint-and-test.outputs.workspace_out }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
+            const plan_result = '${{ needs.lint-and-test.outputs.plan_result }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
 
             const output = `
             ### ${ fmt_result } Terraform Format and Style 🎨
