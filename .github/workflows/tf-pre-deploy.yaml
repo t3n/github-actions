@@ -53,6 +53,10 @@ jobs:
         id: validate
         run: terraform validate -no-color
 
+      - name: Terraform Show Workspace
+        id: workspace
+        run: terraform workspace show
+
       - name: Terraform Plan
         id: plan
         run: terraform plan -var-file _${{ inputs.environment }}.json -no-color -lock-timeout=20s -out plan_${{ inputs.environment }}.out
@@ -126,7 +130,7 @@ jobs:
             ${ CODE_BLOCK }
             </details> <!-- End Validate Logs -->
 
-            ### ${ workspace_result } Terraform select Workspace 👈
+            ### ${ workspace_result } Terraform show Workspace 👀
             <details><summary>Logs</summary>
             Output
             
