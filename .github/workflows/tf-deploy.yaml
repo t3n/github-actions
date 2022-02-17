@@ -1,4 +1,4 @@
-name: Terraform Merge - Deploy
+name: Terraform Deploy Workflow
 
 on:
   workflow_call:
@@ -17,36 +17,15 @@ on:
 env:
   TF_WORKSPACE: ${{ inputs.environment }}
 
+
 jobs:
-  parse:
-    if: inputs.environment == 'live'
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Comment on Issue
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          issue-number: ${{ github.event.issue.number }}
-          body: 'Deployment Initiated 🚀'
-
-      - name: Get Issue Data
-        uses: peter-murray/issue-body-parser-action@v1
-        id: issue_body_parser
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          issue_id: ${{ github.event.issue.number }}         
-          payload: yaml
-
-      - name: Remove isue tag
-        uses: actions-ecosystem/action-remove-labels@v1
-        if: ${{ startsWith(github.event.comment.body, '/approve') }}
-        with:
-          labels: |
-            wait-for-approval
-
   deploy:
-    runs-on: ubuntu-20.04
-    needs: [parse]
+    needs: parse_issue
     if: ${{ always() }}
+    runs-on: ubuntu-20.04
+    outputs:
+      tag: ${{ steps.tag_version.outputs.new_tag }}
+      changelog: ${{ steps.tag_version.outputs.changelog }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -99,27 +78,19 @@ jobs:
             major:major:BREAKING,
             stable:major:BREAKING,
             release:major:BREAKING
-          
+
+  create_issue:
+    needs: deploy
+    if: inputs.environment == 'stage'
+    runs-on: ubuntu-20.04
+    steps:
       - name: Create issue for approval
         if: inputs.environment == 'stage'
         id: create_issue
         uses: JasonEtco/create-an-issue@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ steps.tag_version.outputs.new_tag }}
-          CHANGELOG: ${{ steps.tag_version.outputs.changelog }}
+          TAG: ${{ needs.deploy.outputs.tag }}
+          CHANGELOG: ${{ needs.deploy.outputs.changelog }}
         with:
           filename: .github/approve-deployment.md
-
-      - name: Close issue after live deployment
-        if: inputs.environment == 'stage'
-        uses: peter-evans/close-issue@v1.0.3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          comment: 'Deployment Completed 🌟'
-
-  tf-lint-test:
-    runs-on: ubuntu-20.04
-    needs: [deploy]
-    if: inputs.environment == 'live'
-          
