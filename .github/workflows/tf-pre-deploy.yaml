@@ -1,4 +1,4 @@
-name: Terraform PR - Comment
+name: Terraform pre deploy
 
 on:
   workflow_call:
@@ -18,30 +18,67 @@ env:
   TF_WORKSPACE: ${{ inputs.environment }}
 
 jobs:
-  comment-pr:
+  lint-and-test:
     runs-on: ubuntu-20.04
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ inputs.terraform_version }}
+      
+      - name: Check terraform version
+        run: terraform version
+
+      - name: Terraform Fmt
+        id: fmt
+        run: terraform fmt -check -diff
+
+      - name: Terraform Init
+        id: init
+        run: terraform init -no-color
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -var-file _${{ inputs.environment }}.json -no-color -lock-timeout=20s -out plan_${{ inputs.environment }}.out
+
       - name: Comment on PR
+        if: github.event_name == 'pull_request'
         uses: actions/github-script@v5
         env:
-          format_out: ${{ needs.lint-and-test.outputs.format_out }}
-          format_err: ${{ needs.lint-and-test.outputs.format_err }}
-          init_out: ${{ needs.lint-and-test.outputs.init_out }}
-          init_err: ${{ needs.lint-and-test.outputs.init_err }}
-          workspace_err: ${{ needs.lint-and-test.outputs.workspace_err }}
-          workspace_result: ${{ needs.lint-and-test.outputs.workspace_result }}
-          validate_out: ${{ needs.lint-and-test.outputs.validate_out }}
-          validate_err: ${{ needs.lint-and-test.outputs.validate_err }}
-          plan: "${{ needs.lint-and-test.outputs.plan }}"
+          format_out: ${{ steps.fmt.outputs.stdout }}
+          format_err: ${{ steps.fmt.outputs.stderr }}
+          init_out: ${{ steps.init.outputs.stdout }}
+          init_err: ${{ steps.init.outputs.stderr }}
+          workspace_out: ${{ steps.workspace.outputs.stdout }}
+          workspace_err: ${{ steps.workspace.outputs.stderr }}
+          validate_out: ${{ steps.validate.outputs.stdout }}
+          validate_err: ${{ steps.validate.outputs.stderr }}
+          plan: "${{ steps.plan.outputs.stdout }}"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const CODE_BLOCK = '```';
-            const fmt_result = '${{ needs.lint-and-test.outputs.format_result }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
-            const init_result = '${{ needs.lint-and-test.outputs.init_result }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
-            const validate_result = '${{ needs.lint-and-test.outputs.validate_result }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
-            const workspace_result = '${{ needs.lint-and-test.outputs.workspace_out }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
-            const plan_result = '${{ needs.lint-and-test.outputs.plan_result }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
+            const fmt_result = '${{ steps.fmt.outcome }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
+            const init_result = '${{ steps.init.outcome }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
+            const validate_result = '${{ steps.validate.outcome }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
+            const workspace_result = '${{ steps.workspace.outcome }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
+            const plan_result = '${{ steps.plan.outcome }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
 
             const output = `
             ### ${ fmt_result } Terraform Format and Style 🎨
@@ -123,9 +160,9 @@ jobs:
 
       - name: Terraform errored
         if: |
-          env.format_result == 'failure' ||
-          env.init_result == 'failure' ||
-          env.workspace_result == 'failure' ||
-          env.validate_result == 'failure' ||
-          env.plan_result == 'failure'
+          steps.fmt.outcome == 'failure' ||
+          steps.init.outcome == 'failure' ||
+          steps.validate.outcome == 'failure' ||
+          steps.workspace.outcome == 'failure' ||
+          steps.plan.outcome == 'failure'
         run: exit 1
