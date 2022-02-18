@@ -18,7 +18,7 @@ env:
   TF_WORKSPACE: ${{ inputs.environment }}
 
 jobs:
-  lint-and-test:
+  tf-pre-deploy:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repository

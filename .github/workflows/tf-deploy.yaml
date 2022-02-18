@@ -19,7 +19,7 @@ env:
 
 
 jobs:
-  deploy:
+  tf-deploy:
     needs: parse_issue
     if: ${{ always() }}
     runs-on: ubuntu-20.04
@@ -79,7 +79,7 @@ jobs:
             stable:major:BREAKING,
             release:major:BREAKING
 
-  create_issue:
+  tf-create_issue:
     needs: deploy
     if: inputs.environment == 'stage'
     runs-on: ubuntu-20.04
