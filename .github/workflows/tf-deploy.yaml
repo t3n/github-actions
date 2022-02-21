@@ -19,7 +19,7 @@ env:
 
 
 jobs:
-  tf-deploy:
+  deploy:
     runs-on: ubuntu-20.04
     outputs:
       tag: ${{ steps.tag_version.outputs.new_tag }}
@@ -77,18 +77,21 @@ jobs:
             stable:major:BREAKING,
             release:major:BREAKING
 
-  tf-post-deploy:
-    needs: tf-deploy
+  create_issue:
+    needs: deploy
     if: inputs.environment == 'stage'
     runs-on: ubuntu-20.04
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
       - name: Create issue for approval
         if: inputs.environment == 'stage'
         id: create_issue
         uses: JasonEtco/create-an-issue@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ needs.tf-deploy.outputs.tag }}
-          CHANGELOG: ${{ needs.tf-deploy.outputs.changelog }}
+          TAG: ${{ needs.deploy.outputs.tag }}
+          CHANGELOG: ${{ needs.deploy.outputs.changelog }}
         with:
           filename: .github/approve-deployment.md
