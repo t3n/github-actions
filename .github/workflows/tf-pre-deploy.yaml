@@ -14,8 +14,11 @@ on:
       GOOGLE_APPLICATION_CREDENTIALS:
         required: true
 
+env:
+  TF_WORKSPACE: ${{ inputs.environment }}
+
 jobs:
-  lint-and-test:
+  tf-lint-and-test:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repository
@@ -42,8 +45,8 @@ jobs:
         id: fmt
         run: terraform fmt -check -diff
 
-      - name: Terraform create workspace
-        run: terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment   }}
+      #- name: Terraform create workspace
+      #  run: terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment   }}
 
       - name: Terraform Init
         id: init
