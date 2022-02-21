@@ -40,7 +40,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: echo '1' | TF_WORKSPACE=${{ inputs.environment }} terraform init -no-color
+        run: echo '1' | TF_WORKSPACE=${{ inputs.environment }} terraform init -no-color -input=false
 
       - name: Terraform Select Workspace
         id: workspace
