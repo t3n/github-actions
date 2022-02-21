@@ -45,20 +45,17 @@ jobs:
         id: fmt
         run: terraform fmt -check -diff
 
-      #- name: Terraform create workspace
-      #  run: terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment   }}
-
       - name: Terraform Init
         id: init
-        run: terraform init -no-color
+        run: echo '1' | terraform init -no-color
+
+      - name: Terraform Select Workspace
+        id: workspace
+        run: terraform workspace select ${{ inputs.environment }}
 
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
-
-      - name: Terraform Show Workspace
-        id: workspace
-        run: terraform workspace show
 
       - name: Terraform Plan
         id: plan
@@ -170,5 +167,6 @@ jobs:
           steps.fmt.outcome == 'failure' ||
           steps.init.outcome == 'failure' ||
           steps.validate.outcome == 'failure' ||
+          steps.workspace.outcome == 'failure' ||
           steps.plan.outcome == 'failure'
         run: exit 1
