@@ -40,11 +40,14 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: echo '1' | TF_WORKSPACE=${{ inputs.environment }} terraform init -no-color -input=false
+        run: terraform init
 
       - name: Terraform Select Workspace
+        run: terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }}
+
+      - name: Terraform Show Workspace
         id: workspace
-        run: terraform workspace select ${{ inputs.environment }}
+        run: terraform workspace show
 
       - name: Terraform Plan
         id: plan
