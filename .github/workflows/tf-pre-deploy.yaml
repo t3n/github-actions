@@ -14,6 +14,10 @@ on:
       GOOGLE_APPLICATION_CREDENTIALS:
         required: true
 
+env:
+  TF_IN_AUTOMATION: true
+  TF_WORKSPACE: ${{ inputs.environment }}
+
 jobs:
   lint-and-test:
     runs-on: ubuntu-20.04
@@ -44,11 +48,14 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: echo '1' | TF_WORKSPACE=${{ inputs.environment }} terraform init -no-color
+        run: terraform init
+        #run: echo '1' | TF_WORKSPACE=${{ inputs.environment }} terraform init -no-color
 
-      - name: Terraform Select Workspace
+      - name: Terraform Workspace
         id: workspace
-        run: terraform workspace select ${{ inputs.environment }}
+        run: terraform workspace show
+        #run: terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }}
+        #run: terraform workspace select ${{ inputs.environment }}
 
       - name: Terraform Validate
         id: validate
@@ -164,6 +171,5 @@ jobs:
           steps.fmt.outcome == 'failure' ||
           steps.init.outcome == 'failure' ||
           steps.validate.outcome == 'failure' ||
-          steps.workspace.outcome == 'failure' ||
           steps.plan.outcome == 'failure'
         run: exit 1
