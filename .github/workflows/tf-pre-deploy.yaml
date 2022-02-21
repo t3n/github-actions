@@ -14,10 +14,6 @@ on:
       GOOGLE_APPLICATION_CREDENTIALS:
         required: true
 
-env:
-  TF_IN_AUTOMATION: true
-  TF_WORKSPACE: ${{ inputs.environment }}
-
 jobs:
   lint-and-test:
     runs-on: ubuntu-20.04
