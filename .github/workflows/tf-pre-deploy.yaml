@@ -14,9 +14,6 @@ on:
       GOOGLE_APPLICATION_CREDENTIALS:
         required: true
 
-env:
-  TF_WORKSPACE: ${{ inputs.environment }}
-
 jobs:
   lint-and-test:
     runs-on: ubuntu-20.04
@@ -47,7 +44,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: echo '1' | terraform init -no-color
+        run: echo '1' | TF_WORKSPACE=${{ inputs.environment }} terraform init -no-color
 
       - name: Terraform Select Workspace
         id: workspace
