@@ -49,6 +49,7 @@ jobs:
 
       - name: Terraform Select Workspace
         run: terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }}
+        continue-on-error: true
 
       - name: Terraform Show Workspace
         id: workspace
