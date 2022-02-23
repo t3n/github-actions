@@ -34,6 +34,7 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: ${{ inputs.terraform_version }}
+          terraform_wrapper: false
       
       - name: Check terraform version
         run: terraform version
@@ -47,7 +48,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Select Workspace
-        run: terraform workspace select ${{ inputs.environment }} 2&> /dev/null || terraform workspace new ${{ inputs.environment }}
+        run: terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }}
 
       - name: Terraform Show Workspace
         id: workspace
