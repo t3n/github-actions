@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Download Issue Templatefile
-        if: github.event_name == 'pull_request'
+        if: github.event_name != 'pull_request'
         run: curl https://raw.githubusercontent.com/t3n/github-actions/main/.github/templates/approve-deployment.md -o ./.github/approve-deployment.md
 
       - name: Authenticate to Google Cloud
