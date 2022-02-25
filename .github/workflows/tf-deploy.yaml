@@ -116,17 +116,20 @@ jobs:
   issue_handling:
     runs-on: ubuntu-20.04
     needs: deploy
-    if: always()
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
       - name: Download Issue Templatefile
-        if: github.event_name == 'pull_request'
+        if: |
+          github.event_name == 'push' &&
+          github.ref_name == github.event.repository.default_branch
         run: curl https://raw.githubusercontent.com/t3n/github-actions/main/.github/templates/approve-deployment.md -o ./.github/approve-deployment.md
 
       - name: Create issue for approval
-        if: github.event_name == 'pull_request'
+        if: |
+          github.event_name == 'push' &&
+          github.ref_name == github.event.repository.default_branch
         id: create_issue
         uses: JasonEtco/create-an-issue@v2
         env:
@@ -137,7 +140,9 @@ jobs:
           filename: .github/approve-deployment.md
 
       - name: Close Issue
-        if: github.event_name != 'pull_request'
+        if: | 
+          !github.event.issue.pull_request && 
+          github.event.comment.body == '/approve'
         uses: peter-evans/close-issue@v1.0.3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
