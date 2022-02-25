@@ -15,6 +15,36 @@ on:
         required: true
 
 jobs:
+  parse_issue_data:
+    if: |
+      github.event_name != 'pull_request' && 
+      !github.event.issue.pull_request && 
+      github.event.comment.body == '/approve'
+    runs-on: ubuntu-20.04
+    outputs:
+      tag: ${{ fromJSON(steps.issue_body_parser.outputs.payload).tag }}
+    steps:
+      - name: Comment on Issue      
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: 'Deployment Initiated 🚀'
+          
+      - name: Get Issue Data
+        uses: peter-murray/issue-body-parser-action@v1
+        id: issue_body_parser
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_id: ${{ github.event.issue.number }}         
+          payload: yaml
+
+      - name: Remove isue tag
+        uses: actions-ecosystem/action-remove-labels@v1
+        if: ${{ startsWith(github.event.comment.body, '/approve') }}
+        with:
+          labels: |
+            wait-for-approval
+
   deploy:
     runs-on: ubuntu-20.04
     outputs:
@@ -59,7 +89,7 @@ jobs:
         run: terraform apply -no-color -lock-timeout=20s plan_${{ inputs.environment }}.out
 
       - name: Bump version and push tag (stage)
-        if: inputs.environment == 'stage'
+        if: github.event_name == 'pull_request'
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.0
         with:
@@ -81,19 +111,19 @@ jobs:
             stable:major:BREAKING,
             release:major:BREAKING
 
-  create_issue:
+  issue_handling:
     needs: deploy
-    if: inputs.environment == 'stage'
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
       - name: Download Issue Templatefile
+        if: github.event_name == 'pull_request'
         run: curl https://raw.githubusercontent.com/t3n/github-actions/main/.github/templates/approve-deployment.md -o ./.github/approve-deployment.md
 
       - name: Create issue for approval
-        if: inputs.environment == 'stage'
+        if: github.event_name == 'pull_request'
         id: create_issue
         uses: JasonEtco/create-an-issue@v2
         env:
@@ -102,3 +132,10 @@ jobs:
           CHANGELOG: ${{ needs.deploy.outputs.changelog }}
         with:
           filename: .github/approve-deployment.md
+
+      - name: Close Issue
+        if: github.event_name != 'pull_request'
+        uses: peter-evans/close-issue@v1.0.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          comment: 'Deployment Completed ✅'
