@@ -90,7 +90,7 @@ jobs:
         id: apply
         run: terraform apply -no-color -lock-timeout=20s plan_${{ inputs.environment }}.out
 
-      - name: Bump version and push tag (stage)
+      - name: Bump version and push tag
         if: github.event_name == 'pull_request'
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.0
