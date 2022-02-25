@@ -114,8 +114,8 @@ jobs:
             release:major:BREAKING
 
   issue_handling:
-    needs: deploy
     runs-on: ubuntu-20.04
+    needs: deploy
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
