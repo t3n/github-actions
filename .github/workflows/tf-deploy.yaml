@@ -75,8 +75,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Select Workspace
-        run: terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }}
-        continue-on-error: true
+        run: terraform workspace select ${{ inputs.environment }} && true || terraform workspace new ${{ inputs.environment }}
 
       - name: Terraform Show Workspace
         id: workspace
@@ -84,7 +83,19 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -var-file _${{ inputs.environment }}.json -no-color -lock-timeout=20s -out plan_${{ inputs.environment }}.out
+        run: |
+          if [[ -f _global.json ]]; then
+              terraform plan \
+              -var-file _global.json \
+              -var-file _${{ inputs.environment }}.json \
+              -no-color -lock-timeout=20s \
+              -out plan_${{ inputs.environment }}.out
+          else
+              terraform plan \
+              -var-file _${{ inputs.environment }}.json \
+              -no-color -lock-timeout=20s \
+              -out plan_${{ inputs.environment }}.out
+          fi
 
       - name: Terraform Apply
         id: apply
