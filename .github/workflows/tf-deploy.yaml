@@ -60,6 +60,9 @@ jobs:
       tag: ${{ steps.tag_version.outputs.new_tag }}
       changelog: ${{ steps.tag_version.outputs.changelog }}
     steps:
+      - name: TEST - Break pipeline
+        run: exit 1
+        
       - name: Checkout Repository
         uses: actions/checkout@v2
 
