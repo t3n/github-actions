@@ -55,7 +55,7 @@ jobs:
       (always() && 
        github.event_name != 'pull_request' && 
        !github.event.issue.pull_request && 
-       github.event.comment.body == '/approve'))
+       github.event.comment.body == '/approve')
     outputs:
       tag: ${{ steps.tag_version.outputs.new_tag }}
       changelog: ${{ steps.tag_version.outputs.changelog }}
