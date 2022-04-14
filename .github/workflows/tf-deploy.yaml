@@ -49,8 +49,8 @@ jobs:
     runs-on: ubuntu-20.04
     needs: parse_issue_data
     if: |
-      (github.event_name == 'push' ||
-      (github.event_name != 'pull_request' && !github.event.issue.pull_request && github.event.comment.body == '/approve'))
+      (always() && github.event_name == 'push') ||
+      (always() && github.event_name != 'pull_request' && !github.event.issue.pull_request && github.event.comment.body == '/approve'))
     outputs:
       tag: ${{ steps.tag_version.outputs.new_tag }}
       changelog: ${{ steps.tag_version.outputs.changelog }}
@@ -118,7 +118,6 @@ jobs:
   issue_handling:
     runs-on: ubuntu-20.04
     needs: deploy
-    if: always()
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
