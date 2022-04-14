@@ -49,8 +49,13 @@ jobs:
     runs-on: ubuntu-20.04
     needs: parse_issue_data
     if: |
-      ((always() && github.event_name == 'push') ||
-      (always() && github.event_name != 'pull_request' && !github.event.issue.pull_request && github.event.comment.body == '/approve'))
+      ((always() && 
+        github.event_name == 'push'
+        github.ref_name == github.event.repository.default_branch) ||
+       (always() && 
+        github.event_name != 'pull_request' && 
+        !github.event.issue.pull_request && 
+        github.event.comment.body == '/approve'))
     outputs:
       tag: ${{ steps.tag_version.outputs.new_tag }}
       changelog: ${{ steps.tag_version.outputs.changelog }}
