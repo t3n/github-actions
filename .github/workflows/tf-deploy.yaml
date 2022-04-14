@@ -48,7 +48,11 @@ jobs:
   deploy:
     runs-on: ubuntu-20.04
     needs: parse_issue_data
-    if: always()
+    if: |
+      (github.event_name != 'pull_request' &&
+       github.event.issue.pull_request && 
+       github.event.comment.body == '/approve') || 
+      (github.event_name == 'pull_request')
     outputs:
       tag: ${{ steps.tag_version.outputs.new_tag }}
       changelog: ${{ steps.tag_version.outputs.changelog }}
