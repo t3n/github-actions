@@ -15,17 +15,7 @@ on:
         required: true
 
 jobs:
-  debug:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Echo github context variables
-        run: env | grep GITHUB
-
-      - name: Cancel pipeline
-        run: exit 1
-
   parse_issue_data:
-    needs: debug
     if: |
       github.event_name != 'pull_request' && 
       !github.event.issue.pull_request && 
@@ -60,7 +50,7 @@ jobs:
     needs: parse_issue_data
     if: |
       (github.event_name == 'push' ||
-      (github_event_name != 'pull_request' && !github.event.issue.pull_request && github.event.comment.body == '/approve'))
+      (github.event_name != 'pull_request' && !github.event.issue.pull_request && github.event.comment.body == '/approve'))
     outputs:
       tag: ${{ steps.tag_version.outputs.new_tag }}
       changelog: ${{ steps.tag_version.outputs.changelog }}
