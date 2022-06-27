@@ -7,6 +7,8 @@ on:
         required: true
       GKE_CLUSTER_K8S_VERSION_LIVE:
         required: true
+      GAR_HELM_REGISTRY_ACCOUNT:
+        required: true
   # pull_request:
   #   paths:
   #     - charts/**
@@ -27,6 +29,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: ${{ secrets.GAR_HELM_REGISTRY_ACCOUNT }}
 
       - name: ⚗️ [INSTALL] helm
         uses: azure/setup-helm@v1
