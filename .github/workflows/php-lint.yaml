@@ -1,0 +1,21 @@
+name: PHP Lint
+on:
+  workflow_call:
+    inputs:
+      PROJECT:
+        type: string
+        required: true
+      PATH:
+        type: string
+        required: false
+
+jobs:
+  php-lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - uses: php-actions/composer@v6 # or alternative dependency management
+      - uses: php-actions/phpstan@v3
+        with:
+          path: ${{env.PATH}}
