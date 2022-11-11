@@ -8,6 +8,20 @@ on:
       PATH:
         type: string
         required: false
+      COMPOSER_PHP_VERSION:
+        type: string
+        required: false
+        default: 7.4
+      COMPOSER_VERSION:
+        type: string
+        required: false
+        default: 1.x
+      FLAVOUR:
+        type: string
+        required: false
+        default: phpcs
+        description: "one of phpcs, phpstan"
+
 
 jobs:
   php-lint:
@@ -15,7 +29,18 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
-      - uses: php-actions/composer@v6 # or alternative dependency management
+      - uses: php-actions/composer@v6
+        with:
+          version: ${{env.COMPOSER_VERSION}}
+          php_version: ${{env.COMPOSER_PHP_VERSION}}
+
       - uses: php-actions/phpstan@v3
         with:
           path: ${{env.PATH}}
+        if: ${{env.FLAVOUR}} == "phpstan"
+
+      - name: PHP Code Style (phpcs)
+        uses: chindit/actions-phpcs@master
+        with:
+          dir: ${{env.PATH}}
+        if:  ${{env.FLAVOUR}} == "phpcs"
