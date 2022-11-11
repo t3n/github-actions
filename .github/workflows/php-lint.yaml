@@ -11,7 +11,7 @@ on:
       COMPOSER_PHP_VERSION:
         type: string
         required: false
-        default: 7.4
+        default: "7.4"
       COMPOSER_VERSION:
         type: string
         required: false
