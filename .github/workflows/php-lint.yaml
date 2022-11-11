@@ -33,6 +33,7 @@ jobs:
         with:
           version: ${{env.COMPOSER_VERSION}}
           php_version: ${{env.COMPOSER_PHP_VERSION}}
+          args: "--working-dir ${{env.PATH}}"
 
       - uses: php-actions/phpstan@v3
         with:
