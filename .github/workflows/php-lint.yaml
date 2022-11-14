@@ -16,6 +16,10 @@ on:
         type: string
         required: false
         default: "1.x"
+      PHP_EXTENSIONS:
+        type: string
+        required: false
+        default: "amqp"
       FLAVOUR:
         type: string
         required: false
@@ -34,6 +38,7 @@ jobs:
           php_version: ${{inputs.COMPOSER_PHP_VERSION}}
           version: ${{inputs.COMPOSER_VERSION}}
           args: "--working-dir ${{inputs.PATH}}"
+          php_extensions: ${{inputs.PHP_EXTENSIONS}}
 
       - uses: php-actions/phpstan@v3
         with:
