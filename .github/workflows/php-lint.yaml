@@ -41,7 +41,7 @@ jobs:
         with:
           php_version: ${{inputs.COMPOSER_PHP_VERSION}}
           version: ${{inputs.COMPOSER_VERSION}}
-          args: "--working-dir ${{inputs.PATH}}"
+          args: "--ignore-platform-reqs --working-dir ${{inputs.PATH}}"
           php_extensions: ${{inputs.PHP_EXTENSIONS}}
           dev: ${{inputs.COMPOSER_DEV}}
 
