@@ -29,6 +29,12 @@ on:
         required: false
         default: phpcs
         description: "one of phpcs, phpstan"
+    secrets:
+      SSH_KEY:
+        required: false
+      SSH_KEY_PUB:
+        required: false
+
 
 
 jobs:
@@ -44,6 +50,8 @@ jobs:
           args: "--ignore-platform-reqs --working-dir ${{inputs.PATH}}"
           php_extensions: ${{inputs.PHP_EXTENSIONS}}
           dev: ${{inputs.COMPOSER_DEV}}
+          ssh_key: ${{secrets.SSH_KEY}}
+          ssh_key_pub: ${{secrets.SSH_KEY_PUB}}
 
       - uses: php-actions/phpstan@v3
         with:
