@@ -9,13 +9,13 @@ on:
         type: string
         required: false
       COMPOSER_PHP_VERSION:
-        type: string
+        type: number
         required: false
-        default: "7.4"
+        default: 7.4
       COMPOSER_VERSION:
         type: string
         required: false
-        default: 1.x
+        default: "1.x"
       FLAVOUR:
         type: string
         required: false
