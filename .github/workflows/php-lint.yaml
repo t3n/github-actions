@@ -8,14 +8,14 @@ on:
       PATH:
         type: string
         required: false
-      # COMPOSER_PHP_VERSION:
-      #   type: string
-      #   required: false
-      #   default: "7.4"
-      # COMPOSER_VERSION:
-      #   type: string
-      #   required: false
-      #   default: 1.x
+      COMPOSER_PHP_VERSION:
+        type: string
+        required: false
+        default: "7.4"
+      COMPOSER_VERSION:
+        type: string
+        required: false
+        default: 1.x
       FLAVOUR:
         type: string
         required: false
@@ -31,17 +31,17 @@ jobs:
         uses: actions/checkout@v3
       - uses: php-actions/composer@v6
         with:
-          # php_version: ${{env.COMPOSER_PHP_VERSION}}
-          # version: ${{env.COMPOSER_VERSION}}
-          args: "--working-dir ${{env.PATH}}"
+          php_version: ${{github.event.inputs.COMPOSER_PHP_VERSION}}
+          version: ${{github.event.inputs.COMPOSER_VERSION}}
+          args: "--working-dir ${{github.event.inputs.PATH}}"
 
       - uses: php-actions/phpstan@v3
         with:
-          path: ${{env.PATH}}
-        if: ${{env.FLAVOUR}} == "phpstan"
+          path: ${{github.event.inputs.PATH}}
+        if: ${{github.event.inputs.FLAVOUR}} == "phpstan"
 
       - name: PHP Code Style (phpcs)
         uses: chindit/actions-phpcs@master
         with:
-          dir: ${{env.PATH}}
-        if:  ${{env.FLAVOUR}} == "phpcs"
+          dir: ${{github.event.inputs.PATH}}
+        if:  ${{github.event.inputs.FLAVOUR}} == "phpcs"
