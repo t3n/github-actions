@@ -20,6 +20,10 @@ on:
         type: string
         required: false
         default: "no"
+      COMPOSER_MEMORY_LIMIT:
+        type: string
+        required: false
+        default: "256M"
       PHP_EXTENSIONS:
         type: string
         required: false
@@ -52,6 +56,7 @@ jobs:
           dev: ${{inputs.COMPOSER_DEV}}
           ssh_key: ${{secrets.SSH_KEY}}
           ssh_key_pub: ${{secrets.SSH_KEY_PUB}}
+          memory_limit: ${{inputs.COMPOSER_MEMORY_LIMIT}}
 
       - uses: php-actions/phpstan@v3
         with:
