@@ -31,17 +31,17 @@ jobs:
         uses: actions/checkout@v3
       - uses: php-actions/composer@v6
         with:
-          # php_version: ${{github.event.inputs.COMPOSER_PHP_VERSION}}
-          # version: ${{github.event.inputs.COMPOSER_VERSION}}
-          args: "--working-dir ${{github.event.inputs.PATH}}"
+          php_version: ${{inputs.COMPOSER_PHP_VERSION}}
+          version: ${{inputs.COMPOSER_VERSION}}
+          args: "--working-dir ${{inputs.PATH}}"
 
       - uses: php-actions/phpstan@v3
         with:
-          path: ${{github.event.inputs.PATH}}
-        if: ${{github.event.inputs.FLAVOUR}} == "phpstan"
+          path: ${{inputs.PATH}}
+        if: ${{inputs.FLAVOUR}} == "phpstan"
 
       - name: PHP Code Style (phpcs)
         uses: chindit/actions-phpcs@master
         with:
-          dir: ${{github.event.inputs.PATH}}
-        if:  ${{github.event.inputs.FLAVOUR}} == "phpcs"
+          dir: ${{inputs.PATH}}
+        if:  ${{inputs.FLAVOUR}} == "phpcs"
