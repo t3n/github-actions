@@ -16,6 +16,10 @@ on:
         type: string
         required: false
         default: "1.x"
+      COMPOSER_DEV:
+        type: string
+        required: false
+        default: "no"
       PHP_EXTENSIONS:
         type: string
         required: false
@@ -39,6 +43,7 @@ jobs:
           version: ${{inputs.COMPOSER_VERSION}}
           args: "--working-dir ${{inputs.PATH}}"
           php_extensions: ${{inputs.PHP_EXTENSIONS}}
+          dev: ${{inputs.COMPOSER_DEV}}
 
       - uses: php-actions/phpstan@v3
         with:
