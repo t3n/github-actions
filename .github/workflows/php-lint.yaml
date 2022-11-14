@@ -61,6 +61,7 @@ jobs:
       - uses: php-actions/phpstan@v3
         with:
           path: ${{inputs.PATH}}
+          memory_limit: ${{inputs.COMPOSER_MEMORY_LIMIT}}
         if: ${{inputs.FLAVOUR}} == "phpstan"
 
       - name: PHP Code Style (phpcs)
