@@ -72,6 +72,6 @@ jobs:
       - name: PHP Code Style (phpcs)
         uses: chindit/actions-phpcs@master
         with:
-          dir: ""
+          # dir: ""
           cli: --standard=${{inputs.PATH}}/phpcs.xml.dist
         if: inputs.FLAVOUR == 'phpcs'
