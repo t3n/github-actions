@@ -73,4 +73,5 @@ jobs:
         uses: chindit/actions-phpcs@master
         with:
           dir: ""
+          cli: --standard=${{inputs.PATH}}/phpcs.xml.dist
         if: inputs.FLAVOUR == 'phpcs'
