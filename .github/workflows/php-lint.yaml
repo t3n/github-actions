@@ -39,8 +39,6 @@ on:
       SSH_KEY_PUB:
         required: false
 
-
-
 jobs:
   php-lint:
     runs-on: ubuntu-22.04
@@ -70,7 +68,7 @@ jobs:
         if: inputs.FLAVOUR == 'phpstan'
 
       - name: phpcs
-        uses: docker://docker.io/cytopia/phpcs:3-php${{inputs.COMPOSER_PHP_VERSION}}
+        uses: docker://docker.io/cytopia/phpcs:3 # https://hub.docker.com/r/cytopia/phpcs
         with:
           args: --standard=${{inputs.PATH}}/phpcs.xml.dist
         if: inputs.FLAVOUR == 'phpcs'
