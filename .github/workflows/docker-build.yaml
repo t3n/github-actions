@@ -23,7 +23,7 @@ jobs:
           context: .
           push: false
           load: true
-          tags: image_${{inputs.PROJECT}}:${GITHUB_SHA}
+          tags: image_${{inputs.PROJECT}}:${{GITHUB_SHA}}
       - name: docker image save
         run: docker image save image_${{inputs.PROJECT}}:${GITHUB_SHA} -o ./image_${{inputs.PROJECT}}_${GITHUB_SHA}.tar
       - name: upload
