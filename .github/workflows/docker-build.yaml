@@ -5,9 +5,7 @@ on:
       PROJECT:
         type: string
         required: true
-      GITHUB_SHA:
-        type: string
-        required: true
+
 
 jobs:
   build:
