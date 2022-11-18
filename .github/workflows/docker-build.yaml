@@ -5,6 +5,9 @@ on:
       PROJECT:
         type: string
         required: true
+      GITHUB_SHA:
+        type: string
+        required: true
 
 jobs:
   build:
@@ -22,11 +25,11 @@ jobs:
           context: .
           push: false
           load: true
-          tags: image_${{env.PROJECT}}:${{env.GITHUB_SHA}}
+          tags: image_${{inputs.PROJECT}}:${{inputs.GITHUB_SHA}}
       - name: docker image save
-        run: docker image save image_${{env.PROJECT}}:${{env.GITHUB_SHA}} -o ./image_${{env.PROJECT}}_${{env.GITHUB_SHA}}.tar
+        run: docker image save image_${{inputs.PROJECT}}:${{inputs.GITHUB_SHA}} -o ./image_${{inputs.PROJECT}}_${{inputs.GITHUB_SHA}}.tar
       - name: upload
         uses: actions/upload-artifact@v3
         with:
-          name: artifacts_image_${{env.GITHUB_SHA}}
-          path: ./image_${{env.PROJECT}}_${{env.GITHUB_SHA}}.tar
+          name: artifacts_image_${{inputs.GITHUB_SHA}}
+          path: ./image_${{inputs.PROJECT}}_${{inputs.GITHUB_SHA}}.tar
