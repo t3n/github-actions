@@ -69,9 +69,8 @@ jobs:
           memory_limit: ${{inputs.COMPOSER_MEMORY_LIMIT}}
         if: inputs.FLAVOUR == 'phpstan'
 
-      - name: PHP Code Style (phpcs)
-        uses: chindit/actions-phpcs@master
+      - name: phpcs
+        uses: docker://docker.io/cytopia/phpcs:3-php${{inputs.COMPOSER_PHP_VERSION}}
         with:
-          dir: " "
-          cli: --standard=${{inputs.PATH}}/phpcs.xml.dist
+          args: --standard=${{inputs.PATH}}/phpcs.xml.dist
         if: inputs.FLAVOUR == 'phpcs'
