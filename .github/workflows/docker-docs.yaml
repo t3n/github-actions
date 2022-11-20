@@ -1,6 +1,7 @@
 name: Docker Docs
 on:
   workflow_call:
+    inputs:
       PROJECT:
         type: string
         required: true
