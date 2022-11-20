@@ -30,6 +30,8 @@ jobs:
           push: false
           load: true
           ssh: default
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: image_${{inputs.PROJECT}}:${{github.sha}}
       - name: docker image save
         run: docker image save image_${{inputs.PROJECT}}:${{github.sha}} -o ./image_${{inputs.PROJECT}}_${{github.sha}}.tar
