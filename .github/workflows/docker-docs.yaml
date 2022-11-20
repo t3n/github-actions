@@ -1,0 +1,30 @@
+name: Docker Docs
+on:
+  workflow_call:
+      PROJECT:
+        type: string
+        required: true
+
+jobs:
+  docs:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v3.0.0
+        id: download
+        with:
+          name: artifacts_image_${{github.sha}}
+      - name: rename image
+        run: mv image_${{inputs.PROJECT}}_${{github.sha}}.tar image_${{inputs.PROJECT}}.tar
+      - name: docker-docs
+        uses: docker://anchore/syft:v0.59.0@sha256:098f18527d591c73d9933e9f430421c6a3194022d7d9af012bd3ff2442cdcd45
+        with:
+          args: image_${{inputs.PROJECT}}.tar -o template -t "./README.md.tmpl" > README.md
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+          message: 'Update Readme'
+          add: 'README.md'
