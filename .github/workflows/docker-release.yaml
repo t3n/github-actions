@@ -7,7 +7,7 @@ on:
         required: true
       GCP_REGISTRY:
         type: string
-        required: true
+        required: false
         default: "eu.gcr.io"
     secrets:
       GCP_PROJECT_ID:
