@@ -13,7 +13,7 @@ jobs:
         with:
           config: ./cliff.toml
       - name: write file
-        run: echo ${{ steps.git-cliff.outputs.changelog }} >> ./CHANGELOG.md
+        run: cat ${{ steps.git-cliff.outputs.changelog }} >> ./CHANGELOG.md
       - name: commit changes
         uses: EndBug/add-and-commit@v9.1.1
         with:
