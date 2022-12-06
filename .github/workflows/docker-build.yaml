@@ -40,3 +40,4 @@ jobs:
         with:
           name: artifacts_image_${{github.ref_name}}
           path: ./image_${{inputs.PROJECT}}_${{github.ref_name}}.tar
+          retention-days: 1
