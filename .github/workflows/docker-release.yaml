@@ -9,6 +9,9 @@ on:
         type: string
         required: false
         default: "eu.gcr.io"
+      DOCKER_IMAGE_TAG:
+        type: string
+        required: true
     secrets:
       GCP_PROJECT_ID:
         required: true
@@ -19,7 +22,7 @@ on:
 
 
 jobs:
-  git-tag-release:
+  release:
     runs-on: ubuntu-22.04
     steps:
       - name: Download a Build Artifact
@@ -31,7 +34,7 @@ jobs:
         run: docker image load --input image_${{inputs.PROJECT}}_${{github.ref_name}}.tar
       - name: tag image
         run: |
-          docker tag image_${{inputs.PROJECT}}:${{github.ref_name}} ${{ inputs.GCP_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ inputs.PROJECT }}:${{ github.ref_name }}
+          docker tag image_${{inputs.PROJECT}}:${{github.ref_name}} ${{ inputs.GCP_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ inputs.PROJECT }}:${{ inputs.DOCKER_IMAGE_TAG }}
           docker image ls -a
       - name: Login to GCR
         uses: docker/login-action@v1.12.0
