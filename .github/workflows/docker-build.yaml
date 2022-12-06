@@ -32,6 +32,18 @@ jobs:
           context: .
           push: false
           load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: image_${{inputs.PROJECT}}:${{github.ref_name}}
+      - name: Build and push with ssh
+        uses: docker/build-push-action@v3
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+        if: "${{ env.SSH_KEY != ''}}"
+        with:
+          context: .
+          push: false
+          load: true
           ssh: default
           cache-from: type=gha
           cache-to: type=gha,mode=max
