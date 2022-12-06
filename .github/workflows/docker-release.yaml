@@ -1,0 +1,44 @@
+name: Docker Release
+on:
+  workflow_call:
+    inputs:
+      PROJECT:
+        type: string
+        required: true
+      GCP_REGISTRY:
+        type: string
+        required: true
+        default: "eu.gcr.io"
+    secrets:
+      GCP_PROJECT_ID:
+        required: true
+      GCR_JSON_KEY:
+        required: true
+
+
+
+
+jobs:
+  git-tag-release:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v3.0.0
+        id: download
+        with:
+          name: artifacts_image_${{github.ref_name}}
+      - name: docker load
+        run: docker image load --input artifacts_image_${{github.ref_name}}.tar
+      - name: tag image
+        run: |
+          docker tag artifacts_image_${{ github.ref_name }} ${{ inputs.GCP_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ inputs.PROJECT }}:${{ github.ref_name }}
+          docker image ls -a
+      - name: Login to GCR
+        uses: docker/login-action@v1.12.0
+        with:
+          registry: ${{ inputs.GCP_REGISTRY }}
+          username: _json_key
+          password: ${{ secrets.GCR_JSON_KEY }}
+      - name: push to registry
+        run: docker push ${{ inputs.GCP_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ inputs.PROJECT }}:${{ github.ref_name }}
+
