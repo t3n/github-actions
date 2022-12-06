@@ -18,9 +18,6 @@ on:
       GCR_JSON_KEY:
         required: true
 
-
-
-
 jobs:
   release:
     runs-on: ubuntu-22.04
@@ -43,5 +40,5 @@ jobs:
           username: _json_key
           password: ${{ secrets.GCR_JSON_KEY }}
       - name: push to registry
-        run: docker push ${{ inputs.GCP_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ inputs.PROJECT }}:${{ github.ref_name }}
+        run: docker push ${{ inputs.GCP_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ inputs.PROJECT }}:${{ inputs.DOCKER_IMAGE_TAG }}
 
