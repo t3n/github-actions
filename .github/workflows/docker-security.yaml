@@ -14,12 +14,12 @@ jobs:
         uses: actions/download-artifact@v3.0.0
         id: download
         with:
-          name: artifacts_image_${{github.sha}}
+          name: artifacts_image_${{github.ref_name}}
       - name: docker load
-        run: docker image load --input image_${{inputs.PROJECT}}_${{github.sha}}.tar
+        run: docker image load --input image_${{inputs.PROJECT}}_${{github.ref_name}}.tar
       - name: scan
         uses: anchore/scan-action@v3
         continue-on-error: true
         with:
-          image: image_${{inputs.PROJECT}}:${{github.sha}}
+          image: image_${{inputs.PROJECT}}:${{github.ref_name}}
           output-format: table

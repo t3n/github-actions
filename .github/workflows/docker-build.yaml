@@ -32,11 +32,11 @@ jobs:
           ssh: default
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: image_${{inputs.PROJECT}}:${{github.sha}}
+          tags: image_${{inputs.PROJECT}}:${{github.ref_name}}
       - name: docker image save
-        run: docker image save image_${{inputs.PROJECT}}:${{github.sha}} -o ./image_${{inputs.PROJECT}}_${{github.sha}}.tar
+        run: docker image save image_${{inputs.PROJECT}}:${{github.ref_name}} -o ./image_${{inputs.PROJECT}}_${{github.ref_name}}.tar
       - name: upload
         uses: actions/upload-artifact@v3
         with:
-          name: artifacts_image_${{github.sha}}
-          path: ./image_${{inputs.PROJECT}}_${{github.sha}}.tar
+          name: artifacts_image_${{github.ref_name}}
+          path: ./image_${{inputs.PROJECT}}_${{github.ref_name}}.tar
