@@ -24,4 +24,5 @@ jobs:
       - name: conftest
         uses: docker://openpolicyagent/conftest:v0.35.0@sha256:95a8879ababe8be9f0369113c87436300adbc7599a0b940c4733c220b3e477c5
         with:
-          args: for d in ./rendered_*; do test "${d}" --all-namespaces --no-color; done
+          args: 'for d in ./rendered_*; do conftest test "${d}" --all-namespaces --no-color; done'
+          entrypoint: "sh -c"
