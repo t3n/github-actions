@@ -1,0 +1,33 @@
+name: Helm Security
+on:
+  workflow_call:
+    inputs:
+      PROJECT:
+        type: string
+        required: true
+
+env:
+  HELM_VERSION: 3.10.2
+
+jobs:
+  security:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: install helm
+        uses: Azure/setup-helm@v3.3
+        with:
+          version: ${{env.HELM_VERSION}}
+
+      - name: checkov
+        uses: docker://bridgecrew/checkov:2.1.270@sha256:81e9cb16d019375a542b7ba9b93eb1d0c4921f573118d1b195cdcaa0b369a43c
+        with:
+          entrypoint: checkov
+          args: -d ./charts -o cli -o junitxml --output-file-path ./checkov.junit.xml -s
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: checkov.junit.xml
+          path: ./checkov.junit.xml/results_junitxml.xml

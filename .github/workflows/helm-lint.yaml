@@ -1,0 +1,24 @@
+name: Helm Lint
+on:
+  workflow_call:
+    inputs:
+      PROJECT:
+        type: string
+        required: true
+
+env:
+  HELM_VERSION: 3.10.2
+
+jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: install helm
+        uses: Azure/setup-helm@v3.3
+        with:
+          version: ${{env.HELM_VERSION}}
+      - name: Lint
+        run: helm lint ./charts/*

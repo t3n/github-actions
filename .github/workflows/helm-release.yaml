@@ -1,0 +1,54 @@
+name: Helm Release
+on:
+  workflow_call:
+    inputs:
+      PROJECT:
+        type: string
+        required: true
+
+env:
+  HELM_VERSION: 3.10.2
+  HELM_GCS_VERSION: 0.4.0
+
+jobs:
+  release:
+    runs-on: ubuntu-22.04
+    outputs:
+      new_tag: ${{ steps.tag_version.outputs.new_tag }}
+      changelog: ${{ steps.tag_version.outputs.changelog }}
+    steps:
+      - uses: actions/checkout@master
+        with:
+          fetch-depth: '0'
+
+      - name: authenticate to google cloud
+        id: 'auth'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.GAR_HELM_REGISTRY_ACCOUNT }}'
+
+      - name: set up cloud sdk
+        uses: 'google-github-actions/setup-gcloud@v0'
+
+      - name: install helm
+        uses: Azure/setup-helm@v3.3
+        with:
+          version: ${{env.HELM_VERSION}}
+
+      - name: install helm-gcs
+        run: helm plugin install --version ${{env.HELM_GCS_VERSION}} https://github.com/hayorov/helm-gcs.git
+
+      - name: helm package
+        id: helm-package
+        run: for d in ./charts/* ; do helm package --version ${{ steps.tag_version.outputs.new_tag }} "${d}"; done
+
+      - name: registry login
+        id: registry-login
+        run: gcloud auth print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://${{ secrets.GAR_HELM_REGISTRY_URL }}
+
+      - name: push chart to legacy gcs target
+        run: helm repo add yeebase gs://bucket/path && for c in $(ls ./*.tgz); do helm gcs push $c yeebase; done
+
+      - name: push chart
+        id: helm-push-chart
+        run: for c in $(ls ./*.tgz); do helm push $c oci://${{ secrets.GAR_HELM_REGISTRY_URL }}; done
