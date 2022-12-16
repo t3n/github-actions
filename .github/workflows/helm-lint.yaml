@@ -1,10 +1,6 @@
 name: Helm Lint
 on:
   workflow_call:
-    inputs:
-      PROJECT:
-        type: string
-        required: true
 
 env:
   HELM_VERSION: 3.10.2
