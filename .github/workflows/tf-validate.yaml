@@ -1,0 +1,38 @@
+name: Terraform Validate
+on:
+  workflow_call:
+
+env:
+  TERRAFORM_VERSION: 1.3.2
+
+defaults:
+  run:
+    working-directory: tf
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        ENVIRONMENT: ["stage","live"]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: install terraform
+        uses: hashicorp/setup-terraform@v2.0.0
+        with:
+          terraform_version: ${{env.TERRAFORM_VERSION}}
+          terraform_wrapper: false
+      - name: terraform init
+        run: terraform init
+      - name: terraform select workspace
+        run: terraform workspace select ${{ matrix.ENVIRONMENT }} || terraform workspace new ${{ matrix.ENVIRONMENT }} && terraform workspace select ${{ matrix.ENVIRONMENT }}
+      - name: terraform plan
+        run: terraform plan -var-file=_global.json -var-file=_${{ matrix.ENVIRONMENT }}.json -out=plan_${{ matrix.ENVIRONMENT }}_${GITHUB_SHA}.bin
+      - name: terraform validate
+        run: terraform validate
+      - name: tflint
+        uses: docker://ghcr.io/terraform-linters/tflint:v0.41.0@sha256:f942b96809085f6262bde51750da56fd13d2bdd098239d0e37c09a5acac2c50e
+        with:
+          args: ./tf
+

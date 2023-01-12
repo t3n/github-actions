@@ -1,0 +1,44 @@
+name: Terraform Security
+on:
+  workflow_call:
+    inputs:
+      ENVIRONMENT:
+        type: string
+        required: true
+
+defaults:
+  run:
+    working-directory: tf
+
+env:
+  TERRAFORM_VERSION: 1.3.2
+  CHECKOV_VERSION: 2.1.270@sha:81e9cb16d019
+
+jobs:
+  security:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: install terraform
+        uses: hashicorp/setup-terraform@v2.0.0
+        with:
+          terraform_version: ${{env.TERRAFORM_VERSION}}
+          terraform_wrapper: false
+      - name: terraform init
+        run: terraform init
+      - name: terraform plan
+        run: terraform workspace select ${{ github.event.inputs.ENVIRONMENT }}
+      - name: terraform plan
+        run: terraform plan -var-file=_global.json -var-file=_${{ github.event.inputs.ENVIRONMENT }}.json -out=plan_${{ github.event.inputs.ENVIRONMENT }}_${GITHUB_SHA:0:9}_$(date +%s).bin
+      - name: generate plan json
+        run: terraform show -json -no-color plan_* > test.json
+      - name: checkov
+        uses: docker://bridgecrew/checkov:2.1.270@sha256:81e9cb16d019375a542b7ba9b93eb1d0c4921f573118d1b195cdcaa0b369a43c
+        with:
+          entrypoint: checkov
+          args: -f ./tf/test.json -o cli -o junitxml --output-file-path ./tf/checkov.junit.xml -s
+      - uses: actions/upload-artifact@v3
+        with:
+          name: checkov.junit.xml
+          path: ./tf/checkov.junit.xml/results_junitxml.xml

@@ -1,0 +1,15 @@
+name: Terraform Release
+on:
+  workflow_call:
+    inputs:
+      ENVIRONMENT:
+        type: string
+        required: true
+
+env:
+  TERRAFORM_VERSION: 1.3.2
+
+jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
