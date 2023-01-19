@@ -6,16 +6,12 @@ on:
         type: string
         required: true
 
-defaults:
-  run:
-    working-directory: tf
-
 env:
-  TERRAFORM_VERSION: 1.3.2
+  TERRAFORM_VERSION: 1.3.7
   CHECKOV_VERSION: 2.1.270@sha:81e9cb16d019
 
 jobs:
-  security:
+  terraform-security:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout

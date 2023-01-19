@@ -6,7 +6,7 @@ env:
   HELM_VERSION: 3.10.2
 
 jobs:
-  lint:
+  helm-lint:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
@@ -16,5 +16,5 @@ jobs:
         uses: Azure/setup-helm@v3.3
         with:
           version: ${{env.HELM_VERSION}}
-      - name: Lint
+      - name: lint
         run: helm lint ./charts/*

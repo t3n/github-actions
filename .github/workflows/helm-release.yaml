@@ -2,13 +2,12 @@ name: Helm Release
 on:
   workflow_call:
 
-
 env:
   HELM_VERSION: 3.10.2
   HELM_GCS_VERSION: 0.4.0
 
 jobs:
-  release:
+  helm-release:
     runs-on: ubuntu-22.04
     outputs:
       new_tag: ${{ steps.tag_version.outputs.new_tag }}

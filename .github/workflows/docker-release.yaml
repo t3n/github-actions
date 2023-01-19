@@ -19,26 +19,30 @@ on:
         required: true
 
 jobs:
-  release:
+  docker-release:
     runs-on: ubuntu-22.04
     steps:
-      - name: Download a Build Artifact
+      - name: download a build artifact
         uses: actions/download-artifact@v3.0.0
         id: download
         with:
           name: artifacts_image_${{github.ref_name}}
+
       - name: docker load
         run: docker image load --input image_${{inputs.PROJECT}}_${{github.ref_name}}.tar
+
       - name: tag image
         run: |
           docker tag image_${{inputs.PROJECT}}:${{github.ref_name}} ${{ inputs.GCP_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ inputs.PROJECT }}:${{ inputs.DOCKER_IMAGE_TAG }}
           docker image ls -a
-      - name: Login to GCR
+
+      - name: login to gcr
         uses: docker/login-action@v1.12.0
         with:
           registry: ${{ inputs.GCP_REGISTRY }}
           username: _json_key
           password: ${{ secrets.GCR_JSON_KEY }}
+
       - name: push to registry
         run: docker push ${{ inputs.GCP_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ inputs.PROJECT }}:${{ inputs.DOCKER_IMAGE_TAG }}
 

@@ -4,7 +4,7 @@ on:
 
 
 jobs:
-  unittest:
+  helm-unittest:
     strategy:
       matrix:
         ENVIRONMENT: ["stage","live"]

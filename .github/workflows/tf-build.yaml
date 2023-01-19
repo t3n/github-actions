@@ -1,4 +1,4 @@
-name: Terraform Unittest
+name: Terraform Build
 on:
   workflow_call:
 
@@ -10,7 +10,7 @@ defaults:
     working-directory: tf
 
 jobs:
-  build:
+  terraform-build:
     strategy:
       matrix:
         ENVIRONMENT: ["stage","live"]
@@ -18,19 +18,25 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
+
       - name: install terraform
         uses: hashicorp/setup-terraform@v2.0.0
         with:
           terraform_version: ${{env.TERRAFORM_VERSION}}
           terraform_wrapper: false
+
       - name: terraform init
         run: terraform init
+
       - name: terraform select workspace
         run: terraform workspace select ${{ matrix.ENVIRONMENT }} || terraform workspace new ${{ matrix.ENVIRONMENT }} && terraform workspace select ${{ matrix.ENVIRONMENT }}
+
       - name: terraform plan
         run: terraform plan -var-file=_global.json -var-file=_${{ matrix.ENVIRONMENT }}.json -out=plan_${{ matrix.ENVIRONMENT }}_${GITHUB_SHA}.bin
+
       - name: generate plan json
         run: terraform show -json -no-color plan_${{ matrix.ENVIRONMENT }}_${{env.GITHUB_SHA}}.bin > test_${{ matrix.ENVIRONMENT }}_${{env.GITHUB_SHA}}.json
+
       - name: upload
         uses: actions/upload-artifact@v3
         with:

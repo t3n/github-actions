@@ -6,7 +6,7 @@ env:
   HELM_VERSION: 3.10.2
 
 jobs:
-  security:
+  helm-security:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout

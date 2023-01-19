@@ -1,20 +1,23 @@
-name: Git create Changelog
+name: Git Changelog
 on:
   workflow_call:
 
 jobs:
-  git-tag-release:
+  git-changelog:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
+
       - name: generate changelog
         uses: orhun/git-cliff-action@v1
         id: git-cliff
         with:
           config: ./cliff.toml
           args: --verbose
+
       - name: write file
         run: cat ${{ steps.git-cliff.outputs.changelog }} > ./CHANGELOG.md
+
       - name: commit changes
         uses: EndBug/add-and-commit@v9.1.1
         with:
