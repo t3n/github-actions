@@ -1,15 +1,21 @@
 name: Terraform Unittest
 on:
   workflow_call:
+    inputs:
+      ENVIRONMENT:
+        type: string
+        required: true
+    secrets:
+      GCP_PROJECT_ID:
+        required: true
+      GCP_JSON_KEY:
+        required: true
 
 env:
   TERRAFORM_VERSION: 1.3.7
 
 jobs:
   unittest:
-    strategy:
-      matrix:
-        ENVIRONMENT: ["stage","live"]
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
@@ -19,15 +25,15 @@ jobs:
         uses: actions/download-artifact@v3.0.0
         id: download
         with:
-          name: artifacts_${{ matrix.ENVIRONMENT }}_${{env.GITHUB_SHA}}
+          name: artifacts_${{inputs.ENVIRONMENT}}_${{env.GITHUB_SHA}}
 
       - name: rename test file
-        run: mv ./test_${{ matrix.ENVIRONMENT }}_${{ env.GITHUB_SHA }}.json ./test_${{ matrix.ENVIRONMENT }}.json
+        run: mv ./test_${{inputs.ENVIRONMENT}}_${{ env.GITHUB_SHA }}.json ./test_${{inputs.ENVIRONMENT}}.json
 
       - name: conftest
         uses: docker://openpolicyagent/conftest:v0.35.0@sha256:95a8879ababe8be9f0369113c87436300adbc7599a0b940c4733c220b3e477c5
         with:
-          args: test ./test_${{ matrix.ENVIRONMENT }}.json --all-namespaces --no-color
+          args: test ./test_${{inputs.ENVIRONMENT}}.json --all-namespaces --no-color
 
 
 
