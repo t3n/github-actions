@@ -15,7 +15,7 @@ env:
   TERRAFORM_VERSION: 1.3.7
 
 jobs:
-  unittest:
+  terraform-unittest:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
