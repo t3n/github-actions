@@ -40,13 +40,13 @@ jobs:
         run: terraform workspace select ${{inputs.ENVIRONMENT}} || terraform workspace new ${{inputs.ENVIRONMENT}} && terraform workspace select ${{inputs.ENVIRONMENT}}
 
       - name: terraform plan
-        run: terraform plan -var-file=_global.json -var-file=_${{inputs.ENVIRONMENT}}.json -out=plan_${{inputs.ENVIRONMENT}}_${GITHUB_SHA}.bin
+        run: terraform plan -var-file=_global.json -var-file=_${{inputs.ENVIRONMENT}}.json -out=plan_${{inputs.ENVIRONMENT}}_${{github.sha}}.bin
 
       - name: generate plan json
-        run: terraform show -json -no-color plan_${{inputs.ENVIRONMENT}}_${GITHUB_SHA}.bin > test_${{inputs.ENVIRONMENT}}_${GITHUB_SHA}.json
+        run: terraform show -json -no-color plan_${{inputs.ENVIRONMENT}}_${{github.sha}}.bin > test_${{inputs.ENVIRONMENT}}_${{github.sha}}.json
 
       - name: upload
         uses: actions/upload-artifact@v3
         with:
-          name: artifacts_${{inputs.ENVIRONMENT}}_${GITHUB_SHA}
-          path: ./*_${{inputs.ENVIRONMENT}}_${GITHUB_SHA}.*
+          name: artifacts_${{inputs.ENVIRONMENT}}_${{github.sha}}
+          path: ./*_${{inputs.ENVIRONMENT}}_${{github.sha}}.*
