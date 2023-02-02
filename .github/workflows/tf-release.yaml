@@ -5,7 +5,11 @@ on:
       ENVIRONMENT:
         type: string
         required: true
-
+    secrets:
+      GCP_PROJECT_ID:
+        required: true
+      GCP_JSON_KEY:
+        required: true
 env:
   TERRAFORM_VERSION: 1.3.7
 
@@ -26,4 +30,4 @@ jobs:
         id: auth
         uses: google-github-actions/auth@v0
         with:
-          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+          credentials_json: '${{ secrets.GCP_JSON_KEY }}'
