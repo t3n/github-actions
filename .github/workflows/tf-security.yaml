@@ -14,15 +14,6 @@ jobs:
   terraform-security:
     runs-on: ubuntu-22.04
     steps:
-      - name: checkout
-        uses: actions/checkout@v3
-
-      - name: install terraform
-        uses: hashicorp/setup-terraform@v2.0.0
-        with:
-          terraform_version: ${{env.TERRAFORM_VERSION}}
-          terraform_wrapper: false
-
       - name: download a build artifact
         uses: actions/download-artifact@v3.0.0
         id: download
