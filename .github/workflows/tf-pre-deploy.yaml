@@ -23,18 +23,18 @@ jobs:
 
       - name: Authenticate to Google Cloud
         id: auth
-        uses: google-github-actions/auth@v0
+        uses: google-github-actions/auth@v1
         with:
           credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
 
       - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0
+        uses: google-github-actions/setup-gcloud@v1.1.0
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: ${{ inputs.terraform_version }}
-      
+
       - name: Check terraform version
         run: terraform version
 
@@ -130,13 +130,13 @@ jobs:
             ### ${ validate_result } Terraform Validation 🤖
             <details><summary>Logs</summary>
             Output
-            
+
             ${ CODE_BLOCK }
             ${ process.env.validate_out }
             ${ CODE_BLOCK }
-            
+
             Errors
-            
+
             ${ CODE_BLOCK }
             ${ process.env.validate_err }
             ${ CODE_BLOCK }
@@ -145,13 +145,13 @@ jobs:
             ### ${ workspace_result } Terraform show Workspace 👀
             <details><summary>Logs</summary>
             Output
-            
+
             ${ CODE_BLOCK }
             ${ process.env.workspace_out }
             ${ CODE_BLOCK }
-            
+
             Errors
-            
+
             ${ CODE_BLOCK }
             ${ process.env.workspace_err }
             ${ CODE_BLOCK }
@@ -159,14 +159,14 @@ jobs:
 
             ### ${ plan_result } Terraform Plan 📖
             <details><summary>Logs</summary>
-            
+
             ${ CODE_BLOCK }terraform
             ${ process.env.plan }
             ${ CODE_BLOCK }
             </details>
-        
+
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`*`;
-          
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,

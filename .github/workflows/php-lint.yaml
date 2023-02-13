@@ -44,9 +44,9 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.3.0
       - name: Cache Composer dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v3.2.5
         with:
           path: /tmp/composer-cache
           key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
@@ -68,7 +68,7 @@ jobs:
         if: inputs.FLAVOUR == 'phpstan'
 
       - name: phpcs
-        uses: docker://docker.io/cytopia/phpcs:3 # https://hub.docker.com/r/cytopia/phpcs
+        uses: docker://docker.io/cytopia/phpcs:3@sha0779105398580e65d38f5fe49d3dcda9a8e3a14bc42a2f4f7be3ba511cbcde1a # https://hub.docker.com/r/cytopia/phpcs
         with:
           args: --standard=${{inputs.PATH}}/phpcs.xml.dist
         if: inputs.FLAVOUR == 'phpcs'

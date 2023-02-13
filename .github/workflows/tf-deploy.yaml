@@ -17,25 +17,25 @@ on:
 jobs:
   parse_issue_data:
     if: |
-      github.event_name != 'pull_request' && 
-      !github.event.issue.pull_request && 
+      github.event_name != 'pull_request' &&
+      !github.event.issue.pull_request &&
       github.event.comment.body == '/approve'
     runs-on: ubuntu-20.04
     outputs:
       tag: ${{ fromJSON(steps.issue_body_parser.outputs.payload).tag }}
     steps:
-      - name: Comment on Issue      
+      - name: Comment on Issue
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.issue.number }}
           body: 'Deployment Initiated 🚀'
-          
+
       - name: Get Issue Data
         uses: peter-murray/issue-body-parser-action@v1
         id: issue_body_parser
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          issue_id: ${{ github.event.issue.number }}         
+          issue_id: ${{ github.event.issue.number }}
           payload: yaml
 
       - name: Remove Issue Tag
@@ -49,12 +49,12 @@ jobs:
     runs-on: ubuntu-20.04
     needs: parse_issue_data
     if: |
-      (always() && 
+      (always() &&
        github.event_name == 'push' &&
        github.ref_name == github.event.repository.default_branch) ||
-      (always() && 
-       github.event_name != 'pull_request' && 
-       !github.event.issue.pull_request && 
+      (always() &&
+       github.event_name != 'pull_request' &&
+       !github.event.issue.pull_request &&
        github.event.comment.body == '/approve')
     outputs:
       tag: ${{ steps.tag_version.outputs.new_tag }}
@@ -65,12 +65,12 @@ jobs:
 
       - name: Authenticate to Google Cloud
         id: auth
-        uses: google-github-actions/auth@v0
+        uses: google-github-actions/auth@v1
         with:
           credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
 
       - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0
+        uses: google-github-actions/setup-gcloud@v1.1.0
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -148,8 +148,8 @@ jobs:
           filename: .github/approve-deployment.md
 
       - name: Close Issue
-        if: | 
-          !github.event.issue.pull_request && 
+        if: |
+          !github.event.issue.pull_request &&
           github.event.comment.body == '/approve'
         uses: peter-evans/close-issue@v1.0.3
         with:
