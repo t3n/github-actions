@@ -8,25 +8,25 @@ on:
 
 env:
   TERRAFORM_VERSION: 1.3.7
-  CHECKOV_VERSION: 2.1.270@sha:81e9cb16d019
+
 
 jobs:
   terraform-security:
     runs-on: ubuntu-22.04
     steps:
       - name: download a build artifact
-        uses: actions/download-artifact@v3.0.0
+        uses: actions/download-artifact@v3.0.2
         id: download
         with:
           name: artifacts_${{inputs.ENVIRONMENT}}_${{github.sha}}
 
       - name: checkov
-        uses: docker://bridgecrew/checkov:2.1.270@sha256:81e9cb16d019375a542b7ba9b93eb1d0c4921f573118d1b195cdcaa0b369a43c
+        uses: docker://bridgecrew/checkov:2.3.3@sha256:a3f943c7ad999d2cf68f14bf869c64a7eaa1efb28de1a4e50d9af91fc63de990
         with:
           entrypoint: checkov
           args: -f ./test_${{inputs.ENVIRONMENT}}_${{github.sha}}.json -o cli -o junitxml --output-file-path ./checkov.junit.xml -s
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v3.1.2
         with:
           name: checkov.junit.xml
           path: ./checkov.junit.xml/results_junitxml.xml

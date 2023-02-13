@@ -11,7 +11,7 @@ jobs:
     outputs:
       NEW_TAG: ${{ steps.tag_version.outputs.new_tag }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.3.0
 
       - name: set tag
         id: tag_version
@@ -30,7 +30,7 @@ jobs:
           echo ::set-output name=release_name::"${arr1[RANDOM%${#arr1[@]}]}-${arr2[RANDOM%${#arr2[@]}]}"
 
       - name: release
-        uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@v1.12.0
         with:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: ${{ steps.tag_version.outputs.new_tag }} - ${{ steps.fancy_name.outputs.release_name }}

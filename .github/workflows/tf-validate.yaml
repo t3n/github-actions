@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.3.0
 
       - name: tflint
-        uses: docker://ghcr.io/terraform-linters/tflint:v0.41.0@sha256:f942b96809085f6262bde51750da56fd13d2bdd098239d0e37c09a5acac2c50e
+        uses: docker://ghcr.io/terraform-linters/tflint:v0.45.0@sha256:8f5007a878fc2af8f84c4455e4e5dbeeb6c5860b98250b286b70849276b02254
