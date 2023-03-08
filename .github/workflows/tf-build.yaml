@@ -45,6 +45,13 @@ jobs:
       - name: generate plan json
         run: terraform show -json -no-color plan_${{inputs.ENVIRONMENT}}_${{github.sha}}.bin > test_${{inputs.ENVIRONMENT}}_${{github.sha}}.json
 
+      - name: inform about changes
+        uses: liatrio/terraform-change-pr-commenter@v1.4.0
+        with:
+          json-file: my-tfplan.json
+          expand-comment: 'true'
+          include-plan-job-summary: 'true'
+
       - name: upload
         uses: actions/upload-artifact@v3.1.2
         with:
