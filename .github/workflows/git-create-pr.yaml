@@ -1,0 +1,29 @@
+name: Git create PR
+on:
+  workflow_call:
+    inputs:
+      TARGET_BRANCH:
+        type: string
+        required: true
+      TAG:
+        type: string
+        required: true
+      RELEASE_NAME:
+        type: string
+        required: true
+      CHANGELOG:
+        type: string
+        required: false
+        default: "n/a"
+
+jobs:
+  git-create-pr:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4.2.3
+        with:
+          branch: ${{inputs.TARGET_BRANCH}}
+          title: Promote ${{inputs.TAG}} to ${{inputs.TARGET_BRANCH}}
+          body: ${{inputs.RELEASE_NAME}} () wants to go ${{inputs.TARGET_BRANCH}} \
+                ${{ inputs.CHANGELOG }}
