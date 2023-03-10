@@ -26,7 +26,8 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4.2.3
         with:
-          branch: ${{inputs.TARGET_BRANCH}}
+          base: ${{inputs.TARGET_BRANCH}}
+          branch: upmerge/${{inputs.TAG}}
           title: Promote ${{inputs.TAG}} to ${{inputs.TARGET_BRANCH}}
-          body: ${{inputs.RELEASE_NAME}} () wants to go ${{inputs.TARGET_BRANCH}} \
+          body: ${{inputs.RELEASE_NAME}} (${{inputs.TAG}}) wants to go ${{inputs.TARGET_BRANCH}} \
                 ${{ inputs.CHANGELOG }}
