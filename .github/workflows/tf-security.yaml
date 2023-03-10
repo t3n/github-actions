@@ -30,3 +30,4 @@ jobs:
         with:
           name: checkov.junit.xml
           path: ./checkov.junit.xml/results_junitxml.xml
+          retention-days: 1

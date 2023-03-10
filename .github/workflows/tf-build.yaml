@@ -57,3 +57,4 @@ jobs:
         with:
           name: artifacts_${{inputs.ENVIRONMENT}}_${{github.sha}}
           path: ./*_${{inputs.ENVIRONMENT}}_${{github.sha}}.*
+          retention-days: 1
