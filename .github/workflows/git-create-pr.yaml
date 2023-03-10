@@ -28,5 +28,7 @@ jobs:
         with:
           destination_branch: ${{inputs.TARGET_BRANCH}}
           pr_title: Promote ${{inputs.TAG}} to ${{inputs.TARGET_BRANCH}}
-          pr_body: ${{inputs.RELEASE_NAME}} (${{inputs.TAG}}) wants to go ${{inputs.TARGET_BRANCH}} \
-                ${{ inputs.CHANGELOG }}
+          pr_body: |
+            ${{inputs.RELEASE_NAME}} (${{inputs.TAG}}) wants to go ${{inputs.TARGET_BRANCH}}
+
+            ${{ inputs.CHANGELOG }}
