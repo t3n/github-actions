@@ -24,10 +24,9 @@ jobs:
         uses: actions/checkout@v3.3.0
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4.2.3
+        uses: repo-sync/pull-request@v2.12.1
         with:
-          base: ${{inputs.TARGET_BRANCH}}
-          branch: upmerge/${{inputs.TAG}}
-          title: Promote ${{inputs.TAG}} to ${{inputs.TARGET_BRANCH}}
-          body: ${{inputs.RELEASE_NAME}} (${{inputs.TAG}}) wants to go ${{inputs.TARGET_BRANCH}} \
+          destination_branch: ${{inputs.TARGET_BRANCH}}
+          pr_title: Promote ${{inputs.TAG}} to ${{inputs.TARGET_BRANCH}}
+          pr_body: ${{inputs.RELEASE_NAME}} (${{inputs.TAG}}) wants to go ${{inputs.TARGET_BRANCH}} \
                 ${{ inputs.CHANGELOG }}
