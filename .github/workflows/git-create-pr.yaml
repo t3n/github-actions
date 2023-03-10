@@ -20,6 +20,9 @@ jobs:
   git-create-pr:
     runs-on: ubuntu-22.04
     steps:
+      - name: checkout
+        uses: actions/checkout@v3.3.0
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4.2.3
         with:
