@@ -20,12 +20,12 @@ jobs:
           name: artifacts_image_${{github.ref_name}}
 
       - name: docker-docs
-        uses: docker://anchore/syft:v0.71.0@sha256:00798a849966158b3458c3e10eb70db5c55b077f25622f1d8ba91f92d2b9c1e7
+        uses: docker://anchore/syft:v0.74.1@sha256:17cdbd5cdd7d59cae2e794a91573c92aa8941cb5ab027fb176521dd3da647031
         with:
           args: packages docker-archive:./image_${{inputs.PROJECT}}_${{github.ref_name}}.tar  -o template -t "./README.md.tmpl" > README.md
 
       - name: commit changes
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v9.1.1
         with:
           default_author: github_actions
           message: 'Update Readme'

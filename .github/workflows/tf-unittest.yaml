@@ -7,7 +7,7 @@ on:
         required: true
 
 env:
-  TERRAFORM_VERSION: 1.3.8
+  TERRAFORM_VERSION: 1.4.0
 
 jobs:
   terraform-unittest:
@@ -26,7 +26,7 @@ jobs:
         run: mv ./test_${{inputs.ENVIRONMENT}}_${{github.sha}}.json ./test_${{inputs.ENVIRONMENT}}.json
 
       - name: conftest
-        uses: docker://openpolicyagent/conftest:v0.39.0@sha256:042e0b78eff667ae824f8d49a22af7a53295c7b15011d368c7fb382b22d6cb8b
+        uses: docker://openpolicyagent/conftest:v0.39.2@sha256:ed13a4339535bf14bbe72be0298ff96ee9d7d5306da631766b72f99ade1f23e4
         with:
           args: test ./test_${{inputs.ENVIRONMENT}}.json --all-namespaces --no-color
 
