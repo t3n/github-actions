@@ -7,14 +7,14 @@ on:
         required: true
 
 env:
-  TERRAFORM_VERSION: 1.4.0
+  TERRAFORM_VERSION: 1.4.5
 
 jobs:
   terraform-unittest:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v3.5.2
 
       - name: download a build artifact
         uses: actions/download-artifact@v3.0.2
@@ -26,7 +26,7 @@ jobs:
         run: mv ./test_${{inputs.ENVIRONMENT}}_${{github.sha}}.json ./test_${{inputs.ENVIRONMENT}}.json
 
       - name: conftest
-        uses: docker://openpolicyagent/conftest:v0.39.2@sha256:ed13a4339535bf14bbe72be0298ff96ee9d7d5306da631766b72f99ade1f23e4
+        uses: docker://openpolicyagent/conftest:v0.41.0@sha256:f9e6b6739d7be0083c909196a5b4950d7b017a69038aed3ac3dd6ed0a92bfe7c
         with:
           args: test ./test_${{inputs.ENVIRONMENT}}.json --all-namespaces --no-color
 

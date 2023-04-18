@@ -7,7 +7,7 @@ on:
         required: true
 
 env:
-  TERRAFORM_VERSION: 1.4.0
+  TERRAFORM_VERSION: 1.4.5
 
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
           name: artifacts_${{inputs.ENVIRONMENT}}_${{github.sha}}
 
       - name: checkov
-        uses: docker://bridgecrew/checkov:2.3.79@sha256:89ce8690ea86476ac974df108472fd364758d73774a21ed95856ec25eb946c1c
+        uses: docker://bridgecrew/checkov:2.3.178@sha256:2b7ccfd642d6f39a121052d8d963864a23cb248113f2ddf725dd9402cf54a398
         with:
           entrypoint: checkov
           args: -f ./test_${{inputs.ENVIRONMENT}}_${{github.sha}}.json -o cli -o junitxml --output-file-path ./checkov.junit.xml -s
