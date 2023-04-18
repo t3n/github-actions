@@ -23,9 +23,13 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3.5.2
 
+      - name: create release branch
+        run: git checkout -b release/${{inputs.TAG}} && git push --set-upstream origin release/${{inputs.TAG}}
+
       - name: Create Pull Request
         uses: repo-sync/pull-request@v2.12.1
         with:
+          source_branch: release/${{inputs.TAG}}
           destination_branch: ${{inputs.TARGET_BRANCH}}
           pr_title: Promote ${{inputs.TAG}} to ${{inputs.TARGET_BRANCH}}
           pr_body: |
