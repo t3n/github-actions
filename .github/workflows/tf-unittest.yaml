@@ -10,15 +10,14 @@ on:
         type: string
         required: true
 
-defaults:
-  run:
-    working-directory: ${{ inputs.WORKING_DIRECTORY }}
-
 env:
   TERRAFORM_VERSION: 1.4.5
 
 jobs:
   terraform-unittest:
+    defaults:
+      run:
+        working-directory: ${{ inputs.WORKING_DIRECTORY }}
     runs-on: ubuntu-22.04
     steps:
       - name: checkout

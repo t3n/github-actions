@@ -16,6 +16,9 @@ defaults:
 
 jobs:
   terraform-docs:
+    defaults:
+      run:
+        working-directory: ${{ inputs.WORKING_DIRECTORY }}
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
