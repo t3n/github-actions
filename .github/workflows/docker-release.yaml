@@ -12,9 +12,10 @@ on:
       DOCKER_IMAGE_TAG:
         type: string
         required: true
-    secrets:
       GCP_PROJECT_ID:
+        type: string
         required: true
+    secrets:
       GCR_JSON_KEY:
         required: true
 

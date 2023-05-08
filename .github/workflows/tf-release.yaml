@@ -10,10 +10,10 @@ on:
         type: string
         required: true
     secrets:
-      GCP_PROJECT_ID:
-        required: true
       GCP_JSON_KEY:
-        required: true
+        required: false
+        description: "can be inherited by using the 'inherit' keyword https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idsecretsinherit"
+
 
 env:
   TERRAFORM_VERSION: 1.4.5
