@@ -28,6 +28,12 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3.5.2
 
+      - name: secrets-to-env
+        uses: oNaiPs/secrets-to-env-action@v1.2
+        with:
+          secrets: {{ toJSON(secrets) }}
+          include: TF_VAR_*
+
       - name: install terraform
         uses: hashicorp/setup-terraform@v2.0.3
         with:

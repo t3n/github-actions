@@ -20,5 +20,11 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3.5.2
 
+      - name: secrets-to-env
+        uses: oNaiPs/secrets-to-env-action@v1.2
+        with:
+          secrets: {{ toJSON(secrets) }}
+          include: TF_VAR_*
+
       - name: tflint
         uses: docker://ghcr.io/terraform-linters/tflint:vv0.46.0@sha256:e940f26b801080546df5a8ba4629d7bc6fc47c940058774039c3cf8b1d6c6f59
