@@ -2,9 +2,17 @@ name: Terraform Unittest
 on:
   workflow_call:
     inputs:
+      WORKING_DIRECTORY:
+        type: string
+        required: false
+        default: '.'
       ENVIRONMENT:
         type: string
         required: true
+
+defaults:
+  run:
+    working-directory: ${{ inputs.WORKING_DIRECTORY }}
 
 env:
   TERRAFORM_VERSION: 1.4.5
