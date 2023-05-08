@@ -3,6 +3,10 @@ name: Terraform Pre Deploy - Lind and Test
 on:
   workflow_call:
     inputs:
+      WORKING_DIRECTORY:
+        type: string
+        required: false
+        default: '.'
       environment:
         type: string
         required: true
@@ -13,6 +17,10 @@ on:
     secrets:
       GOOGLE_APPLICATION_CREDENTIALS:
         required: true
+
+defaults:
+  run:
+    working-directory: ${{ inputs.WORKING_DIRECTORY }}
 
 jobs:
   lint-and-test:

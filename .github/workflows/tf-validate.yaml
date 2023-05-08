@@ -1,6 +1,15 @@
 name: Terraform Validate
 on:
   workflow_call:
+    inputs:
+      WORKING_DIRECTORY:
+        type: string
+        required: false
+        default: '.'
+
+defaults:
+  run:
+    working-directory: ${{ inputs.WORKING_DIRECTORY }}
 
 env:
   TERRAFORM_VERSION: 1.3.8
