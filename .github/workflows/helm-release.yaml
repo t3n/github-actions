@@ -3,7 +3,7 @@ on:
   workflow_call:
 
 env:
-  HELM_VERSION: 3.10.2
+  HELM_VERSION: 3.11.2
   HELM_GCS_VERSION: 0.4.1
 
 jobs:
@@ -13,13 +13,13 @@ jobs:
       new_tag: ${{ steps.tag_version.outputs.new_tag }}
       changelog: ${{ steps.tag_version.outputs.changelog }}
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3.3.0
         with:
           fetch-depth: '0'
 
       - name: authenticate to google cloud
         id: 'auth'
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v1.1.0
         with:
           credentials_json: '${{ secrets.GAR_HELM_REGISTRY_ACCOUNT }}'
 

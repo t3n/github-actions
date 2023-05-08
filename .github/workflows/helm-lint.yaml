@@ -3,18 +3,19 @@ on:
   workflow_call:
 
 env:
-  HELM_VERSION: 3.10.2
+  HELM_VERSION: 3.11.2
 
 jobs:
   helm-lint:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v3.5.2
 
       - name: install helm
         uses: Azure/setup-helm@v3.5
         with:
           version: ${{env.HELM_VERSION}}
+
       - name: lint
         run: helm lint ./charts/*

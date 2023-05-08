@@ -2,27 +2,26 @@ name: Helm Unittest
 on:
   workflow_call:
 
+env:
+  HELM_VERSION: 3.11.2
 
 jobs:
   helm-unittest:
-    strategy:
-      matrix:
-        ENVIRONMENT: ["stage","live"]
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v3.5.2
 
       - name: install helm
         uses: Azure/setup-helm@v3.5
         with:
-          version: 3.10.0
+          version: ${{env.HELM_VERSION}}
 
       - name: helm template
-        run: for d in ./charts/* ; do helm template $(basename -- $d) -f ${d}/_live.yaml ${d}/ > ./rendered_$(basename -- $d)_${{ matrix.ENVIRONMENT }}.yaml; done
+        run: for d in ./charts/* ; do helm template $(basename -- $d) > ./rendered_$(basename -- $d).yaml; done
 
       - name: conftest
-        uses: docker://openpolicyagent/conftest:v0.39.0@sha256:042e0b78eff667ae824f8d49a22af7a53295c7b15011d368c7fb382b22d6cb8b
+        uses: docker://openpolicyagent/conftest:v0.41.0@sha256:f9e6b6739d7be0083c909196a5b4950d7b017a69038aed3ac3dd6ed0a92bfe7c
         with:
           args: -c 'for d in ./rendered_*; do conftest test "${d}" --all-namespaces --no-color; done'
           entrypoint: sh

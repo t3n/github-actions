@@ -3,14 +3,14 @@ on:
   workflow_call:
 
 env:
-  HELM_VERSION: 3.10.2
+  HELM_VERSION: 3.11.2
 
 jobs:
   helm-security:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v3.5.2
 
       - name: install helm
         uses: Azure/setup-helm@v3.5
@@ -18,7 +18,7 @@ jobs:
           version: ${{env.HELM_VERSION}}
 
       - name: checkov
-        uses: docker://bridgecrew/checkov:2.3.3@sha256:a3f943c7ad999d2cf68f14bf869c64a7eaa1efb28de1a4e50d9af91fc63de990
+        uses: docker://bridgecrew/checkov:2.3.178@sha256:2b7ccfd642d6f39a121052d8d963864a23cb248113f2ddf725dd9402cf54a398
         with:
           entrypoint: checkov
           args: -d ./charts -o cli -o junitxml --output-file-path ./checkov.junit.xml -s
@@ -27,3 +27,4 @@ jobs:
         with:
           name: checkov.junit.xml
           path: ./checkov.junit.xml/results_junitxml.xml
+          retention-days: 1

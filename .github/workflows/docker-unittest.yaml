@@ -7,9 +7,9 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v3.5.2
 
       - name: conftest
-        uses: docker://openpolicyagent/conftest:v0.39.0@sha256:042e0b78eff667ae824f8d49a22af7a53295c7b15011d368c7fb382b22d6cb8b
+        uses: docker://openpolicyagent/conftest:v0.41.0@sha256:f9e6b6739d7be0083c909196a5b4950d7b017a69038aed3ac3dd6ed0a92bfe7c
         with:
           args: test Dockerfile --all-namespaces --no-color

@@ -15,10 +15,12 @@ jobs:
         id: download
         with:
           name: artifacts_image_${{github.ref_name}}
+
       - name: docker load
         run: docker image load --input image_${{inputs.PROJECT}}_${{github.ref_name}}.tar
+
       - name: docker scan
-        uses: anchore/scan-action@v3.3.3
+        uses: anchore/scan-action@v3.3.5
         continue-on-error: true
         with:
           image: image_${{inputs.PROJECT}}:${{github.ref_name}}

@@ -15,7 +15,7 @@ defaults:
     working-directory: ${{ inputs.WORKING_DIRECTORY }}
 
 env:
-  TERRAFORM_VERSION: 1.3.8
+  TERRAFORM_VERSION: 1.4.5
 
 
 jobs:
@@ -29,7 +29,7 @@ jobs:
           name: artifacts_${{inputs.ENVIRONMENT}}_${{github.sha}}
 
       - name: checkov
-        uses: docker://bridgecrew/checkov:2.3.3@sha256:a3f943c7ad999d2cf68f14bf869c64a7eaa1efb28de1a4e50d9af91fc63de990
+        uses: docker://bridgecrew/checkov:2.3.178@sha256:2b7ccfd642d6f39a121052d8d963864a23cb248113f2ddf725dd9402cf54a398
         with:
           entrypoint: checkov
           args: -f ./test_${{inputs.ENVIRONMENT}}_${{github.sha}}.json -o cli -o junitxml --output-file-path ./checkov.junit.xml -s
@@ -38,3 +38,4 @@ jobs:
         with:
           name: checkov.junit.xml
           path: ./checkov.junit.xml/results_junitxml.xml
+          retention-days: 1
