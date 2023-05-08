@@ -60,7 +60,7 @@ jobs:
       - name: inform about changes
         uses: liatrio/terraform-change-pr-commenter@v1.4.1
         with:
-          json-file: test_${{inputs.ENVIRONMENT}}_${{github.sha}}.json
+          json-file: ${{ inputs.WORKING_DIRECTORY }}/test_${{inputs.ENVIRONMENT}}_${{github.sha}}.json
           expand-comment: 'true'
           include-plan-job-summary: 'true'
 
@@ -68,5 +68,5 @@ jobs:
         uses: actions/upload-artifact@v3.1.2
         with:
           name: artifacts_${{inputs.ENVIRONMENT}}_${{github.sha}}
-          path: ./*_${{inputs.ENVIRONMENT}}_${{github.sha}}.*
+          path: ${{ inputs.WORKING_DIRECTORY }}/*_${{inputs.ENVIRONMENT}}_${{github.sha}}.*
           retention-days: 1
