@@ -23,7 +23,7 @@ jobs:
       - name: secrets-to-env
         uses: oNaiPs/secrets-to-env-action@v1.2
         with:
-          secrets: {{ toJSON(secrets) }}
+          secrets: ${{ toJSON(secrets) }}
           include: TF_VAR_*
 
       - name: tflint
