@@ -51,6 +51,7 @@ jobs:
         id: download
         with:
           name: artifacts_${{inputs.ENVIRONMENT}}_${{github.sha}}
+          path: ${{ inputs.WORKING_DIRECTORY }}
 
       - name: terraform init
         run: terraform init

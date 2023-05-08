@@ -25,15 +25,16 @@ jobs:
         id: download
         with:
           name: artifacts_${{inputs.ENVIRONMENT}}_${{github.sha}}
+          path: ${{ inputs.WORKING_DIRECTORY }}
 
       - name: checkov
         uses: docker://bridgecrew/checkov:2.3.178@sha256:2b7ccfd642d6f39a121052d8d963864a23cb248113f2ddf725dd9402cf54a398
         with:
           entrypoint: checkov
-          args: -f ./test_${{inputs.ENVIRONMENT}}_${{github.sha}}.json -o cli -o junitxml --output-file-path ./checkov.junit.xml -s
+          args: -f ${{ inputs.WORKING_DIRECTORY }}/test_${{inputs.ENVIRONMENT}}_${{github.sha}}.json -o cli -o junitxml --output-file-path ./checkov.junit.xml -s
 
       - uses: actions/upload-artifact@v3.1.2
         with:
           name: checkov.junit.xml
-          path: ./checkov.junit.xml/results_junitxml.xml
+          path: ${{ inputs.WORKING_DIRECTORY }}/checkov.junit.xml/results_junitxml.xml
           retention-days: 1

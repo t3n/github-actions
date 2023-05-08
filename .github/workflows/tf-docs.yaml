@@ -10,10 +10,6 @@ on:
         type: string
         required: true
 
-defaults:
-  run:
-    working-directory: ${{ inputs.WORKING_DIRECTORY }}
-
 jobs:
   terraform-docs:
     defaults:

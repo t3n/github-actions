@@ -28,6 +28,7 @@ jobs:
         id: download
         with:
           name: artifacts_${{inputs.ENVIRONMENT}}_${{github.sha}}
+          path: ${{ inputs.WORKING_DIRECTORY }}
 
       - name: rename test file
         run: mv ./test_${{inputs.ENVIRONMENT}}_${{github.sha}}.json ./test_${{inputs.ENVIRONMENT}}.json
@@ -35,7 +36,7 @@ jobs:
       - name: conftest
         uses: docker://openpolicyagent/conftest:v0.41.0@sha256:f9e6b6739d7be0083c909196a5b4950d7b017a69038aed3ac3dd6ed0a92bfe7c
         with:
-          args: test ./test_${{inputs.ENVIRONMENT}}.json --all-namespaces --no-color
+          args: test ${{ inputs.WORKING_DIRECTORY }}/test_${{inputs.ENVIRONMENT}}.json --all-namespaces --no-color
 
 
 
