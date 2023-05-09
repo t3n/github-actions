@@ -11,7 +11,7 @@ on:
         required: true
 
 env:
-  TERRAFORM_VERSION: 1.4.5
+  TERRAFORM_VERSION: 1.4.6
 
 jobs:
   terraform-security:
@@ -28,7 +28,7 @@ jobs:
           path: ${{ inputs.WORKING_DIRECTORY }}
 
       - name: checkov
-        uses: docker://bridgecrew/checkov:2.3.178@sha256:2b7ccfd642d6f39a121052d8d963864a23cb248113f2ddf725dd9402cf54a398
+        uses: docker://bridgecrew/checkov:2.3.232@sha256:70a730e1c20186232bfc0e4bdc0cdab88f9d4cb1d63d6b9ba46d8793906d2782
         with:
           entrypoint: checkov
           args: -f ${{ inputs.WORKING_DIRECTORY }}/test_${{inputs.ENVIRONMENT}}_${{github.sha}}.json -o cli -o junitxml --output-file-path ${{ inputs.WORKING_DIRECTORY }}/checkov.junit.xml -s

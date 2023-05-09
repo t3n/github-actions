@@ -3,7 +3,7 @@ on:
   workflow_call:
 
 env:
-  HELM_VERSION: 3.11.2
+  HELM_VERSION: 3.11.3
 
 jobs:
   helm-lint:

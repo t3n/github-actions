@@ -69,7 +69,7 @@ jobs:
         if: inputs.FLAVOUR == 'phpstan'
 
       - name: phpcs
-        uses: docker://docker.io/cytopia/phpcs:3@sha256:dff12035218e12b6c256ba7c60bc4c19cfa570500d6ed787cd536be070f6502b # https://hub.docker.com/r/cytopia/phpcs
+        uses: docker://docker.io/cytopia/phpcs:3@sha256:b9e4eabd576d218d0084edacdc2b099de9e8c7c30e919e71704cdb0d46bc3cbf # https://hub.docker.com/r/cytopia/phpcs
         with:
           args: --standard=${{inputs.PATH}}/phpcs.xml.dist
         if: inputs.FLAVOUR == 'phpcs'

@@ -15,7 +15,7 @@ on:
         description: "can be inherited by using the 'inherit' keyword https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idsecretsinherit"
 
 env:
-  TERRAFORM_VERSION: 1.4.5
+  TERRAFORM_VERSION: 1.4.6
 
 jobs:
   terraform-build:
@@ -41,7 +41,7 @@ jobs:
 
       - name: authenticate to google cloud
         id: auth
-        uses: google-github-actions/auth@v1.1.0
+        uses: google-github-actions/auth@v1.1.1
         with:
           credentials_json: '${{ secrets.GCP_JSON_KEY }}'
 

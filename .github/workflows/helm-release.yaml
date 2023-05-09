@@ -3,7 +3,7 @@ on:
   workflow_call:
 
 env:
-  HELM_VERSION: 3.11.2
+  HELM_VERSION: 3.11.3
   HELM_GCS_VERSION: 0.4.1
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
 
       - name: authenticate to google cloud
         id: 'auth'
-        uses: google-github-actions/auth@v1.1.0
+        uses: google-github-actions/auth@v1.1.1
         with:
           credentials_json: '${{ secrets.GAR_HELM_REGISTRY_ACCOUNT }}'
 

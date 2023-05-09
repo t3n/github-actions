@@ -3,7 +3,7 @@ on:
   workflow_call:
 
 env:
-  HELM_VERSION: 3.11.2
+  HELM_VERSION: 3.11.3
 
 jobs:
   helm-unittest:
@@ -21,7 +21,7 @@ jobs:
         run: for d in ./charts/* ; do helm template $(basename -- $d) > ./rendered_$(basename -- $d).yaml; done
 
       - name: conftest
-        uses: docker://openpolicyagent/conftest:v0.41.0@sha256:f9e6b6739d7be0083c909196a5b4950d7b017a69038aed3ac3dd6ed0a92bfe7c
+        uses: docker://openpolicyagent/conftest:v0.42.1@sha256:da120c6e4d5d274138ebd711fc5e16658e4cb3ccce1ff4979d653ccc3902d1cc
         with:
           args: -c 'for d in ./rendered_*; do conftest test "${d}" --all-namespaces --no-color; done'
           entrypoint: sh

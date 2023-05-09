@@ -8,7 +8,7 @@ on:
         default: '.'
 
 env:
-  TERRAFORM_VERSION: 1.4.5
+  TERRAFORM_VERSION: 1.4.6
 
 jobs:
   terraform-validate:
@@ -27,4 +27,4 @@ jobs:
           include: TF_VAR_*
 
       - name: tflint
-        uses: docker://ghcr.io/terraform-linters/tflint:vv0.46.0@sha256:e940f26b801080546df5a8ba4629d7bc6fc47c940058774039c3cf8b1d6c6f59
+        uses: docker://ghcr.io/terraform-linters/tflint:v0.46.1@docker pull ghcr.io/terraform-linters/tflint:v0.46.1@sha256:b2dbd35ef461f73e626bde4e988a79ec715d6c1c71be7410a6a734533ba708b4

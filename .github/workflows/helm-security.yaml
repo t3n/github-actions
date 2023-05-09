@@ -3,7 +3,7 @@ on:
   workflow_call:
 
 env:
-  HELM_VERSION: 3.11.2
+  HELM_VERSION: 3.11.3
 
 jobs:
   helm-security:
@@ -18,7 +18,7 @@ jobs:
           version: ${{env.HELM_VERSION}}
 
       - name: checkov
-        uses: docker://bridgecrew/checkov:2.3.178@sha256:2b7ccfd642d6f39a121052d8d963864a23cb248113f2ddf725dd9402cf54a398
+        uses: docker://bridgecrew/checkov:2.3.232@sha256:70a730e1c20186232bfc0e4bdc0cdab88f9d4cb1d63d6b9ba46d8793906d2782
         with:
           entrypoint: checkov
           args: -d ./charts -o cli -o junitxml --output-file-path ./checkov.junit.xml -s
