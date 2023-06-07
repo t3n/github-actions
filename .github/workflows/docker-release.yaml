@@ -34,7 +34,7 @@ jobs:
 
       - name: tag image
         run: |
-          docker tag image_${{inputs.PROJECT}}:${{github.ref_name}} ${{ inputs.GCP_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ inputs.PROJECT }}:${{ inputs.DOCKER_IMAGE_TAG }}
+          docker tag image_${{inputs.PROJECT}}:${{github.ref_name}} ${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.PROJECT }}:${{ inputs.DOCKER_IMAGE_TAG }}
           docker image ls -a
 
       - name: login to gcr
