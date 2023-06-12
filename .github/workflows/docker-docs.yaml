@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
-        uses: actions/checkout@v3.5.2
+        uses: actions/checkout@v3.5.3
 
       - name: download a build artifact
         uses: actions/download-artifact@v3.0.2
@@ -20,7 +20,7 @@ jobs:
           name: artifacts_image_${{github.ref_name}}
 
       - name: docker-docs
-        uses: docker://anchore/syft:v0.80.0@sha256:8b11ac4d8d15f598c7523f149a6b65be8540102f3665e4fdaa0d8231fd115092
+        uses: docker://anchore/syft:v0.83.0@sha256:aa3c040294b0a46b5cf38859fc245da929772161431e1003bfe43cb2852d128d
         with:
           args: packages docker-archive:./image_${{inputs.PROJECT}}_${{github.ref_name}}.tar  -o template -t "./README.md.tmpl" > README.md
 

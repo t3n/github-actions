@@ -3,14 +3,14 @@ on:
   workflow_call:
 
 env:
-  HELM_VERSION: 3.11.3
+  HELM_VERSION: 3.12.0
 
 jobs:
   helm-unittest:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
-        uses: actions/checkout@v3.5.2
+        uses: actions/checkout@v3.5.3
 
       - name: install helm
         uses: Azure/setup-helm@v3.5
@@ -21,7 +21,7 @@ jobs:
         run: for d in ./charts/* ; do helm template $(basename -- $d) > ./rendered_$(basename -- $d).yaml; done
 
       - name: conftest
-        uses: docker://openpolicyagent/conftest:v0.42.1@sha256:da120c6e4d5d274138ebd711fc5e16658e4cb3ccce1ff4979d653ccc3902d1cc
+        uses: docker://openpolicyagent/conftest:v0.43.1@sha256:435d78463b0c11b873d7e4a4f8cf0710a3c9b9784bce36700dbf510347e490be
         with:
           args: -c 'for d in ./rendered_*; do conftest test "${d}" --all-namespaces --no-color; done'
           entrypoint: sh

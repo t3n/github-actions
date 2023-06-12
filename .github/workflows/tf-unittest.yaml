@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
-        uses: actions/checkout@v3.5.2
+        uses: actions/checkout@v3.5.3
 
       - name: download a build artifact
         uses: actions/download-artifact@v3.0.2
@@ -34,7 +34,7 @@ jobs:
         run: mv ./test_${{inputs.ENVIRONMENT}}_${{github.sha}}.json ./test_${{inputs.ENVIRONMENT}}.json
 
       - name: conftest
-        uses: docker://openpolicyagent/conftest:v0.42.1@sha256:da120c6e4d5d274138ebd711fc5e16658e4cb3ccce1ff4979d653ccc3902d1cc
+        uses: docker://openpolicyagent/conftest:v0.43.1@sha256:435d78463b0c11b873d7e4a4f8cf0710a3c9b9784bce36700dbf510347e490be
         with:
           args: test ${{ inputs.WORKING_DIRECTORY }}/test_${{inputs.ENVIRONMENT}}.json --all-namespaces --no-color -p ${{ inputs.WORKING_DIRECTORY }}/policy
 
