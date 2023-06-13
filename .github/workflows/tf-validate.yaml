@@ -7,9 +7,6 @@ on:
         required: false
         default: '.'
 
-env:
-  TERRAFORM_VERSION: 1.4.6
-
 jobs:
   terraform-validate:
     defaults:
