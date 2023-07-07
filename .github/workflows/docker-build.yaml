@@ -5,6 +5,9 @@ on:
       PROJECT:
         type: string
         required: true
+      FILE:
+        type: string
+        default: Dockerfile
     secrets:
       SSH_KEY:
         required: false
@@ -31,20 +34,21 @@ jobs:
         with:
             ssh-private-key: ${{ secrets.SSH_KEY }}
 
-      - name: build and push
+      - name: build
         if: "${{ env.SSH_KEY == ''}}"
         uses: docker/build-push-action@v4.1.0
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         with:
           context: .
+          file: ${{inputs.FILE}}
           push: false
           load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: image_${{inputs.PROJECT}}:${{github.ref_name}}
 
-      - name: build and push with ssh
+      - name: build
         uses: docker/build-push-action@v4.1.0
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
