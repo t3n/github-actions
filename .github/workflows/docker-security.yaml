@@ -19,9 +19,20 @@ jobs:
       - name: docker load
         run: docker image load --input image_${{inputs.PROJECT}}_${{github.ref_name}}.tar
 
+      - uses: anchore/sbom-action@v0
+        with:
+          image: image_${{inputs.PROJECT}}:${{github.ref_name}}
+          artifact-name: sbom_${{inputs.PROJECT}}_${{github.ref_name}}.spdx.json
+
       - name: docker scan
+        id: scan
         uses: anchore/scan-action@v3.3.5
         continue-on-error: true
         with:
-          image: image_${{inputs.PROJECT}}:${{github.ref_name}}
-          output-format: table
+          sbom: sbom_${{inputs.PROJECT}}_${{github.ref_name}}.spdx.json
+          output-format: sarif
+
+      - name: upload sarif report
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ steps.scan.outputs.sarif }}
