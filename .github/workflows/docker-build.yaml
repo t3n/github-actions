@@ -55,6 +55,7 @@ jobs:
         if: "${{ env.SSH_KEY != ''}}"
         with:
           context: .
+          file: ${{inputs.FILE}}
           push: false
           load: true
           ssh: default

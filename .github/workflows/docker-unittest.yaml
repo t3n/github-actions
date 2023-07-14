@@ -1,6 +1,10 @@
 name: Docker Unittest
 on:
   workflow_call:
+    inputs:
+      FILE:
+        type: string
+        default: Dockerfile
 
 jobs:
   docker-unittest:
@@ -12,4 +16,4 @@ jobs:
       - name: conftest
         uses: docker://openpolicyagent/conftest:v0.43.1@sha256:435d78463b0c11b873d7e4a4f8cf0710a3c9b9784bce36700dbf510347e490be
         with:
-          args: test Dockerfile --all-namespaces --no-color
+          args: test ${{inputs.FILE}} --all-namespaces --no-color
