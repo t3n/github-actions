@@ -1,0 +1,49 @@
+name: Docker Main
+on:
+  workflow_call:
+    inputs:
+      FILE:
+        type: string
+        default: Dockerfile
+      PROJECT:
+        type: string
+        required: true
+      GCP_REGISTRY:
+        type: string
+        required: false
+        default: "eu.gcr.io"
+      DOCKER_IMAGE_TAG:
+        type: string
+        required: true
+      GCP_PROJECT_ID:
+        type: string
+        required: true
+    secrets:
+      GCR_JSON_KEY:
+        required: true
+      SSH_KEY:
+        required: false
+
+jobs:
+  unittest:
+    uses: t3n/github-actions/.github/workflows/docker-unittest.yaml@main
+    with:
+      FILE: ${{inputs.FILE}}
+  build:
+    uses: t3n/github-actions/.github/workflows/docker-build.yaml@main
+    secrets: inherit
+    with:
+      FILE: ${{inputs.FILE}}
+      PROJECT: ${{inputs.PROJECT}}
+  security:
+    uses: t3n/github-actions/.github/workflows/docker-security.yaml@main
+    with:
+      PROJECT: ${{inputs.PROJECT}}
+  release:
+    uses: t3n/github-actions/.github/workflows/docker-release.yaml@main
+    with:
+      PROJECT: ${{inputs.PROJECT}}
+      GCP_REGISTRY: ${{inputs.GCP_REGISTRY}}
+      DOCKER_IMAGE_TAG: ${{inputs.DOCKER_IMAGE_TAG}}
+      GCP_PROJECT_ID: ${{inputs.GCP_PROJECT_ID}}
+    secrets: inherit
