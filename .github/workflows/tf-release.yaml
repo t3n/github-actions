@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@v4.1.0
 
       - name: secrets-to-env
-        uses: oNaiPs/secrets-to-env-action@v1.2
+        uses: oNaiPs/secrets-to-env-action@v1.3
         with:
           secrets: ${{ toJSON(secrets) }}
           include: TF_VAR_*
