@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
-        uses: actions/checkout@v3.5.3
+        uses: actions/checkout@v4.1.0
       - name: Cache Composer dependencies
         uses: actions/cache@v3.3.1
         with:

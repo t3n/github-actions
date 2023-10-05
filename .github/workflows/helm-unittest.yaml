@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
-        uses: actions/checkout@v3.5.3
+        uses: actions/checkout@v4.1.0
 
       - name: install helm
         uses: Azure/setup-helm@v3.5
@@ -21,7 +21,7 @@ jobs:
         run: for d in ./charts/* ; do helm template $(basename -- $d) > ./rendered_$(basename -- $d).yaml; done
 
       - name: conftest
-        uses: docker://openpolicyagent/conftest:v0.43.1@sha256:435d78463b0c11b873d7e4a4f8cf0710a3c9b9784bce36700dbf510347e490be
+        uses: docker://openpolicyagent/conftest:v0.46.0@sha256:7da98fe5e8fe091193769e67a1823bfd1cfd16f682046474ce4ac81c0bd41dce
         with:
           args: -c 'for d in ./rendered_*; do conftest test "${d}" --all-namespaces --no-color; done'
           entrypoint: sh

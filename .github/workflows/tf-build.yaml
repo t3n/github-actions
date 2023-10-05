@@ -25,10 +25,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
-        uses: actions/checkout@v3.5.3
+        uses: actions/checkout@v4.1.0
 
       - name: secrets-to-env
-        uses: oNaiPs/secrets-to-env-action@v1.2
+        uses: oNaiPs/secrets-to-env-action@v1.3
         with:
           secrets: ${{ toJSON(secrets) }}
           include: TF_VAR_*
@@ -65,7 +65,7 @@ jobs:
           include-plan-job-summary: 'true'
 
       - name: upload
-        uses: actions/upload-artifact@v3.1.2
+        uses: actions/upload-artifact@v3.1.3
         with:
           name: artifacts_${{inputs.ENVIRONMENT}}_${{github.sha}}
           path: ${{ inputs.WORKING_DIRECTORY }}/*_${{inputs.ENVIRONMENT}}_${{github.sha}}.*

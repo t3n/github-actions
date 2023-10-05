@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
-        uses: actions/checkout@v3.5.3
+        uses: actions/checkout@v4.1.0
 
       - name: install helm
         uses: Azure/setup-helm@v3.5
@@ -18,12 +18,12 @@ jobs:
           version: ${{env.HELM_VERSION}}
 
       - name: checkov
-        uses: docker://bridgecrew/checkov:2.3.287@sha256:46c65709153873fc8e4bb35629ef490413c3ea1a8deda6b3ed58b496fc74fb55
+        uses: docker://bridgecrew/checkov:2.5.4@sha256:5e5fab5726b234dc102208d5fe138d0038d491959a466f6d64664555792cf6b5
         with:
           entrypoint: checkov
           args: -d ./charts -o cli -o junitxml --output-file-path ./checkov.junit.xml -s
 
-      - uses: actions/upload-artifact@v3.1.2
+      - uses: actions/upload-artifact@v3.1.3
         with:
           name: checkov.junit.xml
           path: ./checkov.junit.xml/results_junitxml.xml
