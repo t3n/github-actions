@@ -46,7 +46,7 @@ jobs:
           load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: image_${{inputs.PROJECT}}:${{github.ref_name}}
+          tags: image_${{inputs.PROJECT}}:gha
 
       - name: build
         uses: docker/build-push-action@v5.0.0
@@ -61,10 +61,10 @@ jobs:
           ssh: default
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: image_${{inputs.PROJECT}}:${{github.ref_name}}
+          tags: image_${{inputs.PROJECT}}:gha
 
       - name: docker image save
-        run: docker image save image_${{inputs.PROJECT}}:${{github.ref_name}} -o ./image_${{inputs.PROJECT}}_${{github.ref_name}}.tar
+        run: docker image save image_${{inputs.PROJECT}}:gha -o ./image_${{inputs.PROJECT}}_${{github.ref_name}}.tar
 
       - name: upload
         uses: actions/upload-artifact@v3.1.3

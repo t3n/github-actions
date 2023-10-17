@@ -21,7 +21,7 @@ jobs:
 
       - uses: anchore/sbom-action@v0
         with:
-          image: image_${{inputs.PROJECT}}:${{github.ref_name}}
+          image: image_${{inputs.PROJECT}}:gha
           artifact-name: sbom_${{inputs.PROJECT}}_${{github.ref_name}}.spdx.json
 
       - name: docker scan
