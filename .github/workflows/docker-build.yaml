@@ -64,11 +64,11 @@ jobs:
           tags: image_${{inputs.PROJECT}}:gha
 
       - name: docker image save
-        run: docker image save image_${{inputs.PROJECT}}:gha -o ./image_${{inputs.PROJECT}}_${{github.ref_name}}.tar
+        run: docker image save image_${{inputs.PROJECT}}:gha -o ./image_${{inputs.PROJECT}}.tar
 
       - name: upload
         uses: actions/upload-artifact@v3.1.3
         with:
-          name: artifacts_image_${{github.ref_name}}
-          path: ./image_${{inputs.PROJECT}}_${{github.ref_name}}.tar
+          name: artifacts_image_${{inputs.PROJECT}}
+          path: ./image_${{inputs.PROJECT}}.tar
           retention-days: 1

@@ -14,22 +14,22 @@ jobs:
         uses: actions/download-artifact@v3.0.2
         id: download
         with:
-          name: artifacts_image_${{github.ref_name}}
+          name: artifacts_image_${{inputs.PROJECT}}
 
       - name: docker load
-        run: docker image load --input image_${{inputs.PROJECT}}_${{github.ref_name}}.tar
+        run: docker image load --input image_${{inputs.PROJECT}}.tar
 
       - uses: anchore/sbom-action@v0
         with:
           image: image_${{inputs.PROJECT}}:gha
-          artifact-name: sbom_${{inputs.PROJECT}}_${{github.ref_name}}.spdx.json
+          artifact-name: sbom_${{inputs.PROJECT}}.spdx.json
 
       - name: docker scan
         id: scan
         uses: anchore/scan-action@v3.3.6
         continue-on-error: true
         with:
-          sbom: sbom_${{inputs.PROJECT}}_${{github.ref_name}}.spdx.json
+          sbom: sbom_${{inputs.PROJECT}}.spdx.json
           output-format: sarif
 
       - name: upload sarif report

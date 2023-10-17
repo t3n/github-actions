@@ -31,10 +31,10 @@ jobs:
         uses: actions/download-artifact@v3.0.2
         id: download
         with:
-          name: artifacts_image_${{github.ref_name}}
+          name: artifacts_image_${{inputs.PROJECT}}
 
       - name: docker load
-        run: docker image load --input image_${{inputs.PROJECT}}_${{github.ref_name}}.tar
+        run: docker image load --input image_${{inputs.PROJECT}}.tar
 
       - name: tag image
         run: |
