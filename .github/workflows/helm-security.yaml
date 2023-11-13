@@ -18,7 +18,7 @@ jobs:
           version: ${{env.HELM_VERSION}}
 
       - name: checkov
-        uses: docker://bridgecrew/checkov:2.5.4@sha256:5e5fab5726b234dc102208d5fe138d0038d491959a466f6d64664555792cf6b5
+        uses: docker://bridgecrew/checkov:3.0.35@sha256:a5a56df30ae5d40da0890dfc4de99d4590081e323ea196e1bef90b144bb84a7d
         with:
           entrypoint: checkov
           args: -d ./charts -o cli -o junitxml --output-file-path ./checkov.junit.xml -s

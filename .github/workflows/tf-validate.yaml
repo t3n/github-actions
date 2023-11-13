@@ -24,4 +24,4 @@ jobs:
           include: TF_VAR_*
 
       - name: tflint
-        uses: docker://ghcr.io/terraform-linters/tflint:v0.46.1@sha256:b2dbd35ef461f73e626bde4e988a79ec715d6c1c71be7410a6a734533ba708b4
+        uses: docker://ghcr.io/terraform-linters/tflint:v0.49.0@sha256:3f567269172bce107ca9c05e9e91ad3ccebb6e9ab3871f4e5b80bee1ef89db60

@@ -20,7 +20,7 @@ jobs:
           name: artifacts_image_${{inputs.PROJECT}}
 
       - name: docker-docs
-        uses: docker://anchore/syft:v0.92.0@sha256:4b305a9446f18d272ae15da9040af5f7d3875d162be4875f501b8e4c9b9c9ae0
+        uses: docker://anchore/syft:v0.96.0@sha256:d7a90627d73cce2ac1ea077da0c05049f74aff4a7544ca24a45c6861162db90b
         with:
           args: packages docker-archive:./image_${{inputs.PROJECT}}.tar  -o template -t "./README.md.tmpl" > README.md
 
