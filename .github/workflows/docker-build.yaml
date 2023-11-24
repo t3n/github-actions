@@ -45,12 +45,12 @@ jobs:
         with:
           context: .
           file: ${{inputs.FILE}}
-          push: false
+          push: true
           load: true
           target: ${{inputs.TARGET}}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: image_${{inputs.PROJECT}}:gha
+          tags: localhost:5000/gha/image_${{inputs.PROJECT}}:gha
 
       - name: build
         uses: docker/build-push-action@v5.1.0
@@ -60,20 +60,20 @@ jobs:
         with:
           context: .
           file: ${{inputs.FILE}}
-          push: false
+          push: true
           load: true
           target: ${{inputs.TARGET}}
           ssh: default
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: image_${{inputs.PROJECT}}:gha
+          tags: localhost:5000/gha/image_${{inputs.PROJECT}}:gha
 
-      - name: docker image save
-        run: docker image save image_${{inputs.PROJECT}}:gha -o ./image_${{inputs.PROJECT}}.tar
+      # - name: docker image save
+      #   run: docker image save image_${{inputs.PROJECT}}:gha -o ./image_${{inputs.PROJECT}}.tar
 
-      - name: upload
-        uses: actions/upload-artifact@v3.1.3
-        with:
-          name: artifacts_image_${{inputs.PROJECT}}
-          path: ./image_${{inputs.PROJECT}}.tar
-          retention-days: 1
+      # - name: upload
+      #   uses: actions/upload-artifact@v3.1.3
+      #   with:
+      #     name: artifacts_image_${{inputs.PROJECT}}
+      #     path: ./image_${{inputs.PROJECT}}.tar
+      #     retention-days: 1

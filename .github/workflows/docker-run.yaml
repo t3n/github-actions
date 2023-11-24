@@ -13,15 +13,15 @@ jobs:
   docker-run:
     runs-on: ubuntu-22.04
     steps:
-      - name: download a build artifact
-        uses: actions/download-artifact@v3.0.2
-        id: download
-        with:
-          name: artifacts_image_${{inputs.PROJECT}}
+      # - name: download a build artifact
+      #   uses: actions/download-artifact@v3.0.2
+      #   id: download
+      #   with:
+      #     name: artifacts_image_${{inputs.PROJECT}}
 
-      - name: docker load
-        run: docker image load --input image_${{inputs.PROJECT}}.tar
+      # - name: docker load
+      #   run: docker image load --input image_${{inputs.PROJECT}}.tar
 
       - name: docker run
         id: run
-        run: docker run --rm image_${{inputs.PROJECT}}:gha ${{inputs.COMMAND}}
+        run: docker run --rm localhost:5000/gha/image_${{inputs.PROJECT}}:gha ${{inputs.COMMAND}}

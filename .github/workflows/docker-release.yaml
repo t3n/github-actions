@@ -31,18 +31,21 @@ jobs:
   docker-release:
     runs-on: ubuntu-22.04
     steps:
-      - name: download a build artifact
-        uses: actions/download-artifact@v3.0.2
-        id: download
-        with:
-          name: artifacts_image_${{inputs.PROJECT}}
+      # - name: download a build artifact
+      #   uses: actions/download-artifact@v3.0.2
+      #   id: download
+      #   with:
+      #     name: artifacts_image_${{inputs.PROJECT}}
 
-      - name: docker load
-        run: docker image load --input image_${{inputs.PROJECT}}.tar
+      # - name: docker load
+      #   run: docker image load --input image_${{inputs.PROJECT}}.tar
+
+      - name: docker pull
+        run: docker pull localhost:5000/gha/image_${{inputs.PROJECT}}.tar
 
       - name: tag image
         run: |
-          docker tag image_${{inputs.PROJECT}}:gha ${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || inputs.PROJECT }}:${{ inputs.DOCKER_IMAGE_TAG }}${{ inputs.DOCKER_IMAGE_TAG_POSTFIX }}
+          docker tag localhost:5000/gha/image_${{inputs.PROJECT}}:gha ${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || inputs.PROJECT }}:${{ inputs.DOCKER_IMAGE_TAG }}${{ inputs.DOCKER_IMAGE_TAG_POSTFIX }}
           docker image ls -a
 
       - name: login to gcr
