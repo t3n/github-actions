@@ -8,6 +8,9 @@ on:
       FILE:
         type: string
         default: Dockerfile
+      TARGET:
+        type: string
+        default: null
     secrets:
       SSH_KEY:
         required: false
@@ -44,6 +47,7 @@ jobs:
           file: ${{inputs.FILE}}
           push: false
           load: true
+          target: ${{inputs.TARGET}}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: image_${{inputs.PROJECT}}:gha
@@ -58,6 +62,7 @@ jobs:
           file: ${{inputs.FILE}}
           push: false
           load: true
+          target: ${{inputs.TARGET}}
           ssh: default
           cache-from: type=gha
           cache-to: type=gha,mode=max
