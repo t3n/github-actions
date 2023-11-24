@@ -1,0 +1,48 @@
+name: Docker Tag
+on:
+  workflow_call:
+    inputs:
+      PROJECT:
+        type: string
+        required: true
+      GCP_REGISTRY:
+        type: string
+        required: false
+        default: "eu.gcr.io"
+      DOCKER_IMAGE_SOURCE_TAG:
+        type: string
+        required: true
+      DOCKER_IMAGE_TARGET_TAG:
+        type: string
+        required: true
+      DOCKER_IMAGE_TAG_POSTFIX:
+        type: string
+        required: false
+        default: ""
+      GCP_PROJECT_ID:
+        type: string
+        required: true
+    secrets:
+      GCR_JSON_KEY:
+        required: true
+
+jobs:
+    docker-tag:
+        runs-on: ubuntu-22.04
+        steps:
+
+        - name: login to gcr
+          uses: docker/login-action@v3.0.0
+          with:
+            registry: ${{ inputs.GCP_REGISTRY }}
+            username: _json_key
+            password: ${{ secrets.GCR_JSON_KEY }}
+
+        - name: pull docker image
+          run: docker pull ${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.PROJECT }}:${{ inputs.DOCKER_IMAGE_SOURCE_TAG }}
+
+        - name: tag docker image
+          run: docker tag ${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.PROJECT }}:${{ inputs.DOCKER_IMAGE_SOURCE_TAG }} ${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.PROJECT }}:${{ inputs.DOCKER_IMAGE_TARGET_TAG }}${{ inputs.DOCKER_IMAGE_TAG_POSTFIX }}
+
+        - name: push to registry
+          run: docker push ${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.PROJECT }}:${{ inputs.DOCKER_IMAGE_TARGET_TAG }}${{ inputs.DOCKER_IMAGE_TAG_POSTFIX }}
