@@ -10,17 +10,14 @@ jobs:
   docker-security:
     runs-on: ubuntu-22.04
     steps:
-      # - name: download a build artifact
-      #   uses: actions/download-artifact@v3.0.2
-      #   id: download
-      #   with:
-      #     name: artifacts_image_${{inputs.PROJECT}}
+      - name: download a build artifact
+        uses: actions/download-artifact@v3.0.2
+        id: download
+        with:
+          name: artifacts_image_${{inputs.PROJECT}}
 
-      # - name: docker load
-      #   run: docker image load --input image_${{inputs.PROJECT}}.tar
-
-      - name: docker pull
-        run: docker pull localhost:5000/gha/image_${{inputs.PROJECT}}.tar
+      - name: docker load
+        run: docker image load --input image_${{inputs.PROJECT}}.tar
 
       - uses: anchore/sbom-action@v0
         with:
