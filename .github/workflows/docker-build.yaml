@@ -47,7 +47,7 @@ jobs:
           file: ${{inputs.FILE}}
           push: false
           load: false
-          outputs: type=local,dest=./image_${{inputs.PROJECT}}.tar
+          outputs: type=docker,dest=./image_${{inputs.PROJECT}}.tar
           target: ${{inputs.TARGET}}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -63,7 +63,7 @@ jobs:
           file: ${{inputs.FILE}}
           push: false
           load: false
-          outputs: type=local,dest=./image_${{inputs.PROJECT}}.tar
+          outputs: type=docker,dest=./image_${{inputs.PROJECT}}.tar
           target: ${{inputs.TARGET}}
           ssh: default
           cache-from: type=gha
