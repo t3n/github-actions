@@ -46,7 +46,8 @@ jobs:
           context: .
           file: ${{inputs.FILE}}
           push: false
-          load: true
+          load: false
+          outputs: type=local,dest=./image_${{inputs.PROJECT}}.tar
           target: ${{inputs.TARGET}}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -61,7 +62,8 @@ jobs:
           context: .
           file: ${{inputs.FILE}}
           push: false
-          load: true
+          load: false
+          outputs: type=local,dest=./image_${{inputs.PROJECT}}.tar
           target: ${{inputs.TARGET}}
           ssh: default
           cache-from: type=gha
