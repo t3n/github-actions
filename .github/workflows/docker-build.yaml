@@ -11,10 +11,12 @@ on:
       TARGET:
         type: string
         default: null
+      BUILD_ARGS:
+        type: string
+        default: null
     secrets:
       SSH_KEY:
         required: false
-
 
 jobs:
   docker-build:
@@ -35,7 +37,7 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         with:
-            ssh-private-key: ${{ secrets.SSH_KEY }}
+          ssh-private-key: ${{ secrets.SSH_KEY }}
 
       - name: build
         if: "${{ env.SSH_KEY == ''}}"
@@ -49,6 +51,7 @@ jobs:
           load: false
           outputs: type=docker,dest=./image_${{inputs.PROJECT}}.tar
           target: ${{inputs.TARGET}}
+          build-args: ${{inputs.BUILD_ARGS}}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: image_${{inputs.PROJECT}}:gha
@@ -65,6 +68,7 @@ jobs:
           load: false
           outputs: type=docker,dest=./image_${{inputs.PROJECT}}.tar
           target: ${{inputs.TARGET}}
+          build-args: ${{inputs.BUILD_ARGS}}
           ssh: default
           cache-from: type=gha
           cache-to: type=gha,mode=max
