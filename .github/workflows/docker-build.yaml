@@ -50,7 +50,7 @@ jobs:
           load: false
           outputs: type=docker,dest=./image_${{inputs.PROJECT}}.tar
           target: ${{inputs.TARGET}}
-          build-args: ${{inputs.BUILD_ARGS}}
+          build-args: ${{secrets.BUILD_ARGS}}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: image_${{inputs.PROJECT}}:gha
@@ -67,7 +67,7 @@ jobs:
           load: false
           outputs: type=docker,dest=./image_${{inputs.PROJECT}}.tar
           target: ${{inputs.TARGET}}
-          build-args: ${{inputs.BUILD_ARGS}}
+          build-args: ${{secrets.BUILD_ARGS}}
           ssh: default
           cache-from: type=gha
           cache-to: type=gha,mode=max
