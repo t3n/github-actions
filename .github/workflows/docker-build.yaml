@@ -11,11 +11,10 @@ on:
       TARGET:
         type: string
         default: null
-      BUILD_ARGS:
-        type: string
-        default: null
     secrets:
       SSH_KEY:
+        required: false
+      BUILD_ARGS:
         required: false
 
 jobs:
