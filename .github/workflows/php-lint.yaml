@@ -46,7 +46,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4.1.1
       - name: Cache Composer dependencies
-        uses: actions/cache@v3.3.2
+        uses: actions/cache@v3.3.3
         with:
           path: /tmp/composer-cache
           key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
