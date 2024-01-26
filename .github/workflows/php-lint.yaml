@@ -33,6 +33,10 @@ on:
         type: string
         required: false
         default: "amqp"
+      PHPCS_PATH:
+        type: string
+        required: false
+        default: .
       FLAVOUR:
         type: string
         required: false
@@ -76,5 +80,5 @@ jobs:
       - name: phpcs
         uses: docker://docker.io/cytopia/phpcs:3@sha256:b9e4eabd576d218d0084edacdc2b099de9e8c7c30e919e71704cdb0d46bc3cbf # https://hub.docker.com/r/cytopia/phpcs
         with:
-          args: --standard=${{inputs.PATH}}/phpcs.xml.dist
+          args: --standard=${{inputs.PATH}}/phpcs.xml.dist ${{inputs.PHPCS_PATH}}
         if: inputs.FLAVOUR == 'phpcs'
