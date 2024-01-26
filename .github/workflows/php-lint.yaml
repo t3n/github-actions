@@ -8,6 +8,11 @@ on:
       PATH:
         type: string
         required: false
+        default: .
+      COMPOSER_PATH:
+        type: string
+        required: false
+        default: .
       COMPOSER_PHP_VERSION:
         type: string
         required: false
@@ -55,7 +60,7 @@ jobs:
         with:
           php_version: ${{inputs.COMPOSER_PHP_VERSION}}
           version: ${{inputs.COMPOSER_VERSION}}
-          args: "--ignore-platform-reqs --working-dir ${{inputs.PATH}}"
+          args: "--ignore-platform-reqs --working-dir ${{inputs.COMPOSER_PATH}}"
           php_extensions: ${{inputs.PHP_EXTENSIONS}}
           dev: ${{inputs.COMPOSER_DEV}}
           ssh_key: ${{secrets.SSH_KEY}}
