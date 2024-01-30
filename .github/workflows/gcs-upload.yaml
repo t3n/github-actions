@@ -1,0 +1,63 @@
+name: GCS Upload
+on:
+  workflow_call:
+    inputs:
+      SOURCE:
+        type: string
+        description: "path to folder/file to upload"
+        required: true
+      DESTINATION:
+        type: string
+        description: "destination path in bucket"
+        required: true
+      GZIP:
+        type: boolean
+        description: "gzip the file"
+        required: false
+        default: true
+      PREDEFINEDACL:
+        type: string
+        description: "predefined acl for the file"
+        required: false
+        default: "private"
+      HEADERS:
+        type: string
+        description: "headers to add to the file"
+        required: false
+        default: ""
+      GLOB:
+        type: string
+        description: "glob pattern to match files to upload e.g. '**/*.js'"
+        required: false
+        default: null
+      CONCURRENCY:
+        type: number
+        description: "number of concurrent uploads"
+        required: false
+        default: 100
+    secrets:
+      GCP_JSON_KEY:
+        required: false
+        description: "can be inherited by using the 'inherit' keyword https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idsecretsinherit"
+
+jobs:
+  gcs-upload:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4.1.1
+      - name: authenticate to google cloud
+        id: auth
+        uses: google-github-actions/auth@v2.0.1
+        with:
+          credentials_json: "${{ secrets.GCP_JSON_KEY }}"
+      - id: "upload-file"
+        uses: "google-github-actions/upload-cloud-storage@v2.1.0"
+        with:
+          path: ${{ inputs.SOURCE }}
+          destination: ${{ inputs.DESTINATION }}
+          gzip: ${{ inputs.GZIP }}
+          predefinedAcl: ${{ inputs.PREDEFINEDACL }}
+          headers: ${{ inputs.HEADERS }}
+          glob: ${{ inputs.GLOB }}
+          concurrency: ${{ inputs.CONCURRENCY }}
