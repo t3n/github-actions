@@ -41,7 +41,7 @@ jobs:
 
       - name: authenticate to google cloud
         id: auth
-        uses: google-github-actions/auth@v2.0.1
+        uses: google-github-actions/auth@v2.1.0
         with:
           credentials_json: '${{ secrets.GCP_JSON_KEY }}'
 
