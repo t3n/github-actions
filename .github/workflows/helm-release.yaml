@@ -24,7 +24,7 @@ jobs:
           credentials_json: '${{ secrets.GAR_HELM_REGISTRY_ACCOUNT }}'
 
       - name: set up cloud sdk
-        uses: google-github-actions/setup-gcloud@v2.0.1
+        uses: google-github-actions/setup-gcloud@v2.1.0
 
       - name: install helm
         uses: Azure/setup-helm@v3.5
