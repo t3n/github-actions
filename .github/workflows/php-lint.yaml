@@ -61,6 +61,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
 
       - uses: php-actions/composer@v6.1.2
+        run: composer config http-basic.my.yoast.com token ${YOAST_COMPOSER_TOKEN}
         with:
           php_version: ${{inputs.COMPOSER_PHP_VERSION}}
           version: ${{inputs.COMPOSER_VERSION}}
