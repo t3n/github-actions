@@ -5,7 +5,7 @@ on:
       WORKING_DIRECTORY:
         type: string
         required: false
-        default: '.'
+        default: "."
       ENVIRONMENT:
         type: string
         required: true
@@ -14,9 +14,8 @@ on:
         required: false
         description: "can be inherited by using the 'inherit' keyword https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idsecretsinherit"
 
-
 env:
-  TERRAFORM_VERSION: 1.6.5
+  TERRAFORM_VERSION: 1.7.2
 
 jobs:
   terraform-release:
@@ -44,7 +43,7 @@ jobs:
         id: auth
         uses: google-github-actions/auth@v2.1.1
         with:
-          credentials_json: '${{ secrets.GCP_JSON_KEY }}'
+          credentials_json: "${{ secrets.GCP_JSON_KEY }}"
 
       - name: download a build artifact
         uses: actions/download-artifact@v4.1.1
