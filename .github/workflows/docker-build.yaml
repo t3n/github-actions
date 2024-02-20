@@ -11,6 +11,9 @@ on:
       TARGET:
         type: string
         default: null
+      CONTEXT:
+        type: string
+        default: .
     secrets:
       SSH_KEY:
         required: false
@@ -44,7 +47,7 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         with:
-          context: .
+          context: ${{inputs.CONTEXT}}
           file: ${{inputs.FILE}}
           push: false
           load: false
