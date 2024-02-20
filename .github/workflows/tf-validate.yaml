@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v4.1.1
 
       - name: secrets-to-env
-        uses: oNaiPs/secrets-to-env-action@v1.4
+        uses: oNaiPs/secrets-to-env-action@v1.5
         with:
           secrets: ${{ toJSON(secrets) }}
           include: TF_VAR_*
