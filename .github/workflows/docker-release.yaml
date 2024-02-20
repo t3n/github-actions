@@ -52,6 +52,9 @@ jobs:
           username: _json_key
           password: ${{ secrets.GCR_JSON_KEY }}
 
-      - name: push to registry
-        run: docker push ${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || inputs.PROJECT }}:${{ inputs.DOCKER_IMAGE_TAG }}${{ inputs.DOCKER_IMAGE_TAG_POSTFIX }}
+      - name: lowercase things
+        run: |
+          postfix=${{inputs.DOCKER_IMAGE_TAG_POSTFIX}} && postfix="${postfix,,}" >>${GITHUB_ENV}
 
+      - name: push to registry
+        run: docker push ${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || inputs.PROJECT }}:${{ inputs.DOCKER_IMAGE_TAG }}${{ github.postfix }}
