@@ -41,9 +41,10 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
-      - name: lowercase things
+      - name: lowercase things#
+        id: lowercase
         run: |
-          project=${{inputs.PROJECT}} && project="${project,,}" >>${GITHUB_ENV}
+          project=${{inputs.PROJECT}} && project="${project,,}" >>${$GITHUB_OUTPUT}
 
       - name: build
         if: "${{ env.SSH_KEY == ''}}"
@@ -55,12 +56,12 @@ jobs:
           file: ${{inputs.FILE}}
           push: false
           load: false
-          outputs: type=docker,dest=./image_${{github.project}}.tar
+          outputs: type=docker,dest=./image_${{steps.lowercase.outputs.project}}.tar
           target: ${{inputs.TARGET}}
           build-args: ${{secrets.BUILD_ARGS}}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: image_${{github.project}}:gha
+          tags: image_${{steps.lowercase.outputs.project}}:gha
 
       - name: build
         uses: docker/build-push-action@v5.1.0
@@ -72,17 +73,17 @@ jobs:
           file: ${{inputs.FILE}}
           push: false
           load: false
-          outputs: type=docker,dest=./image_${{github.project}}.tar
+          outputs: type=docker,dest=./image_${{steps.lowercase.outputs.project}}.tar
           target: ${{inputs.TARGET}}
           build-args: ${{secrets.BUILD_ARGS}}
           ssh: default
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: image_${{github.project}}:gha
+          tags: image_${{steps.lowercase.outputs.project}}:gha
 
       - name: upload
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: artifacts_image_${{github.project}}
-          path: ./image_${{github.project}}.tar
+          name: artifacts_image_${{steps.lowercase.outputs.project}}
+          path: ./image_${{steps.lowercase.outputs.project}}.tar
           retention-days: 1
