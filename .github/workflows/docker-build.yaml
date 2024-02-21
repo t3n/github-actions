@@ -43,8 +43,10 @@ jobs:
 
       - name: lowercase things
         id: lowercase
+        env:
+          project: ${{inputs.PROJECT}}
         run: |
-          echo "project=${{inputs.PROJECT,,}}"  >> "$GITHUB_OUTPUT"
+          echo "project=${project,,}"  >> "$GITHUB_OUTPUT"
 
       - name: build
         if: "${{ env.SSH_KEY == ''}}"
