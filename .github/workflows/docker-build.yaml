@@ -15,6 +15,8 @@ on:
         type: string
         default: .
     secrets:
+      SECRETS:
+        required: false
       SSH_KEY:
         required: false
       BUILD_ARGS:
@@ -54,16 +56,17 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         with:
-          context: ${{inputs.CONTEXT}}
-          file: ${{inputs.FILE}}
-          push: false
-          load: false
-          outputs: type=docker,dest=./image_${{steps.lowercase.outputs.project}}.tar
-          target: ${{inputs.TARGET}}
           build-args: ${{secrets.BUILD_ARGS}}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          context: ${{inputs.CONTEXT}}
+          file: ${{inputs.FILE}}
+          load: false
+          outputs: type=docker,dest=./image_${{steps.lowercase.outputs.project}}.tar
+          push: false
+          secrets: ${{secrets.SECRETS}}
           tags: image_${{steps.lowercase.outputs.project}}:gha
+          target: ${{inputs.TARGET}}
 
       - name: build
         uses: docker/build-push-action@v5.1.0
@@ -71,17 +74,18 @@ jobs:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         if: "${{ env.SSH_KEY != ''}}"
         with:
-          context: ${{inputs.CONTEXT}}
-          file: ${{inputs.FILE}}
-          push: false
-          load: false
-          outputs: type=docker,dest=./image_${{steps.lowercase.outputs.project}}.tar
-          target: ${{inputs.TARGET}}
           build-args: ${{secrets.BUILD_ARGS}}
-          ssh: default
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          context: ${{inputs.CONTEXT}}
+          file: ${{inputs.FILE}}
+          load: false
+          outputs: type=docker,dest=./image_${{steps.lowercase.outputs.project}}.tar
+          push: false
+          ssh: default
+          secrets: ${{secrets.SECRETS}}
           tags: image_${{steps.lowercase.outputs.project}}:gha
+          target: ${{inputs.TARGET}}
 
       - name: upload
         uses: actions/upload-artifact@v4.3.1
