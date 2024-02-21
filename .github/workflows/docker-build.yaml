@@ -41,10 +41,10 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
-      - name: lowercase things#
+      - name: lowercase things
         id: lowercase
         run: |
-          project=${{inputs.PROJECT}} && project="${project,,}" >>${$GITHUB_OUTPUT}
+          echo "project=${{inputs.PROJECT}}"  >> "$GITHUB_OUTPUT"
 
       - name: build
         if: "${{ env.SSH_KEY == ''}}"
