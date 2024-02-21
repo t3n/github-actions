@@ -68,7 +68,7 @@ jobs:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         if: "${{ env.SSH_KEY != ''}}"
         with:
-          context: .
+          context: ${{inputs.CONTEXT}}
           file: ${{inputs.FILE}}
           push: false
           load: false
