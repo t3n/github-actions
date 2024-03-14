@@ -75,6 +75,6 @@ jobs:
       - name: push to registry
         run: |
           IFS=''
-          for tag in "${${{inputs.DOCKER_METADATA_OUTPUT_TAGS}}[@]}"; do
+          for tag in $DOCKER_METADATA_OUTPUT_TAGS; do
             docker push ${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || steps.lowercase.outputs.project }}:${tag}${{steps.lowercase.outputs.postfix}}
           done
