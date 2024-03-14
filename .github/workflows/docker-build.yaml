@@ -102,7 +102,7 @@ jobs:
       - name: calculate tag
         id: tag_version
         if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
-        uses: mathieudutour/github-tag-action@v6.1
+        uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           release_branches: main,stage
@@ -123,12 +123,12 @@ jobs:
             name=${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}
             name=${{ inputs.GAR_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{inputs.GAR_REPOSITORY}}
           tags: |
-            type=raw,value=${{ steps.tag_version.outputs.tag }}
+            type=raw,value=${{ steps.tag_version.outputs.new_tag }}
             type=schedule,pattern=nightly
             type=ref,event=branch
             type=ref,event=pr
           labels: |
-            org.opencontainers.image.version=${{ steps.tag_version.outputs.tag }}
+            org.opencontainers.image.version=${{ steps.tag_version.outputs.new_tag }}
             org.opencontainers.image.created={{date 'YYYYMMDD'}}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.ref.name=${{ github.ref }}
