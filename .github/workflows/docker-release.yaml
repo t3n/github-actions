@@ -56,7 +56,7 @@ jobs:
       - name: tag image
         run: |
           IFS=''
-          for tag in "${${{inputs.DOCKER_METADATA_OUTPUT_TAGS}}[@]}"; do
+          for tag in "${$DOCKER_METADATA_OUTPUT_TAGS[@]}"; do
             docker tag image_${{steps.lowercase.outputs.project}}:gha "${tag}"
           done
 
