@@ -55,8 +55,8 @@ jobs:
 
       - name: tag image
         run: |
-          IFS=''
-          for tag in $DOCKER_METADATA_OUTPUT_TAGS; do
+          IFS=' '
+          for tag in ${{inputs.DOCKER_METADATA_OUTPUT_TAGS}}; do
             docker tag image_${{steps.lowercase.outputs.project}}:gha "${tag}"
           done
 
@@ -73,8 +73,10 @@ jobs:
           password: ${{ secrets.GCR_JSON_KEY }}
 
       - name: push to registry
+        env:
+          TAGS: ${{inputs.DOCKER_METADATA_OUTPUT_TAGS}}
         run: |
           IFS=''
-          for tag in $DOCKER_METADATA_OUTPUT_TAGS; do
+          for tag in "${${{inputs.DOCKER_METADATA_OUTPUT_TAGS}}[@]}"; do
             docker push ${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || steps.lowercase.outputs.project }}:${tag}${{steps.lowercase.outputs.postfix}}
           done
