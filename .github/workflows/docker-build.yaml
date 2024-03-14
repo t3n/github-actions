@@ -7,10 +7,39 @@ on:
         required: true
       FILE:
         type: string
+        required: false
         default: Dockerfile
       TARGET:
         type: string
+        required: false
         default: null
+      BUILD_LATEST:
+        type: boolean
+        required: false
+        default: false
+      TAG_PREFIX:
+        type: string
+        required: false
+        default: null
+      TAG_SUFFIX:
+        type: string
+        required: false
+        default: null
+      GCP_PROJECT_ID:
+        type: string
+        required: true
+      GCP_REGISTRY:
+        type: string
+        required: false
+        default: "eu.gcr.io"
+      GAR_REGISTRY:
+        type: string
+        required: false
+        default: "europe-west3-docker.pkg.dev"
+      GAR_REPOSITORY:
+        type: string
+        required: false
+        default: "images"
       CONTEXT:
         type: string
         default: .
@@ -22,6 +51,19 @@ on:
         required: false
       SSH_KEY:
         required: false
+      BUILD_ARGS:
+        required: false
+    outputs:
+      DOCKER_METADATA_OUTPUT_VERSION:
+        value: ${{ steps.meta.outputs.version }}
+      DOCKER_METADATA_OUTPUT_TAGS:
+        value: ${{ steps.meta.outputs.tags }}
+      DOCKER_METADATA_OUTPUT_LABELS:
+        value: ${{ steps.meta.outputs.labels }}
+      DOCKER_METADATA_OUTPUT_ANNOTATIONS:
+        value: ${{ steps.meta.outputs.annotations }}
+      DOCKER_METADATA_OUTPUT_JSON:
+        value: ${{ steps.meta.outputs.json }}
 
 jobs:
   docker-build:
@@ -51,40 +93,56 @@ jobs:
         run: |
           echo "project=${project,,}"  >> "$GITHUB_OUTPUT"
 
-      - name: build
-        if: "${{ env.SSH_KEY == ''}}"
-        uses: docker/build-push-action@v5.2.0
-        env:
-          SSH_KEY: ${{ secrets.SSH_KEY }}
+      - name: calculate tag
+        id: tag_version
+        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
+        uses: mathieudutour/github-tag-action@v6.1
         with:
-          build-args: ${{inputs.BUILD_ARGS}}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          context: ${{inputs.CONTEXT}}
-          file: ${{inputs.FILE}}
-          load: false
-          outputs: type=docker,dest=./image_${{steps.lowercase.outputs.project}}.tar
-          push: false
-          secrets: ${{secrets.SECRETS}}
-          tags: image_${{steps.lowercase.outputs.project}}:gha
-          target: ${{inputs.TARGET}}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_branches: main,stage
+          create_annotated_tag: true
+          tag_prefix: ""
+          dry_run: true
+
+      - name: Docker Metadata action
+        uses: docker/metadata-action@v5.4.0
+        id: meta
+        with:
+          flavor: |
+            latest=${{inputs.BUILD_LATEST}}
+            prefix=${{inputs.TAG_PREFIX}}
+            suffix=${{inputs.TAG_SUFFIX}}
+          images: |
+            name=image_${{inputs.PROJECT}}
+            name=${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}
+            name=${{ inputs.GAR_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{inputs.GAR_REPOSITORY}}
+          tags: |
+            type=raw,value=${{ steps.tag_version.outputs.tag }}
+            type=schedule,pattern=nightly
+            type=ref,event=branch
+            type=ref,event=pr
+          labels: |
+            org.opencontainers.image.version=${{ steps.tag_version.outputs.tag }}
+            org.opencontainers.image.created={{date 'YYYYMMDD'}}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.ref.name=${{ github.ref }}
 
       - name: build
-        uses: docker/build-push-action@v5.2.0
+        uses: docker/build-push-action@v5.1.0
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
-        if: "${{ env.SSH_KEY != ''}}"
         with:
           build-args: ${{inputs.BUILD_ARGS}}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           context: ${{inputs.CONTEXT}}
           file: ${{inputs.FILE}}
+          labels: ${{ steps.meta.outputs.labels }}
           load: false
           outputs: type=docker,dest=./image_${{steps.lowercase.outputs.project}}.tar
           push: false
-          ssh: default
           secrets: ${{secrets.SECRETS}}
+          ssh: default
           tags: image_${{steps.lowercase.outputs.project}}:gha
           target: ${{inputs.TARGET}}
 
