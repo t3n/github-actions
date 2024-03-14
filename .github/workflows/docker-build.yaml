@@ -55,19 +55,25 @@ on:
         required: false
     outputs:
       DOCKER_METADATA_OUTPUT_VERSION:
-        value: ${{ steps.meta.outputs.version }}
+        value: ${{ jobs.docker-build.outputs.DOCKER_METADATA_OUTPUT_VERSION }}
       DOCKER_METADATA_OUTPUT_TAGS:
-        value: ${{ steps.meta.outputs.tags }}
+        value: ${{ jobs.docker-build.outputs.DOCKER_METADATA_OUTPUT_TAGS }}
       DOCKER_METADATA_OUTPUT_LABELS:
-        value: ${{ steps.meta.outputs.labels }}
+        value: ${{ jobs.docker-build.outputs.DOCKER_METADATA_OUTPUT_LABELS }}
       DOCKER_METADATA_OUTPUT_ANNOTATIONS:
-        value: ${{ steps.meta.outputs.annotations }}
+        value: ${{ jobs.docker-build.outputs.DOCKER_METADATA_OUTPUT_ANNOTATIONS }}
       DOCKER_METADATA_OUTPUT_JSON:
-        value: ${{ steps.meta.outputs.json }}
+        value: ${{ jobs.docker-build.outputs.DOCKER_METADATA_OUTPUT_JSON }}
 
 jobs:
   docker-build:
     runs-on: ubuntu-22.04
+    outputs:
+      DOCKER_METADATA_OUTPUT_VERSION: ${{ steps.meta.outputs.version }}
+      DOCKER_METADATA_OUTPUT_TAGS: ${{ steps.meta.outputs.tags }}
+      DOCKER_METADATA_OUTPUT_LABELS: ${{ steps.meta.outputs.labels}}
+      DOCKER_METADATA_OUTPUT_ANNOTATIONS: ${{ steps.meta.outputs.annotations}}
+      DOCKER_METADATA_OUTPUT_JSON: ${{ steps.meta.outputs.json}}
     steps:
       - name: checkout
         uses: actions/checkout@v4.1.1
