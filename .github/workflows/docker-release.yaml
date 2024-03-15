@@ -86,7 +86,7 @@ jobs:
 
       - name: push to registry
         run: |
-          VERSIONS="${{DOCKER_METADATA_OUTPUT_VERSION}}"
+#          VERSIONS="${{DOCKER_METADATA_OUTPUT_VERSION}}"
           LABELS="${{DOCKER_METADATA_OUTPUT_LABELS}}"
           ANNOTATIONS="${{DOCKER_METADATA_OUTPUT_ANNOTATIONS}}"
           JSON="${{DOCKER_METADATA_OUTPUT_JSON}}"
