@@ -91,10 +91,6 @@ jobs:
           JSON="${{DOCKER_METADATA_OUTPUT_JSON}}"
           TAGS="${{inputs.DOCKER_METADATA_OUTPUT_TAGS}}"
           
-          for version in ${VERSIONS}; do
-            echo "${version}"
-          done
-          
           for label in ${LABELS}; do
             echo "${label}"
           done
