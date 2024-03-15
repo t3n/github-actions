@@ -73,9 +73,8 @@ jobs:
           password: ${{ secrets.GCR_JSON_KEY }}
 
       - name: push to registry
-        env:
-          TAGS: ${{inputs.DOCKER_METADATA_OUTPUT_TAGS}}
         run: |
+          TAGS="${{inputs.DOCKER_METADATA_OUTPUT_TAGS}}"
           for tag in ${TAGS}; do
             docker push ${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || steps.lowercase.outputs.project }}:${tag}${{steps.lowercase.outputs.postfix}}
           done
