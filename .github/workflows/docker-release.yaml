@@ -74,7 +74,29 @@ jobs:
 
       - name: push to registry
         run: |
+          VERSIONS="${{DOCKER_METADATA_OUTPUT_VERSION}}"
+          LABELS="${{DOCKER_METADATA_OUTPUT_LABELS}}"
+          ANNOTATIONS="${{DOCKER_METADATA_OUTPUT_ANNOTATIONS}}"
+          JSON="${{DOCKER_METADATA_OUTPUT_JSON}}"
           TAGS="${{inputs.DOCKER_METADATA_OUTPUT_TAGS}}"
+          
+          for version in ${VERSIONS}; do
+            echo "${version}"
+          done
+          
+          for label in ${LABELS}; do
+            echo "${label}"
+          done
+          
+          for annotation in ${ANNOTATIONS}; do
+            echo "${annotation}"
+          done
+          
+          for json in ${JSON}; do
+            echo "${json}"
+          done
+          
           for tag in ${TAGS}; do
-            docker push ${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || steps.lowercase.outputs.project }}:${tag}${{steps.lowercase.outputs.postfix}}
+            echo "${tag}"
+            # docker push ${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || steps.lowercase.outputs.project }}:${tag}${{steps.lowercase.outputs.postfix}}
           done
