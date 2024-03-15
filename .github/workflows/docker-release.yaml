@@ -16,6 +16,18 @@ on:
       DOCKER_METADATA_OUTPUT_TAGS:
         type: string
         required: true
+      DOCKER_METADATA_OUTPUT_ANNOTATIONS:
+        type: string
+        required: true
+      DOCKER_METADATA_OUTPUT_LABELS:
+        type: string
+        required: true
+      DOCKER_METADATA_OUTPUT_JSON:
+        type: string
+        required: true
+      DOCKER_METADATA_OUTPUT_VERSION:
+        type: string
+        required: true
       GCP_PROJECT_ID:
         type: string
         required: true
