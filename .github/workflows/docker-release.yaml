@@ -77,5 +77,14 @@ jobs:
           TAGS="${{inputs.DOCKER_METADATA_OUTPUT_TAGS}}"
           for tag in ${TAGS}; do
             echo "${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || steps.lowercase.outputs.project }}:${tag}${{steps.lowercase.outputs.postfix}}"
+            docker push "${tag}"
             # docker push ${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || steps.lowercase.outputs.project }}:${tag}${{steps.lowercase.outputs.postfix}}
           done
+
+        # currently returning:
+        # eu.gcr.io/t3n-registry/metadata:image_metadata:main
+        # eu.gcr.io/t3n-registry/metadata:image_metadata:0.0.16
+        # eu.gcr.io/t3n-registry/metadata:eu.gcr.io/t3n-registry:main
+        # eu.gcr.io/t3n-registry/metadata:eu.gcr.io/t3n-registry:0.0.16
+        # eu.gcr.io/t3n-registry/metadata:europe-west3-docker.pkg.dev/t3n-registry/images:main
+        # eu.gcr.io/t3n-registry/metadata:europe-west3-docker.pkg.dev/t3n-registry/images:0.0.16
