@@ -150,7 +150,7 @@ jobs:
           push: false
           secrets: ${{secrets.SECRETS}}
           ssh: ${{ env.SSH_KEY != '' && 'default' || null }}
-          tags: image_${{steps.lowercase.outputs.project}}:gha
+          tags: ${{ steps.meta.outputs.tags }}
           target: ${{inputs.TARGET}}
 
       - name: upload
