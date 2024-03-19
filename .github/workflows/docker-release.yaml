@@ -53,17 +53,16 @@ jobs:
       - name: docker load
         run: docker image load --input image_${{steps.lowercase.outputs.project}}.tar
 
-      - name: tag image
-        run: |
-          TAGS="${{inputs.DOCKER_METADATA_OUTPUT_TAGS}}"
-          for tag in ${TAGS}; do
-            docker tag image_${{steps.lowercase.outputs.project}}:gha "${tag}"
-          done
-
       # - name: tag image
       #   run: |
-      #     docker tag image_${{inputs.PROJECT}}:gha ${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || steps.lowercase.outputs.project }}:${{ inputs.DOCKER_IMAGE_TAG }}${{steps.lowercase.outputs.postfix}}
-      #     docker image ls -a
+      #     TAGS="${{inputs.DOCKER_METADATA_OUTPUT_TAGS}}"
+      #     for tag in ${TAGS}; do
+      #       docker tag image_${{steps.lowercase.outputs.project}}:gha "${tag}"
+      #     done
+
+      - name: tag image
+        run: |
+          docker image ls -a
 
       - name: login to gcr
         uses: docker/login-action@v3.0.0
@@ -76,7 +75,7 @@ jobs:
         run: |
           TAGS="${{inputs.DOCKER_METADATA_OUTPUT_TAGS}}"
           for tag in ${TAGS}; do
-            echo "${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || steps.lowercase.outputs.project }}:${tag}${{steps.lowercase.outputs.postfix}}"
+            # echo "${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || steps.lowercase.outputs.project }}:${tag}${{steps.lowercase.outputs.postfix}}"
             docker push "${tag}"
             # docker push ${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || steps.lowercase.outputs.project }}:${tag}${{steps.lowercase.outputs.postfix}}
           done
