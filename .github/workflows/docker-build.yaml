@@ -128,11 +128,11 @@ jobs:
           tags: |
             type=raw,value=${{ github.run_attempt == 1 && steps.tag_version.outputs.new_tag || steps.tag_version.outputs.previous_tag }}
             type=schedule,pattern=nightly
-            type=ref,event=branch
+            type=ref,event=branch,enable=${{ github.event_name != 'schedule' }}
             type=ref,event=pr
           labels: |
             org.opencontainers.image.ref.name=${{ github.ref }}
-            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.revision=https://github.com/${{ github.repository }}/commit/${{ github.sha }}
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
             org.opencontainers.image.title=${{ github.repository }}
             org.opencontainers.image.version=${{ github.run_attempt == 1 && steps.tag_version.outputs.new_tag || steps.tag_version.outputs.previous_tag }}
