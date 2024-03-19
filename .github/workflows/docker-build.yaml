@@ -127,12 +127,10 @@ jobs:
             name=${{ inputs.GAR_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{inputs.GAR_REPOSITORY}}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || steps.lowercase.outputs.project }}
           tags: |
             type=raw,value=${{ steps.tag_version.outputs.new_tag }}
-            type=raw,value={{date 'YYYYMMDD'}}
             type=schedule,pattern=nightly
             type=ref,event=branch
             type=ref,event=pr
           labels: |
-            org.opencontainers.image.created={{date 'YYYYMMDD'}}
             org.opencontainers.image.ref.name=${{ github.ref }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
