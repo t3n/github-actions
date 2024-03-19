@@ -119,7 +119,6 @@ jobs:
             prefix=${{inputs.TAG_PREFIX}}
             suffix=${{inputs.TAG_SUFFIX}}
           images: |
-            name=image_${{inputs.PROJECT}}
             name=${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}
             name=${{ inputs.GAR_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{inputs.GAR_REPOSITORY}}
           tags: |
@@ -128,10 +127,12 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
           labels: |
-            org.opencontainers.image.version=${{ steps.tag_version.outputs.new_tag }}
             org.opencontainers.image.created={{date 'YYYYMMDD'}}
-            org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.ref.name=${{ github.ref }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.title=${{ github.repository }}
+            org.opencontainers.image.version=${{ steps.tag_version.outputs.new_tag }}
 
       - name: build
         uses: docker/build-push-action@v5.1.0
