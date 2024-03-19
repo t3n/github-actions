@@ -30,6 +30,8 @@ on:
     secrets:
       GCR_JSON_KEY:
         required: true
+      GAR_HELM_REGISTRY_ACCOUNT:
+        required: true
 
 jobs:
   docker-release:
@@ -70,6 +72,13 @@ jobs:
           registry: ${{ inputs.GCP_REGISTRY }}
           username: _json_key
           password: ${{ secrets.GCR_JSON_KEY }}
+
+      - name: login to gar
+        uses: docker/login-action@v3.0.0
+        with:
+          registry: ${{ inputs.GAR_REGISTRY}}
+          username: _json_key
+          password: ${{ secrets.GAR_HELM_REGISTRY_ACCOUNT }}
 
       - name: push to registry
         run: |
