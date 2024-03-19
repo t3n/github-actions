@@ -46,6 +46,10 @@ on:
       BUILD_ARGS:
         type: string
         required: false
+      FULLNAME_OVERRIDE:
+        type: string
+        required: false
+        default: null
     secrets:
       SECRETS:
         required: false
@@ -119,8 +123,8 @@ jobs:
             prefix=${{inputs.TAG_PREFIX}}
             suffix=${{inputs.TAG_SUFFIX}}
           images: |
-            name=${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}
-            name=${{ inputs.GAR_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{inputs.GAR_REPOSITORY}}
+            name=${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || steps.lowercase.outputs.project }}
+            name=${{ inputs.GAR_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{inputs.GAR_REPOSITORY}}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || steps.lowercase.outputs.project }}
           tags: |
             type=raw,value=${{ steps.tag_version.outputs.new_tag }}
             type=schedule,pattern=nightly
