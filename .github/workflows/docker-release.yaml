@@ -63,7 +63,6 @@ jobs:
       #     done
 
       - name: tag image
-        if: ${{ github.run_attempt == 1 }}
         run: |
           docker image ls -a
 
