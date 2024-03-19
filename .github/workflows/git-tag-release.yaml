@@ -20,6 +20,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.1
 
+      - name: Output Run Attempt
+        run: echo ${{ github.run_attempt }}
+      - name: Output Run Number
+        run: echo ${{ github.run_number }}
+
       - name: set tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.2
