@@ -35,7 +35,6 @@ on:
 
 jobs:
   docker-release:
-    if: always()
     runs-on: ubuntu-22.04
     steps:
       - name: lowercase things
