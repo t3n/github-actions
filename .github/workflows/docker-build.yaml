@@ -105,18 +105,7 @@ jobs:
 
       - name: calculate tag
         id: tag_version
-        if: ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && github.run_attempt == 1 }}
-        uses: mathieudutour/github-tag-action@v6.2
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          release_branches: main,stage
-          create_annotated_tag: true
-          tag_prefix: ""
-          dry_run: true
-
-      - name: calculate previous tag
-        id: tag_version
-        if: ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && github.run_attempt > 1 }}
+        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
         uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -137,7 +126,7 @@ jobs:
             name=${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || steps.lowercase.outputs.project }}
             name=${{ inputs.GAR_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{inputs.GAR_REPOSITORY}}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || steps.lowercase.outputs.project }}
           tags: |
-            type=raw,value=${{ steps.tag_version.outputs.new_tag }}
+            type=raw,value=${{ github.run_attempt == 1 && steps.tag_version.outputs.new_tag || steps.tag_version.outputs.previous_tag }}
             type=schedule,pattern=nightly
             type=ref,event=branch
             type=ref,event=pr
@@ -146,7 +135,7 @@ jobs:
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
             org.opencontainers.image.title=${{ github.repository }}
-            org.opencontainers.image.version=${{ steps.tag_version.outputs.new_tag }}
+            org.opencontainers.image.version=${{ github.run_attempt == 1 && steps.tag_version.outputs.new_tag || steps.tag_version.outputs.previous_tag }}
 
       - name: build
         uses: docker/build-push-action@v5.1.0
