@@ -52,8 +52,8 @@ jobs:
         with:
           name: artifacts_image_${{steps.lowercase.outputs.project}}
 
-      - name: docker import
-        run: docker import image_${{steps.lowercase.outputs.project}}.tar
+      - name: docker load
+        run: docker image load --input image_${{steps.lowercase.outputs.project}}.tar
 
       - name: login to gcr
         uses: docker/login-action@v3.0.0
