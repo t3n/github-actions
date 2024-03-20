@@ -105,7 +105,6 @@ jobs:
 
       - name: calculate tag
         id: tag_version
-        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
         uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
