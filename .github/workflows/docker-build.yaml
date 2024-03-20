@@ -141,6 +141,7 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         with:
+          attests: type=sbom
           build-args: ${{inputs.BUILD_ARGS}}
           cache-from: type=gha
           cache-to: type=gha,mode=max
