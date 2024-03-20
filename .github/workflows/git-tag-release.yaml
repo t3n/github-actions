@@ -27,8 +27,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           release_branches: main,stage
           create_annotated_tag: true
-          pre_release_branches: ^feat.*
-          default_prerelease_bump: false
           tag_prefix: ""
 
       - name: genereate name
