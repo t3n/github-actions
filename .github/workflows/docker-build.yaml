@@ -149,7 +149,7 @@ jobs:
           file: ${{inputs.FILE}}
           labels: ${{ steps.meta.outputs.labels }}
           load: false
-          outputs: type=oci,dest=./image_${{steps.lowercase.outputs.project}}.tar
+          outputs: type=docker,dest=./image_${{steps.lowercase.outputs.project}}.tar
           push: false
           secrets: ${{secrets.SECRETS}}
           ssh: ${{ env.SSH_KEY != '' && 'default' || null }}
