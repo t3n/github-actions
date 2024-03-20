@@ -134,7 +134,7 @@ jobs:
             org.opencontainers.image.revision=https://github.com/${{ github.repository }}/commit/${{ github.sha }}
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
             org.opencontainers.image.title=${{ github.repository }}
-            org.opencontainers.image.version=${{ github.run_attempt == 1 && steps.tag_version.outputs.new_tag || steps.tag_version.outputs.previous_tag }}
+            org.opencontainers.image.version=${{ (github.run_attempt == 1 && github.event_name != 'schedule') && steps.tag_version.outputs.new_tag || steps.tag_version.outputs.previous_tag }}
 
       - name: build
         uses: docker/build-push-action@v5.1.0
