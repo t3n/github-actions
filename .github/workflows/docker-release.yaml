@@ -52,13 +52,7 @@ jobs:
         with:
           name: artifacts_image_${{steps.lowercase.outputs.project}}
 
-      - name: set up qemu
-        uses: docker/setup-qemu-action@v3.0.0
-
-      - name: set up docker buildx
-        uses: docker/setup-buildx-action@v3.1.0
-
-      - name: docker load
+      - name: docker import
         run: docker import image_${{steps.lowercase.outputs.project}}.tar
 
       - name: login to gcr
