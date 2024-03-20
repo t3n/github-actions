@@ -112,6 +112,7 @@ jobs:
           create_annotated_tag: true
           tag_prefix: ""
           pre_release_branches: ^feat.*
+          default_prerelease_bump: false
           dry_run: true
 
       - name: Docker Metadata action
