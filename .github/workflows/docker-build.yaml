@@ -111,6 +111,7 @@ jobs:
           release_branches: main,stage
           create_annotated_tag: true
           tag_prefix: ""
+          pre_release_branches: ^feat.*
           dry_run: true
 
       - name: Docker Metadata action
@@ -125,7 +126,7 @@ jobs:
             name=${{ inputs.GCP_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || steps.lowercase.outputs.project }}
             name=${{ inputs.GAR_REGISTRY }}/${{ inputs.GCP_PROJECT_ID }}/${{inputs.GAR_REPOSITORY}}/${{ inputs.FULLNAME_OVERRIDE && inputs.FULLNAME_OVERRIDE || steps.lowercase.outputs.project }}
           tags: |
-            type=raw,value=${{ github.run_attempt == 1 && steps.tag_version.outputs.new_tag || steps.tag_version.outputs.previous_tag }},enable=${{ github.event_name != 'schedule' }}
+            type=raw,value=${{ github.run_attempt == 1 && steps.tag_version.outputs.new_tag || steps.tag_version.outputs.previous_tag }},enable=${{ github.event_name != 'schedule' && github.ref_name == 'main'}}
             type=schedule,pattern=nightly
             type=ref,event=branch,enable=${{ github.event_name != 'schedule' }}
             type=ref,event=pr
