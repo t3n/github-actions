@@ -54,7 +54,12 @@ jobs:
 
       - name: get the image ids
         id: get_image_ids
-        run: echo "ids=$(docker images --format "{{.Repository}}:{{.Tag}}"| grep ${{inputs.PROJECT}})" >> $GITHUB_OUTPUT
+        run: |
+          {
+            echo 'ids<<EOF'
+            docker images --format "{{.Repository}}:{{.Tag}}"| grep ${{inputs.PROJECT}}
+            echo EOF
+          } >> $GITHUB_OUTPUT
 
       - name: login to gcr
         uses: docker/login-action@v3.0.0
