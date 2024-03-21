@@ -13,9 +13,6 @@ on:
         type: string
         required: false
         default: "eu.gcr.io"
-      DOCKER_METADATA_OUTPUT_TAGS:
-        type: string
-        required: true
       GCP_PROJECT_ID:
         type: string
         required: true
@@ -55,6 +52,10 @@ jobs:
       - name: docker load
         run: docker image load --input image_${{steps.lowercase.outputs.project}}.tar
 
+      - name: get the image ids
+        id: get_image_ids
+        run: echo "ids=$(docker images --format "{{.Repository}}:{{.Tag}}"| grep ${{inputs.PROJECT}}" >> $GITHUB_OUTPUT
+
       - name: login to gcr
         uses: docker/login-action@v3.0.0
         with:
@@ -71,7 +72,7 @@ jobs:
 
       - name: push to registry
         run: |
-          TAGS="${{inputs.DOCKER_METADATA_OUTPUT_TAGS}}"
+          TAGS="${{steps.get_image_ids.outputs.ids}}"
           for tag in ${TAGS}; do
             docker push "${tag}"
           done
