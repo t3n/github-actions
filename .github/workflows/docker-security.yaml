@@ -19,9 +19,13 @@ jobs:
       - name: docker load
         run: docker image load --input image_${{inputs.PROJECT}}.tar
 
+      - name: get the image id
+        id: get_image_id
+        run: echo "id=$(docker images --format "{{.Repository}}:{{.Tag}}"| grep ${{inputs.PROJECT}} | awk 'NR==1{print $1}')" >> $GITHUB_OUTPUT
+
       - uses: anchore/sbom-action@v0
         with:
-          image: image_${{inputs.PROJECT}}:gha
+          image: ${{ steps.get_image_id.outputs.id }}
           artifact-name: sbom_${{inputs.PROJECT}}.spdx.json
 
       - name: docker scan
