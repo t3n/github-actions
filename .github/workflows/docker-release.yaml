@@ -5,25 +5,14 @@ on:
       PROJECT:
         type: string
         required: true
-      FULLNAME_OVERRIDE:
-        type: string
-        required: false
-        default: ""
       GCP_REGISTRY:
         type: string
         required: false
         default: "eu.gcr.io"
-      GCP_PROJECT_ID:
-        type: string
-        required: true
       GAR_REGISTRY:
         type: string
         required: false
         default: "europe-west3-docker.pkg.dev"
-      GAR_REPOSITORY:
-        type: string
-        required: false
-        default: "images"
     secrets:
       GCR_JSON_KEY:
         required: true
@@ -38,10 +27,9 @@ jobs:
         id: lowercase
         env:
           project: ${{inputs.PROJECT}}
-          postfix: ${{inputs.DOCKER_IMAGE_TAG_POSTFIX}}
+
         run: |
           echo "project=${project,,}"  >> "$GITHUB_OUTPUT"
-          echo "postfix=${postfix,,}"  >> "$GITHUB_OUTPUT"
 
       - name: download a build artifact
         uses: actions/download-artifact@v4.1.4
@@ -49,15 +37,12 @@ jobs:
         with:
           name: artifacts_image_${{steps.lowercase.outputs.project}}
 
-      - name: docker load
-        run: docker image load --input image_${{steps.lowercase.outputs.project}}.tar
-
-      - name: get the image ids
-        id: get_image_ids
+      - name: load image
+        id: image_ids
         run: |
           {
             echo 'ids<<EOF'
-            docker images --format "{{.Repository}}:{{.Tag}}"| grep ${{inputs.PROJECT}}
+            docker image load --input image_${{steps.lowercase.outputs.project}}.tar | sed 's/Loaded image: //g'
             echo EOF
           } >> $GITHUB_OUTPUT
 
@@ -77,7 +62,7 @@ jobs:
 
       - name: push to registry
         run: |
-          TAGS="${{steps.get_image_ids.outputs.ids}}"
+          TAGS="${{steps.image_ids.outputs.ids}}"
           for tag in ${TAGS}; do
             docker push "${tag}"
           done
