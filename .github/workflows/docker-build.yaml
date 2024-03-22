@@ -137,7 +137,7 @@ jobs:
             org.opencontainers.image.version=${{ (github.run_attempt == 1 && github.event_name != 'schedule') && steps.tag_version.outputs.new_tag || steps.tag_version.outputs.previous_tag }}
 
       - name: build
-        uses: docker/build-push-action@v5.1.0
+        uses: docker/build-push-action@v5.3.0
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         with:
