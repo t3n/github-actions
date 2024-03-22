@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
       - name: authenticate to google cloud
         id: auth
         uses: google-github-actions/auth@v2.1.2
