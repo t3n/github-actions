@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v4.1.2
 
       - name: install helm
-        uses: Azure/setup-helm@v3.5
+        uses: Azure/setup-helm@v4
         with:
           version: ${{env.HELM_VERSION}}
 

@@ -27,7 +27,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2.1.0
 
       - name: install helm
-        uses: Azure/setup-helm@v3.5
+        uses: Azure/setup-helm@v4
         with:
           version: ${{env.HELM_VERSION}}
 
