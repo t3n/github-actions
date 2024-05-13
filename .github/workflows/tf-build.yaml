@@ -34,7 +34,7 @@ jobs:
           include: TF_VAR_*
 
       - name: install terraform
-        uses: hashicorp/setup-terraform@v3.0.0
+        uses: hashicorp/setup-terraform@v3.1.0
         with:
           terraform_version: ${{env.TERRAFORM_VERSION}}
           terraform_wrapper: false
