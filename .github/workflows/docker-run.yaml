@@ -37,5 +37,4 @@ jobs:
 
       - name: docker run
         id: run
-        run: |
-          docker run --rm ${{fromJson(steps.image_ids.outputs.ids)[0]}} ${{inputs.COMMAND}}
+        run: docker run --rm ${{fromJson(steps.image_ids.outputs.ids)[0]}} ${{inputs.COMMAND}}
