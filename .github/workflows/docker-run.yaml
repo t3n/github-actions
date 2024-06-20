@@ -38,5 +38,4 @@ jobs:
       - name: docker run
         id: run
         run: |
-          TAGS="${{steps.image_ids.outputs.ids}}"
-          docker run --rm "${TAGS[0]}" ${{inputs.COMMAND}}
+          docker run --rm ${{fromJson(steps.image_ids.outputs.ids)[0]}} ${{inputs.COMMAND}}
