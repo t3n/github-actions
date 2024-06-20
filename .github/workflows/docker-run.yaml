@@ -40,6 +40,6 @@ jobs:
         run: |
           TAGS="${{steps.image_ids.outputs.ids}}"
           echo "Original TAGS: $TAGS"
-          TRIMMED_TAG="${TAGS%% *}"
+          TRIMMED_TAG=$(echo $TAGS | cut -d' ' -f1)
           echo "Trimmed TAG: $TRIMMED_TAG"
           docker run --rm ${TRIMMED_TAG} ${{inputs.COMMAND}}
