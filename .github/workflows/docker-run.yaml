@@ -40,4 +40,4 @@ jobs:
         run: |
           TAGS="${{steps.image_ids.outputs.ids}}"
           TRIMMED_TAG="${TAGS%% *}"
-          docker run --rm "$TRIMMED_TAG" ${{inputs.COMMAND}}
+          docker run --rm $TRIMMED_TAG ${{inputs.COMMAND}}
