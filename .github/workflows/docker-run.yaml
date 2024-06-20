@@ -39,4 +39,4 @@ jobs:
         id: run
         run: |
           TAGS="${{steps.image_ids.outputs.ids}}"
-          docker run --rm ${TAGS[0]} ${{inputs.COMMAND}}
+          docker run --rm "${TAGS[0]}" ${{inputs.COMMAND}}
