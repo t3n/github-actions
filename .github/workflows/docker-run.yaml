@@ -13,15 +13,30 @@ jobs:
   docker-run:
     runs-on: ubuntu-22.04
     steps:
+      - name: lowercase things
+        id: lowercase
+        env:
+          project: ${{inputs.PROJECT}}
+        run: |
+          echo "project=${project,,}"  >> "$GITHUB_OUTPUT"
+
       - name: download a build artifact
         uses: actions/download-artifact@v4.1.7
         id: download
         with:
           name: artifacts_image_${{inputs.PROJECT}}
 
-      - name: docker load
-        run: docker image load --input image_${{inputs.PROJECT}}.tar
+      - name: load image
+        id: image_ids
+        run: |
+          {
+            echo 'ids<<EOF'
+            docker image load --input image_${{steps.lowercase.outputs.project}}.tar | sed 's/Loaded image: //g'
+            echo EOF
+          } >> $GITHUB_OUTPUT
 
       - name: docker run
         id: run
-        run: docker run --rm image_${{inputs.PROJECT}}:${{github.ref_name}} ${{inputs.COMMAND}}
+        run: |
+          TAGS="${{steps.image_ids.outputs.ids}}"
+          docker run --rm ${TAGS[0]} ${{inputs.COMMAND}}
