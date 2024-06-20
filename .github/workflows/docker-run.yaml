@@ -24,4 +24,4 @@ jobs:
 
       - name: docker run
         id: run
-        run: docker run --rm image_${{inputs.PROJECT}}:gha ${{inputs.COMMAND}}
+        run: docker run --rm image_${{inputs.PROJECT}}:${{github.ref_name}} ${{inputs.COMMAND}}
