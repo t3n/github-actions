@@ -86,7 +86,7 @@ jobs:
         uses: docker/setup-qemu-action@v3.0.0
 
       - name: set up docker buildx
-        uses: docker/setup-buildx-action@v3.3.0
+        uses: docker/setup-buildx-action@v3.5.0
 
       - name: add key to ssh-agent
         uses: webfactory/ssh-agent@v0.9.0
