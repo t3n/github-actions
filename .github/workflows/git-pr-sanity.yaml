@@ -1,0 +1,11 @@
+name: Git PR Sanity
+on:
+  schedule:
+    - cron: "0 0 * * 1-5"
+
+jobs:
+  git-pr-sanity:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Process stale PRs
+        uses: Sonia-corporation/stale@2.5.0

@@ -1,0 +1,29 @@
+name: Git PR Size
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  git-pr-size:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: Gascon1/pr-size-labeler@v1.3.0
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          xs_label: "size/xs"
+          xs_diff: "10"
+          s_label: "size/s"
+          s_diff: "50"
+          m_label: "size/m"
+          m_diff: "250"
+          l_label: "size/l"
+          l_diff: "500"
+          xl_label: "size/xl"
+          fail_if_xl: "false"
+          message_if_xl: >
+            ✂️ Bitte achte darauf, PRs kleiner und übersichtlicher zu halten.
+            ⏳ Große PRs mit vielen Änderungen sind schwer zu überprüfen, erhöhen das Risiko von Fehlern und verzögern den Review-Prozess.
+            🔍 Kleinere, thematisch fokussierte PRs lassen sich schneller und präziser bearbeiten.
+            🎉 Du bist trotzdem super, danke für deine Arbeit!
+          excluded_files: >
+            /package-lock.json$/
