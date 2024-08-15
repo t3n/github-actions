@@ -8,3 +8,5 @@ jobs:
     steps:
       - name: Process stale PRs
         uses: Sonia-corporation/stale@2.5.0
+        with:
+          pull-request-days-before-close: 366
