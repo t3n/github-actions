@@ -1,7 +1,6 @@
 name: Git PR Sanity
 on:
-  schedule:
-    - cron: "0 0 * * 1-5"
+  workflow_call:
 
 jobs:
   git-pr-sanity:
