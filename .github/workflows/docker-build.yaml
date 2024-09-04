@@ -156,7 +156,7 @@ jobs:
           target: ${{inputs.TARGET}}
 
       - name: upload
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.4.0
         with:
           name: artifacts_image_${{steps.lowercase.outputs.project}}
           path: ./image_${{steps.lowercase.outputs.project}}.tar
