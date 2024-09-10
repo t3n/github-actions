@@ -26,3 +26,6 @@ jobs:
             🎉 Du bist trotzdem super, danke für deine Arbeit!
           excluded_files: >
             /package-lock.json$/
+            /app/package-lock.json$/
+            /composer.lock$/
+            /app/composer.lock$/
