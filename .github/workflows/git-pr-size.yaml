@@ -25,7 +25,10 @@ jobs:
             🔍 Kleinere, thematisch fokussierte PRs lassen sich schneller und präziser bearbeiten.
             🎉 Du bist trotzdem super, danke für deine Arbeit!
           excluded_files: >
-            /package-lock.json$/
-            /app/package-lock.json$/
-            /composer.lock$/
-            /app/composer.lock$/
+            package-lock.json$/
+            app/package-lock.json$/
+            composer.lock$/
+            app/composer.lock$/
+
+
+            
