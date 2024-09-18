@@ -6,17 +6,17 @@ jobs:
   git-pr-size:
     runs-on: ubuntu-22.04
     steps:
-      - uses: Gascon1/pr-size-labeler@v1.3.0
+      - uses: codelytv/pr-size-labeler@v1.10.1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           xs_label: "size/xs"
-          xs_diff: "10"
+          xs_max_size: "10"
           s_label: "size/s"
-          s_diff: "50"
+          s_max_size: "50"
           m_label: "size/m"
-          m_diff: "250"
+          m_max_size: "250"
           l_label: "size/l"
-          l_diff: "500"
+          l_max_size: "500"
           xl_label: "size/xl"
           fail_if_xl: "false"
           message_if_xl: >
@@ -24,11 +24,8 @@ jobs:
             ⏳ Große PRs mit vielen Änderungen sind schwer zu überprüfen, erhöhen das Risiko von Fehlern und verzögern den Review-Prozess.
             🔍 Kleinere, thematisch fokussierte PRs lassen sich schneller und präziser bearbeiten.
             🎉 Du bist trotzdem super, danke für deine Arbeit!
-          excluded_files: >
-            package-lock.json$/
-            app/package-lock.json$/
-            composer.lock$/
-            app/composer.lock$/
-
-
-            
+          ignore_file_deletions: 'true'
+          files_to_ignore: |
+            "package-lock.json"
+            "*.lock"
+            "README.md"
