@@ -18,7 +18,7 @@ jobs:
       CHANGELOG: ${{ steps.tag_version.outputs.changelog }}
       RELEASE_NAME: ${{ steps.fancy_name.outputs.release_name }}
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4.2.0
 
       - name: set tag
         id: tag_version
