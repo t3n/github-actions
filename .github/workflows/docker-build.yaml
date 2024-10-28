@@ -80,7 +80,7 @@ jobs:
       DOCKER_METADATA_OUTPUT_JSON: ${{ steps.meta.outputs.json}}
     steps:
       - name: checkout
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4.2.2
 
       - name: set up qemu
         uses: docker/setup-qemu-action@v3.2.0
