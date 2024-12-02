@@ -71,7 +71,7 @@ jobs:
           ssh_key_pub: ${{secrets.SSH_KEY_PUB}}
           memory_limit: ${{inputs.COMPOSER_MEMORY_LIMIT}}
 
-      - uses: php-actions/phpstan@v3.0.2
+      - uses: php-actions/phpstan@v3.0.3
         with:
           path: ${{inputs.PATH}}
           memory_limit: ${{inputs.COMPOSER_MEMORY_LIMIT}}
