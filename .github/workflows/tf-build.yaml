@@ -58,7 +58,7 @@ jobs:
         run: terraform show -json -no-color plan_${{inputs.ENVIRONMENT}}_${{github.sha}}.bin > test_${{inputs.ENVIRONMENT}}_${{github.sha}}.json
 
       - name: inform about changes
-        uses: liatrio/terraform-change-pr-commenter@v1.5.0
+        uses: liatrio/terraform-change-pr-commenter@v1.7.0
         with:
           json-file: ${{ inputs.WORKING_DIRECTORY }}/test_${{inputs.ENVIRONMENT}}_${{github.sha}}.json
           expand-comment: "true"
