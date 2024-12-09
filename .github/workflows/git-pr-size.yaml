@@ -6,7 +6,7 @@ jobs:
   git-pr-size:
     runs-on: ubuntu-22.04
     steps:
-      - uses: codelytv/pr-size-labeler@v1.10.1
+      - uses: codelytv/pr-size-labeler@v1.10.2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           xs_label: "size/xs"
