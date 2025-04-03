@@ -32,7 +32,7 @@ jobs:
           echo "project=${project,,}"  >> "$GITHUB_OUTPUT"
 
       - name: download a build artifact
-        uses: actions/download-artifact@v4.1.8
+        uses: actions/download-artifact@v4.2.1
         id: download
         with:
           name: artifacts_image_${{steps.lowercase.outputs.project}}
