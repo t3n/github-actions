@@ -11,17 +11,40 @@ on:
 
 jobs:
   git-tag-release:
-    if: ${{ github.run_attempt == 1 && github.event_name != 'schedule' }}
+    if: ${{ github.event_name != 'schedule' }}
     runs-on: ubuntu-22.04
     outputs:
-      NEW_TAG: ${{ steps.tag_version.outputs.new_tag }}
-      CHANGELOG: ${{ steps.tag_version.outputs.changelog }}
+      NEW_TAG: ${{ steps.set_tag.outputs.new_tag }}
+      CHANGELOG: ${{ steps.set_tag.outputs.changelog }}
       RELEASE_NAME: ${{ steps.fancy_name.outputs.release_name }}
     steps:
       - uses: actions/checkout@v4.2.2
 
+      - name: calculate tag
+        id: calc_tag
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_branches: main,stage
+          create_annotated_tag: true
+          tag_prefix: ""
+          dry_run: true
+
+      - name: fetch all tags
+        run: git fetch --prune --unshallow --tags
+
+      - name: Check if tag exists
+        id: tag_exists
+        run: |
+          TAG=${{ steps.calc_tag.outputs.new_tag }}
+          if git rev-parse "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: set tag
-        id: tag_version
+        id: set_tag
         uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -31,14 +54,16 @@ jobs:
 
       - name: genereate name
         id: fancy_name
+        if: steps.tag_exists.outputs.exists == 'false'
         run: |
           arr1=(admiring adoring affectionate agitated amazing angry awesome beautiful blissful bold boring brave busy charming clever cool compassionate competent condescending confident cranky crazy dazzling determined distracted dreamy eager ecstatic elastic elated elegant eloquent epic exciting fervent festive flamboyant focused friendly frosty funny gallant gifted goofy gracious great happy hardcore heuristic hopeful hungry infallible inspiring interesting intelligent jolly jovial keen kind laughing loving lucid magical mystifying modest musing naughty nervous nice nifty nostalgic objective optimistic peaceful pedantic pensive practical priceless quirky quizzical recursing relaxed reverent romantic sad serene sharp silly sleepy stoic strange stupefied suspicious sweet tender thirsty trusting unruffled upbeat vibrant vigilant vigorous wizardly wonderful xenodochial youthful zealous zen)
           arr2=(alena alexander andreas anna-barbara anne annika aylin benjamin bettina birte brian caroline caspar christopher claudia cornelia daniel darleen denise elena elisabeth ellrik emely emilia florian franka gesa gregor grischa hagen ingo insa jan jana jasper jochen johannes jonas jörg josefine josephine jule julia juliane kathrin kim lena-josefin lennart leonie lukas maike manon marcel mario martin matthias melanie mirjam nadine niclas nicola nils noah ole philip philipp roy sabrina sabrine sarah sarina sebastian sharlyn stella-sophie steven tobias)
           echo "release_name=${arr1[RANDOM%${#arr1[@]}]}-${arr2[RANDOM%${#arr2[@]}]}" >> $GITHUB_OUTPUT
 
       - name: release
+        if: steps.tag_exists.outputs.exists == 'false'
         uses: ncipollo/release-action@v1.16.0
         with:
-          tag: ${{ steps.tag_version.outputs.new_tag }}
-          name: ${{ steps.tag_version.outputs.new_tag }} - ${{ steps.fancy_name.outputs.release_name }}
-          body: ${{ steps.tag_version.outputs.changelog }}
+          tag: ${{ steps.set_tag.outputs.new_tag }}
+          name: ${{ steps.set_tag.outputs.new_tag }} - ${{ steps.fancy_name.outputs.release_name }}
+          body: ${{ steps.set_tag.outputs.changelog }}
