@@ -9,6 +9,12 @@ on:
       ENVIRONMENT:
         type: string
         required: true
+      USE_CUSTOM_ARTIFACTS:
+        type: boolean
+        default: false
+        required: false
+        description: "if set to true, the action will download custom artifacts to the working directory (analogous to the 'normla' download step)"
+
     secrets:
       GCP_JSON_KEY:
         required: false
@@ -50,6 +56,14 @@ jobs:
         id: download
         with:
           name: artifacts_${{inputs.ENVIRONMENT}}_${{github.sha}}
+          path: ${{ inputs.WORKING_DIRECTORY }}
+
+      - name: download a custom build artifact
+        uses: actions/download-artifact@v4.2.1
+        id: download-custom
+        if: ${{ inputs.USE_CUSTOM_ARTIFACTS == true }}
+        with:
+          name: custom_artifacts_${{inputs.ENVIRONMENT}}_${{github.sha}}
           path: ${{ inputs.WORKING_DIRECTORY }}
 
       - name: terraform init
