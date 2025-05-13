@@ -13,7 +13,7 @@ on:
         type: boolean
         default: false
         required: false
-        description: "if set to true, the action will download custom artifacts to the working directory (analogous to the 'normla' download step)"
+        description: "if set to true, the action will download custom artifacts to the working directory (analogous to the 'normal' download step)"
 
     secrets:
       GCP_JSON_KEY:
