@@ -14,6 +14,10 @@ on:
         default: false
         required: false
         description: "if set to true, the action will download custom artifacts to the working directory (analogous to the 'normal' download step)"
+      CUSTOM_ARTIFACT_PATH:
+        type: string
+        required: false
+        default: ""
 
     secrets:
       GCP_JSON_KEY:
