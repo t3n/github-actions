@@ -7,6 +7,6 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Process stale PRs
-        uses: Sonia-corporation/stale@2.5.0
+        uses: Sonia-corporation/stale@3.1.0
         with:
           pull-request-days-before-close: 2555
