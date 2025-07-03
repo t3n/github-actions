@@ -57,6 +57,8 @@ on:
         required: false
       BUILD_ARGS:
         required: false
+      GCR_JSON_KEY:
+        required: false
     outputs:
       DOCKER_METADATA_OUTPUT_VERSION:
         value: ${{ jobs.docker-build.outputs.DOCKER_METADATA_OUTPUT_VERSION }}
