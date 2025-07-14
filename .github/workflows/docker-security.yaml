@@ -30,7 +30,7 @@ jobs:
 
       - name: docker scan
         id: scan
-        uses: anchore/scan-action@v6.1.0
+        uses: anchore/scan-action@v6.4.0
         continue-on-error: true
         with:
           sbom: sbom_${{inputs.PROJECT}}.spdx.json
