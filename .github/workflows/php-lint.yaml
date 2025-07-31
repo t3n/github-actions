@@ -42,6 +42,10 @@ on:
         required: false
         default: phpcs
         description: "one of phpcs, phpstan"
+      WORKING_DIRECTORY:
+        type: string
+        required: false
+        default: "."
     secrets:
       SSH_KEY:
         required: false
@@ -50,6 +54,9 @@ on:
 
 jobs:
   php-lint:
+    defaults:
+      run:
+        working-directory: ${{ inputs.WORKING_DIRECTORY }}
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
