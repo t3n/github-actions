@@ -77,7 +77,7 @@ jobs:
           ssh_key: ${{secrets.SSH_KEY}}
           ssh_key_pub: ${{secrets.SSH_KEY_PUB}}
           memory_limit: ${{inputs.COMPOSER_MEMORY_LIMIT}}
-          container_workdir: ${{inputs.WORKING_DIRECTORY}}
+          container_workdir: ${{github.workspace}}
 
       - uses: php-actions/phpstan@v3.0.3
         with:
