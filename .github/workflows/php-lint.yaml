@@ -93,5 +93,5 @@ jobs:
       - name: phpcs
         uses: docker://docker.io/cytopia/phpcs:3@sha256:f1e6e93e9ce6be79e6d27c42b8cdfb7a07255275281e8db961ad3c6f0c1de5d0 # https://hub.docker.com/r/cytopia/phpcs
         with:
-          args: --standard=${{inputs.PATH}}/phpcs.xml.dist ${{inputs.PHPCS_PATH}}
+          args: --standard=${{inputs.WORKING_DIRECTORY}}/phpcs.xml.dist ${{inputs.PHPCS_PATH}}
         if: inputs.FLAVOUR == 'phpcs'
