@@ -30,6 +30,10 @@ on:
 env:
   TERRAFORM_VERSION: 1.12.2
 
+concurrency:
+  group: terraform-${{ inputs.ENVIRONMENT }}
+  cancel-in-progress: false
+
 jobs:
   terraform-build:
     defaults:
