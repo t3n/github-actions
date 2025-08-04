@@ -61,9 +61,9 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4.2.2
-
-      - name: foobar
-        run: echo ${{ github.workspace }}
+#
+#      - name: foobar
+#        run: echo ${{ github.workspace }}
 
       - name: Cache Composer dependencies
         uses: actions/cache@v4.2.3
