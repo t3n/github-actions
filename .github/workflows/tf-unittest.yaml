@@ -5,7 +5,7 @@ on:
       WORKING_DIRECTORY:
         type: string
         required: false
-        default: '.'
+        default: "."
       ENVIRONMENT:
         type: string
         required: true
@@ -31,9 +31,6 @@ jobs:
         run: mv ./test_${{inputs.ENVIRONMENT}}_${{github.sha}}.json ./test_${{inputs.ENVIRONMENT}}.json
 
       - name: conftest
-        uses: docker://openpolicyagent/conftest:v0.46.0@sha256:7da98fe5e8fe091193769e67a1823bfd1cfd16f682046474ce4ac81c0bd41dce
+        uses: docker://openpolicyagent/conftest:v0.62.0@sha256:6182c0c61e83ae6522ed29e5084ac5cce4c88cd0aa26ffb1c6fc57bb34e9daa9
         with:
           args: test ${{ inputs.WORKING_DIRECTORY }}/test_${{inputs.ENVIRONMENT}}.json --all-namespaces --no-color -p ${{ inputs.WORKING_DIRECTORY }}/policy
-
-
-

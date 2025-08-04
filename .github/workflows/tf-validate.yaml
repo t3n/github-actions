@@ -5,7 +5,7 @@ on:
       WORKING_DIRECTORY:
         type: string
         required: false
-        default: '.'
+        default: "."
 
 jobs:
   terraform-validate:
@@ -24,4 +24,4 @@ jobs:
           include: TF_VAR_*
 
       - name: tflint
-        uses: docker://ghcr.io/terraform-linters/tflint:v0.49.0@sha256:3f567269172bce107ca9c05e9e91ad3ccebb6e9ab3871f4e5b80bee1ef89db60
+        uses: docker://ghcr.io/terraform-linters/tflint:v0.58.1@sha256:0aedaea76dec88c8d19692986952bf80f77452ee74188866fd378375bcdd9d29

@@ -20,7 +20,7 @@ jobs:
           name: artifacts_image_${{inputs.PROJECT}}
 
       - name: docker-docs
-        uses: docker://anchore/syft:v0.96.0@sha256:d7a90627d73cce2ac1ea077da0c05049f74aff4a7544ca24a45c6861162db90b
+        uses: docker://anchore/syft:v1.29.1@sha256:5bb3f3b45937489b380559f178a7bea715d574a99a1d4da56591535119dde386
         with:
           args: packages docker-archive:./image_${{inputs.PROJECT}}.tar  -o template -t "./README.md.tmpl" > README.md
 
@@ -28,5 +28,5 @@ jobs:
         uses: EndBug/add-and-commit@v9.1.4
         with:
           default_author: github_actions
-          message: 'Update Readme'
-          add: 'README.md'
+          message: "Update Readme"
+          add: "README.md"

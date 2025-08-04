@@ -5,7 +5,7 @@ on:
       WORKING_DIRECTORY:
         type: string
         required: false
-        default: '.'
+        default: "."
       ENVIRONMENT:
         type: string
         required: true
@@ -25,7 +25,7 @@ jobs:
           path: ${{ inputs.WORKING_DIRECTORY }}
 
       - name: checkov
-        uses: docker://bridgecrew/checkov:3.0.35@sha256:a5a56df30ae5d40da0890dfc4de99d4590081e323ea196e1bef90b144bb84a7d
+        uses: docker://bridgecrew/checkov:3.2.457@sha256:021af1112246ce9f6e8ba6acfd792e40efec59d60f64ca17cf7dce7825f55975
         with:
           entrypoint: checkov
           args: -f ${{ inputs.WORKING_DIRECTORY }}/test_${{inputs.ENVIRONMENT}}_${{github.sha}}.json -o cli -o junitxml --output-file-path ${{ inputs.WORKING_DIRECTORY }}/checkov.junit.xml -s

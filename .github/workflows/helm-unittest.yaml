@@ -21,7 +21,7 @@ jobs:
         run: for d in ./charts/* ; do helm template $(basename -- $d) > ./rendered_$(basename -- $d).yaml; done
 
       - name: conftest
-        uses: docker://openpolicyagent/conftest:v0.46.0@sha256:7da98fe5e8fe091193769e67a1823bfd1cfd16f682046474ce4ac81c0bd41dce
+        uses: docker://openpolicyagent/conftest:v0.62.0@sha256:6182c0c61e83ae6522ed29e5084ac5cce4c88cd0aa26ffb1c6fc57bb34e9daa9
         with:
           args: -c 'for d in ./rendered_*; do conftest test "${d}" --all-namespaces --no-color; done'
           entrypoint: sh
