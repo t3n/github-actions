@@ -45,7 +45,7 @@ on:
       WORKING_DIRECTORY:
         type: string
         required: false
-        default: ${{ github.workspace }}/app
+        default: .
     secrets:
       SSH_KEY:
         required: false
@@ -81,7 +81,8 @@ jobs:
           ssh_key: ${{secrets.SSH_KEY}}
           ssh_key_pub: ${{secrets.SSH_KEY_PUB}}
           memory_limit: ${{inputs.COMPOSER_MEMORY_LIMIT}}
-          container_workdir: ${{inputs.WORKING_DIRECTORY}}
+          working_dir: ${{inputs.COMPOSER_PATH}}
+          #container_workdir: ${{inputs.WORKING_DIRECTORY}}
 
       - uses: php-actions/phpstan@v3.0.3
         with:
