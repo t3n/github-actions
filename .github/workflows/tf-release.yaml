@@ -25,7 +25,7 @@ on:
         description: "can be inherited by using the 'inherit' keyword https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idsecretsinherit"
 
 env:
-  TERRAFORM_VERSION: 1.11.3
+  TERRAFORM_VERSION: 1.12.2
 
 jobs:
   terraform-release:

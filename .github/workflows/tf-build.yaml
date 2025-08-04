@@ -28,7 +28,7 @@ on:
         description: "can be inherited by using the 'inherit' keyword https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idsecretsinherit"
 
 env:
-  TERRAFORM_VERSION: 1.11.3
+  TERRAFORM_VERSION: 1.12.2
 
 jobs:
   terraform-build:
@@ -91,4 +91,4 @@ jobs:
           name: custom_artifacts_${{inputs.ENVIRONMENT}}_${{github.sha}}
           path: ${{ inputs.WORKING_DIRECTORY }}/${{ inputs.CUSTOM_ARTIFACT_PATH }}
           retention-days: 1
-          if-no-files-found: 'warn'
+          if-no-files-found: "warn"
