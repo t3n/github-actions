@@ -31,7 +31,7 @@ env:
   TERRAFORM_VERSION: 1.12.2
 
 concurrency:
-  group: terraform-${{ inputs.ENVIRONMENT }}
+  group: terraform-build-${{ inputs.ENVIRONMENT }}
   cancel-in-progress: false
 
 jobs:
