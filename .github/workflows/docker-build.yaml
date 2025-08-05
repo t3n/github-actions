@@ -136,7 +136,7 @@ jobs:
           dry_run: true
 
       - name: Docker Metadata action
-        uses: docker/metadata-action@v5.7.0
+        uses: docker/metadata-action@v5.8.0
         id: meta
         with:
           flavor: |
