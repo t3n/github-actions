@@ -79,7 +79,7 @@ jobs:
 
       - name: directory ownership
         run: git config --global --add safe.directory /app &&
-             git config --global --add safe.directory /tmp/composer-cache/**/*
+             git config --global --add safe.directory /tmp/composer-cache/*
 
       - uses: php-actions/composer@v6.1.2
         with:
