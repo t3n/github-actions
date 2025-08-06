@@ -78,8 +78,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
 
       - name: directory ownership
-        run: git config --global --add safe.directory /app &&
-             git config --global --add safe.directory "/tmp/composer-cache/*"
+        run: git config --global --add safe.directory "*"
 
       - uses: php-actions/composer@v6.1.2
         with:
