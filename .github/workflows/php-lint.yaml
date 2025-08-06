@@ -70,15 +70,16 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4.2.2
-#
-#      - name: foobar
-#        run: echo ${{ github.workspace }}
 
       - name: Cache Composer dependencies
         uses: actions/cache@v4.2.3
         with:
           path: /tmp/composer-cache
           key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+
+      - name: directory ownership
+        run: git config --global --add safe.directory /app &&
+             git config --global --add safe.directory /tmp/composer-cache
 
       - uses: php-actions/composer@v6.1.2
         with:
