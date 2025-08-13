@@ -95,7 +95,7 @@ jobs:
 
       - uses: php-actions/phpstan@v3.0.3
         with:
-          path: ${{inputs.COMPOSER_PATH}}
+          vendored_phpstan_path: ${{inputs.COMPOSER_PATH}}
           memory_limit: ${{inputs.COMPOSER_MEMORY_LIMIT}}
         if: inputs.FLAVOUR == 'phpstan'
 
