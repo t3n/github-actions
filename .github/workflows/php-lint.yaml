@@ -91,12 +91,14 @@ jobs:
           ssh_key_pub: ${{secrets.SSH_KEY_PUB}}
           memory_limit: ${{inputs.COMPOSER_MEMORY_LIMIT}}
           working_dir: ${{inputs.COMPOSER_PATH}}
-          #container_workdir: ${{inputs.WORKING_DIRECTORY}}
 
       - uses: php-actions/phpstan@v3.0.3
         with:
-          vendored_phpstan_path: ${{inputs.COMPOSER_PATH}}
           memory_limit: ${{inputs.COMPOSER_MEMORY_LIMIT}}
+          php_extensions: ${{inputs.PHP_EXTENSIONS}}
+          php_version: ${{inputs.COMPOSER_PHP_VERSION}}
+          vendored_phpstan_path: ${{inputs.COMPOSER_PATH}}
+          version: "latest"
         if: inputs.FLAVOUR == 'phpstan'
 
       - name: phpcs
