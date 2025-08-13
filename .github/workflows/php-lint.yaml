@@ -55,6 +55,11 @@ on:
         type: string
         required: false
         default: "--standard=${{inputs.PHPCS_STANDARD}} ${{inputs.PHPCS_PATH}}"
+      PHPSTAN_VERSION:
+        type: string
+        required: false
+        default: "latest"
+        description: "the version of PHPStan to use, e.g. 1.0, 1.1, etc."
     secrets:
       SSH_KEY:
         required: false
@@ -98,7 +103,7 @@ jobs:
           php_extensions: ${{inputs.PHP_EXTENSIONS}}
           php_version: ${{inputs.COMPOSER_PHP_VERSION}}
           vendored_phpstan_path: ${{inputs.COMPOSER_PATH}}
-          version: "latest"
+          version: ${{inputs.PHPSTAN_VERSION}}
         if: inputs.FLAVOUR == 'phpstan'
 
       - name: phpcs
