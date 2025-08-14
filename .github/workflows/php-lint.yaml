@@ -109,17 +109,17 @@ jobs:
       - name: phpstan
         # find phpstan install and run it
         run: |
-            if [ -d "${{ inputs.COMPOSER_PATH }}/vendor/bin" ]; then
-                phpstan_path="${{ inputs.COMPOSER_PATH }}/vendor/bin/phpstan"
-            elif [ -d "${{ inputs.COMPOSER_PATH }}/vendor/phpstan/phpstan/bin" ]; then
-                phpstan_path="${{ inputs.COMPOSER_PATH }}/vendor/phpstan/phpstan/bin/phpstan"
-            else
-                echo "PHPStan not found in the expected paths."
-                exit 1
-            fi
-            echo $phpstan_path
-            echo pwd
-            echo ls -la
+          echo pwd
+          echo ls -la
+          if [ -d "${{ inputs.COMPOSER_PATH }}/vendor/bin" ]; then
+              phpstan_path="${{ inputs.COMPOSER_PATH }}/vendor/bin/phpstan"
+          elif [ -d "${{ inputs.COMPOSER_PATH }}/vendor/phpstan/phpstan/bin" ]; then
+              phpstan_path="${{ inputs.COMPOSER_PATH }}/vendor/phpstan/phpstan/bin/phpstan"
+          else
+              echo "PHPStan not found in the expected paths."
+              exit 1
+          fi
+          
             $phpstan_path analyse ${{ inputs.PATH }} --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-interaction --no-ansi
 #          vendor/bin/phpstan analyse ${{ inputs.PATH }} --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-interaction --no-ansi
         if: inputs.FLAVOUR == 'phpstan'
