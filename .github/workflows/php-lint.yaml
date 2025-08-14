@@ -97,13 +97,19 @@ jobs:
           memory_limit: ${{inputs.COMPOSER_MEMORY_LIMIT}}
           working_dir: ${{inputs.COMPOSER_PATH}}
 
-      - uses: php-actions/phpstan@v3.0.3
-        with:
-          memory_limit: ${{inputs.COMPOSER_MEMORY_LIMIT}}
-          php_extensions: ${{inputs.PHP_EXTENSIONS}}
-          php_version: ${{inputs.COMPOSER_PHP_VERSION}}
-          vendored_phpstan_path: ${{inputs.COMPOSER_PATH}}
-          version: ${{inputs.PHPSTAN_VERSION}}
+#      - uses: php-actions/phpstan@v3.0.3
+#        with:
+#          memory_limit: ${{inputs.COMPOSER_MEMORY_LIMIT}}
+#          php_extensions: ${{inputs.PHP_EXTENSIONS}}
+#          php_version: ${{inputs.COMPOSER_PHP_VERSION}}
+#          vendored_phpstan_path: ${{inputs.COMPOSER_PATH}}
+#          version: ${{inputs.PHPSTAN_VERSION}}
+#        if: inputs.FLAVOUR == 'phpstan'
+
+      - name: phpstan
+        run: |
+          which phpstan
+#          vendor/bin/phpstan analyse ${{ inputs.PATH }} --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-interaction --no-ansi
         if: inputs.FLAVOUR == 'phpstan'
 
       - name: phpcs
