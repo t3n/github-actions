@@ -109,8 +109,7 @@ jobs:
       - name: phpstan
         # find phpstan install and run it
         run: |
-          echo "$(pwd)"
-          echo "$(ls -la)"
+          echo "$(cd app && pwd && ls -la && ls -la ./bin)"
           if [ -d "${{ inputs.COMPOSER_PATH }}/vendor/bin" ]; then
               phpstan_path="${{ inputs.COMPOSER_PATH }}/vendor/bin/phpstan"
           elif [ -d "${{ inputs.COMPOSER_PATH }}/vendor/phpstan/phpstan/bin" ]; then
