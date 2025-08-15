@@ -113,15 +113,12 @@ jobs:
       - name: phpstan
         # find phpstan binary and run it
         run: |
-          : # check if phpstan can be found in PATH_TO_BINARIES and if it can, use it
-          : # otherwise use default from PATH_TO_BINARIES
           phpstan_path="${{ inputs.PATH_TO_BINARIES }}/phpstan"
           if [ -x "$phpstan_path" ]; then
-            : # phpstan found in PATH_TO_BINARIES - use it
             exec "$phpstan_path" analyse ${{ inputs.PATH }} --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-ansi
           else
-              echo "PHPStan not found in the given path '${{ inputs.PATH_TO_BINARIES }}'."
-              exit 1
+            echo "PHPStan not found in the given path '${{ inputs.PATH_TO_BINARIES }}'."
+            exit 1
           fi
         if: inputs.FLAVOUR == 'phpstan'
 
