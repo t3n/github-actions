@@ -123,7 +123,7 @@ jobs:
               exit 1
           fi
           
-          exec "$phpstan_path" analyse ${{ inputs.PATH }} --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-interaction --no-ansi
+          exec "$phpstan_path" analyse ${{ inputs.PATH }} --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-ansi
 #         vendor/bin/phpstan analyse ${{ inputs.PATH }} --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-interaction --no-ansi
         if: inputs.FLAVOUR == 'phpstan'
 
