@@ -118,13 +118,11 @@ jobs:
           phpstan_path="${{ inputs.PATH_TO_BINARIES }}/phpstan"
           if [ -x "$phpstan_path" ]; then
             : # phpstan found in PATH_TO_BINARIES - use it
+            exec "$phpstan_path" analyse ${{ inputs.PATH }} --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-ansi
           else
               echo "PHPStan not found in the given path '${{ inputs.PATH_TO_BINARIES }}'."
               exit 1
           fi
-          
-          exec "$phpstan_path" analyse ${{ inputs.PATH }} --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-ansi
-#         vendor/bin/phpstan analyse ${{ inputs.PATH }} --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-interaction --no-ansi
         if: inputs.FLAVOUR == 'phpstan'
 
       - name: phpcs
