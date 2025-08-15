@@ -60,6 +60,10 @@ on:
         required: false
         default: "latest"
         description: "the version of PHPStan to use, e.g. 1.0, 1.1, etc."
+      PATH_TO_BINARIES:
+        type: string
+        required: false
+        default: "./vendor/bin"
     secrets:
       SSH_KEY:
         required: false
@@ -107,20 +111,20 @@ jobs:
 #        if: inputs.FLAVOUR == 'phpstan'
 
       - name: phpstan
-        # find phpstan install and run it
+        # find phpstan binary and run it
         run: |
-          echo "$(cd app && pwd && ls -la && ls -la ./bin)"
-          if [ -d "${{ inputs.COMPOSER_PATH }}/vendor/bin" ]; then
-              phpstan_path="${{ inputs.COMPOSER_PATH }}/vendor/bin/phpstan"
-          elif [ -d "${{ inputs.COMPOSER_PATH }}/vendor/phpstan/phpstan/bin" ]; then
-              phpstan_path="${{ inputs.COMPOSER_PATH }}/vendor/phpstan/phpstan/bin/phpstan"
+          : # check if phpstan can be found in PATH_TO_BINARIES and if it can, use it
+          : # otherwise check in vendor/bin or vendor/phpstan/phpstan/bin
+          phpstan_path="${{ inputs.PATH_TO_BINARIES }}/phpstan"
+          if [ -x "$phpstan_path" ]; then
+            : # phpstan found in PATH_TO_BINARIES - use it
           else
-              echo "PHPStan not found in the expected paths."
+              echo "PHPStan not found in the given path '${{ inputs.PATH_TO_BINARIES }}'."
               exit 1
           fi
           
-            $phpstan_path analyse ${{ inputs.PATH }} --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-interaction --no-ansi
-#          vendor/bin/phpstan analyse ${{ inputs.PATH }} --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-interaction --no-ansi
+          $phpstan_path analyse ${{ inputs.PATH }} --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-interaction --no-ansi
+#         vendor/bin/phpstan analyse ${{ inputs.PATH }} --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-interaction --no-ansi
         if: inputs.FLAVOUR == 'phpstan'
 
       - name: phpcs
