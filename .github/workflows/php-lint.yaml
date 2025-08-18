@@ -64,6 +64,10 @@ on:
         type: string
         required: false
         default: "./vendor/bin"
+      PATH_TO_PHPSTAN_CONFIG_FILE:
+        type: string
+        required: false
+        default: "./phpstan.neon"
     secrets:
       SSH_KEY:
         required: false
@@ -115,7 +119,7 @@ jobs:
         run: |
           phpstan_path="${{ inputs.PATH_TO_BINARIES }}/phpstan"
           if [ -x "$phpstan_path" ]; then
-            exec "$phpstan_path" analyse ${{ inputs.PATH }} --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-ansi
+            exec "$phpstan_path" analyse ${{ inputs.COMPOSER_PATH }} --configuration=${{ inputs.PATH_TO_PHPSTAN_CONFIG_FILE }} --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-ansi
           else
             echo "PHPStan not found in the given path '${{ inputs.PATH_TO_BINARIES }}'."
             exit 1
