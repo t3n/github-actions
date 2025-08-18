@@ -119,7 +119,10 @@ jobs:
         run: |
           phpstan_path="${{ inputs.PATH_TO_BINARIES }}/phpstan"
           if [ -x "$phpstan_path" ]; then
-            exec "$phpstan_path" analyse ${{ inputs.COMPOSER_PATH }} --configuration=${{ inputs.PATH_TO_PHPSTAN_CONFIG_FILE }} --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-ansi
+            # abs_phpstan_path stores the absolute path to the binary before changing directories
+            abs_phpstan_path="$(cd "$(dirname "$phpstan_path")" && pwd)/$(basename "$phpstan_path")"
+            cd "${{ inputs.COMPOSER_PATH }}"
+            exec "$abs_phpstan_path" analyse --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-ansi
           else
             echo "PHPStan not found in the given path '${{ inputs.PATH_TO_BINARIES }}'."
             exit 1
