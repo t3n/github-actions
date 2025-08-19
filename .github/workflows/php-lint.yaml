@@ -83,7 +83,6 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4.2.2
-
 #      - name: Cache Composer dependencies
 #        uses: actions/cache@v4.2.3
 #        with:
@@ -92,7 +91,6 @@ jobs:
 #
 #      - name: directory ownership
 #        run: git config --global --add safe.directory "*"
-
       - uses: php-actions/composer@v6.1.2
         with:
           php_version: ${{inputs.COMPOSER_PHP_VERSION}}
@@ -105,18 +103,10 @@ jobs:
           memory_limit: ${{inputs.COMPOSER_MEMORY_LIMIT}}
           working_dir: ${{inputs.COMPOSER_PATH}}
 
-#      - uses: php-actions/phpstan@v3.0.3
-#        with:
-#          memory_limit: ${{inputs.COMPOSER_MEMORY_LIMIT}}
-#          php_extensions: ${{inputs.PHP_EXTENSIONS}}
-#          php_version: ${{inputs.COMPOSER_PHP_VERSION}}
-#          vendored_phpstan_path: ${{inputs.COMPOSER_PATH}}
-#          version: ${{inputs.PHPSTAN_VERSION}}
-#        if: inputs.FLAVOUR == 'phpstan'
-
       - name: phpstan
         # find phpstan binary and run it
         run: |
+          set -e
           phpstan_path="${{ inputs.PATH_TO_BINARIES }}/phpstan"
           if [ -x "$phpstan_path" ]; then
             # abs_phpstan_path stores the absolute path to the binary before changing directories
@@ -133,5 +123,4 @@ jobs:
         uses: docker://docker.io/cytopia/phpcs:3@sha256:f1e6e93e9ce6be79e6d27c42b8cdfb7a07255275281e8db961ad3c6f0c1de5d0 # https://hub.docker.com/r/cytopia/phpcs
         with:
           args: ${{ inputs.ARGS_STRING }}
-#          args: --standard=${{inputs.PHPCS_STANDARD}} ${{inputs.PHPCS_PATH}}
         if: inputs.FLAVOUR == 'phpcs'
