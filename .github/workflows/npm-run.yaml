@@ -1,0 +1,49 @@
+name: NPM RUN
+
+on:
+  workflow_call:
+    inputs:
+      PROJECT:
+        type: string
+        required: true
+      NODE_VERSION:
+        type: string
+        required: false
+        default: "20"
+      WORKING_DIRECTORY:
+        type: string
+        required: false
+        default: "app"
+      COMMANDS:
+        type: string
+        required: true
+        default: '["test", "lint", "prettier:check"]'
+
+jobs:
+  npm-run:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: true
+      max-parallel: 5
+      matrix:
+        COMMANDS: ${{ fromJson(inputs.COMMANDS) }}
+    defaults:
+      run:
+        shell: bash --noprofile --norc
+        working-directory: ${{ inputs.WORKING_DIRECTORY }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: setup node
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version: ${{ inputs.NODE_VERSION }}
+          cache: "npm"
+
+      - name: npm install
+        run: npm ci
+
+      - name: run commands
+        run: |
+          npm run ${{ matrix.COMMANDS }}
