@@ -3,9 +3,6 @@ name: NPM RUN
 on:
   workflow_call:
     inputs:
-      PROJECT:
-        type: string
-        required: true
       NODE_VERSION:
         type: string
         required: false
