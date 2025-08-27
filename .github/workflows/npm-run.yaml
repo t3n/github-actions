@@ -26,7 +26,7 @@ jobs:
         COMMANDS: ${{ fromJson(inputs.COMMANDS) }}
     defaults:
       run:
-        shell: bash --noprofile --norc
+        shell: bash
         working-directory: ${{ inputs.WORKING_DIRECTORY }}
     steps:
       - name: checkout
