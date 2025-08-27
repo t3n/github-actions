@@ -39,6 +39,11 @@ on:
         type: string
         description: "name of the artifact to download"
         required: false
+      DOWNLOAD_PATH:
+        type: string
+        description: "path to download the artifact to"
+        required: false
+        default: "./download"
     secrets:
       GCP_JSON_KEY:
         required: false
@@ -56,6 +61,7 @@ jobs:
         id: download
         with:
           name: ${{ inputs.ARTIFACT_NAME }}
+          path: ${{ inputs.DOWNLOAD_PATH }}
       - name: authenticate to google cloud
         id: auth
         uses: google-github-actions/auth@v2.1.10
