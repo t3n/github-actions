@@ -98,6 +98,7 @@ jobs:
       DOCKER_METADATA_OUTPUT_LABELS: ${{ steps.meta.outputs.labels}}
       DOCKER_METADATA_OUTPUT_ANNOTATIONS: ${{ steps.meta.outputs.annotations}}
       DOCKER_METADATA_OUTPUT_JSON: ${{ steps.meta.outputs.json}}
+      DOCKER_OUTPUT_ARTIFACT_ID: ${{ steps.upload-outputs.outputs.artifact-id }}
     steps:
       - name: checkout
         uses: actions/checkout@v4.2.2
@@ -218,6 +219,7 @@ jobs:
           path: ./image_${{steps.lowercase.outputs.project}}.tar
           retention-days: 1
       - name: upload (outputs)
+        id: upload-outputs
         uses: actions/upload-artifact@v4.6.2
         if: ${{ inputs.BUILD_OUTPUTS }}
         with:
