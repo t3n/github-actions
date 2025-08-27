@@ -196,7 +196,7 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         with:
-          build-args: ${{inputs.BUILD_ARGS}}
+          build-args: ${{secrets.BUILD_ARGS}}
           cache-from: type=gha,scope=${{ inputs.PROJECT }}
           cache-to: type=gha,mode=max,scope=${{ inputs.PROJECT }}
           context: ${{inputs.CONTEXT}}
