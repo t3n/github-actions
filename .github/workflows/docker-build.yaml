@@ -87,6 +87,8 @@ on:
         value: ${{ jobs.docker-build.outputs.DOCKER_METADATA_OUTPUT_ANNOTATIONS }}
       DOCKER_METADATA_OUTPUT_JSON:
         value: ${{ jobs.docker-build.outputs.DOCKER_METADATA_OUTPUT_JSON }}
+      DOCKER_OUTPUT_ARTIFACT_ID:
+        value: ${{ jobs.docker-build.outputs.DOCKER_OUTPUT_ARTIFACT_ID }}
 
 jobs:
   docker-build:
