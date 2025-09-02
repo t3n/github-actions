@@ -76,4 +76,6 @@ jobs:
           predefinedAcl: ${{ inputs.PREDEFINEDACL }}
           headers: ${{ inputs.HEADERS }}
           glob: ${{ inputs.GLOB }}
+          parent: false
+          process_gcloudignore: false
           concurrency: ${{ inputs.CONCURRENCY }}
