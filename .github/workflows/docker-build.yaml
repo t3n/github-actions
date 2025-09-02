@@ -236,4 +236,4 @@ jobs:
         run: |
           echo "## 🦦 Changelog" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          ${{ steps.tag_version.outputs.changelog }} >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.tag_version.outputs.changelog }}" >> $GITHUB_STEP_SUMMARY
