@@ -232,3 +232,8 @@ jobs:
           name: outputs_${{ steps.lowercase.outputs.project }}${{ inputs.BUILD_OUTPUTS_CUSTOM_NAME != null && format('_{0}', inputs.BUILD_OUTPUTS_CUSTOM_NAME) || '' }}
           path: ./outputs_${{ steps.lowercase.outputs.project }}${{ inputs.BUILD_OUTPUTS_CUSTOM_NAME != null && format('_{0}', inputs.BUILD_OUTPUTS_CUSTOM_NAME) || '' }}
           retention-days: 1
+      - name: create summary
+        run: |
+          echo "## 🦦 Changelog" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          ${{ steps.tag_version.outputs.changelog }} >> $GITHUB_STEP_SUMMARY

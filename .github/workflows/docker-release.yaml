@@ -68,7 +68,7 @@ jobs:
           done
       - name: create summary
         run: |
-          echo "### Docker Image pushed to registry" >> $GITHUB_STEP_SUMMARY
+          echo "## ✨ Docker Tags pushed to registry" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Image |" >> $GITHUB_STEP_SUMMARY
           echo "| ----- |" >> $GITHUB_STEP_SUMMARY
