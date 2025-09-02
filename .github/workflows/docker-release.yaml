@@ -66,3 +66,13 @@ jobs:
           for tag in ${TAGS}; do
             docker push "${tag}"
           done
+      - name: create summary
+        run: |
+          echo "### Docker Image pushed to registry" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Image |" >> $GITHUB_STEP_SUMMARY
+          echo "| ----- |" >> $GITHUB_STEP_SUMMARY
+          TAGS="${{steps.image_ids.outputs.ids}}"
+          for tag in ${TAGS}; do
+            echo "| ${tag} |" >> $GITHUB_STEP_SUMMARY
+          done
