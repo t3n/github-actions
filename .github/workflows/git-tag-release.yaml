@@ -67,3 +67,19 @@ jobs:
           tag: ${{ steps.set_tag.outputs.new_tag }}
           name: ${{ steps.set_tag.outputs.new_tag }} - ${{ steps.fancy_name.outputs.release_name }}
           body: ${{ steps.set_tag.outputs.changelog }}
+
+      - name: create summary
+        run: |
+          echo "## 🦦 New Tag created" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.tag_exists.outputs.exists }}" = "true" ]; then
+            echo "No new tag created, tag ${{ steps.calc_tag.outputs.new_tag }} already exists" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Tag | Release Name |" >> $GITHUB_STEP_SUMMARY
+            echo "| --- | ------------ |" >> $GITHUB_STEP_SUMMARY
+            echo "| ${{ steps.set_tag.outputs.new_tag }} | ${{ steps.fancy_name.outputs.release_name }} |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### 📝 Changelog" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "${{ steps.set_tag.outputs.changelog }}" >> $GITHUB_STEP_SUMMARY
+          fi

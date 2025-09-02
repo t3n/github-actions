@@ -35,6 +35,15 @@ on:
         description: "number of concurrent uploads"
         required: false
         default: 100
+      ARTIFACT_NAME:
+        type: string
+        description: "name of the artifact to download"
+        required: false
+      DOWNLOAD_PATH:
+        type: string
+        description: "path to download the artifact to"
+        required: false
+        default: "./download"
     secrets:
       GCP_JSON_KEY:
         required: false
@@ -46,11 +55,18 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4.2.2
+      - name: download a build artifact
+        if: ${{ inputs.ARTIFACT_NAME != null }}
+        uses: actions/download-artifact@v4.3.0
+        id: download
+        with:
+          name: ${{ inputs.ARTIFACT_NAME }}
+          path: ${{ inputs.DOWNLOAD_PATH }}
       - name: authenticate to google cloud
         id: auth
         uses: google-github-actions/auth@v2.1.10
         with:
-          credentials_json: "${{ secrets.GCP_JSON_KEY }}"
+          credentials_json: ${{ secrets.GCP_JSON_KEY }}
       - id: "upload-file"
         uses: "google-github-actions/upload-cloud-storage@v2.2.2"
         with:
@@ -60,4 +76,6 @@ jobs:
           predefinedAcl: ${{ inputs.PREDEFINEDACL }}
           headers: ${{ inputs.HEADERS }}
           glob: ${{ inputs.GLOB }}
+          parent: false
+          process_gcloudignore: false
           concurrency: ${{ inputs.CONCURRENCY }}
