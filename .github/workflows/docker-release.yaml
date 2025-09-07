@@ -70,9 +70,11 @@ jobs:
         run: |
           echo "## ✨ Docker Tags pushed to registry" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Image |" >> $GITHUB_STEP_SUMMARY
-          echo "| ----- |" >> $GITHUB_STEP_SUMMARY
+          echo "| Repository | Tag |" >> $GITHUB_STEP_SUMMARY
+          echo "| ---------- | --- |" >> $GITHUB_STEP_SUMMARY
           TAGS="${{steps.image_ids.outputs.ids}}"
           for tag in ${TAGS}; do
-            echo "| ${tag} |" >> $GITHUB_STEP_SUMMARY
+          repo="${tag%%:*}"
+          tagname="${tag##*:}"
+          echo "| ${repo} | ${tagname} |" >> $GITHUB_STEP_SUMMARY
           done
