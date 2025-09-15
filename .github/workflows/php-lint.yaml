@@ -37,6 +37,11 @@ on:
         type: string
         required: false
         default: .
+      PHPCS_STANDARD:
+        type: string
+        required: false
+        default: PSR2
+        description: "the coding standard to use, e.g. PSR2, PSR12, WordPress, etc., or a path to a custom standard file"
       FLAVOUR:
         type: string
         required: false
@@ -45,7 +50,24 @@ on:
       WORKING_DIRECTORY:
         type: string
         required: false
-        default: "."
+        default: .
+      ARGS_STRING:
+        type: string
+        required: false
+        default: "--standard=${{inputs.PHPCS_STANDARD}} ${{inputs.PHPCS_PATH}}"
+      PHPSTAN_VERSION:
+        type: string
+        required: false
+        default: "latest"
+        description: "the version of PHPStan to use, e.g. 1.0, 1.1, etc."
+      PATH_TO_BINARIES:
+        type: string
+        required: false
+        default: "./vendor/bin"
+      PATH_TO_PHPSTAN_CONFIG_FILE:
+        type: string
+        required: false
+        default: "./phpstan.neon"
     secrets:
       SSH_KEY:
         required: false
@@ -61,13 +83,6 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4.2.2
-
-      - name: Cache Composer dependencies
-        uses: actions/cache@v4.2.3
-        with:
-          path: /tmp/composer-cache
-          key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
-
       - uses: php-actions/composer@v6.1.2
         with:
           php_version: ${{inputs.COMPOSER_PHP_VERSION}}
@@ -78,16 +93,26 @@ jobs:
           ssh_key: ${{secrets.SSH_KEY}}
           ssh_key_pub: ${{secrets.SSH_KEY_PUB}}
           memory_limit: ${{inputs.COMPOSER_MEMORY_LIMIT}}
-          container_workdir: ${{inputs.WORKING_DIRECTORY}}
+          working_dir: ${{inputs.COMPOSER_PATH}}
 
-      - uses: php-actions/phpstan@v3.0.3
-        with:
-          path: ${{inputs.PATH}}
-          memory_limit: ${{inputs.COMPOSER_MEMORY_LIMIT}}
+      - name: phpstan
+        # find phpstan binary and run it
+        run: |
+          set -e
+          phpstan_path="${{ inputs.PATH_TO_BINARIES }}/phpstan"
+          if [ -x "$phpstan_path" ]; then
+            # abs_phpstan_path stores the absolute path to the binary before changing directories
+            abs_phpstan_path="$(cd "$(dirname "$phpstan_path")" && pwd)/$(basename "$phpstan_path")"
+            cd "${{ inputs.COMPOSER_PATH }}"
+            exec "$abs_phpstan_path" analyse --memory-limit=${{ inputs.COMPOSER_MEMORY_LIMIT }} --no-progress --no-ansi
+          else
+            echo "PHPStan not found in the given path '${{ inputs.PATH_TO_BINARIES }}'."
+            exit 1
+          fi
         if: inputs.FLAVOUR == 'phpstan'
 
       - name: phpcs
         uses: docker://docker.io/cytopia/phpcs:3@sha256:f1e6e93e9ce6be79e6d27c42b8cdfb7a07255275281e8db961ad3c6f0c1de5d0 # https://hub.docker.com/r/cytopia/phpcs
         with:
-          args: --standard=${{inputs.PATH}}/phpcs.xml.dist ${{inputs.PHPCS_PATH}}
+          args: ${{ inputs.ARGS_STRING }}
         if: inputs.FLAVOUR == 'phpcs'
