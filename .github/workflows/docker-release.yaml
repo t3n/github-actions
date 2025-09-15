@@ -47,14 +47,14 @@ jobs:
           } >> $GITHUB_OUTPUT
 
       - name: login to gcr
-        uses: docker/login-action@v3.4.0
+        uses: docker/login-action@v3.5.0
         with:
           registry: ${{ inputs.GCP_REGISTRY }}
           username: _json_key
           password: ${{ secrets.GCR_JSON_KEY }}
 
       - name: login to gar
-        uses: docker/login-action@v3.4.0
+        uses: docker/login-action@v3.5.0
         with:
           registry: ${{ inputs.GAR_REGISTRY}}
           username: _json_key
