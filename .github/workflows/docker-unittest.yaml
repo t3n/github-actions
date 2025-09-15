@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v5.0.0
 
       - name: conftest
         uses: docker://openpolicyagent/conftest:v0.62.0@sha256:6182c0c61e83ae6522ed29e5084ac5cce4c88cd0aa26ffb1c6fc57bb34e9daa9
