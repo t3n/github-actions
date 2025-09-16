@@ -28,7 +28,7 @@ on:
         description: "can be inherited by using the 'inherit' keyword https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idsecretsinherit"
 
 env:
-  TERRAFORM_VERSION: 1.12.2
+  TERRAFORM_VERSION: 1.13.2
 
 concurrency:
   group: terraform-${{ inputs.ENVIRONMENT }}
@@ -96,3 +96,19 @@ jobs:
           path: ${{ inputs.WORKING_DIRECTORY }}/${{ inputs.CUSTOM_ARTIFACT_PATH }}
           retention-days: 1
           if-no-files-found: "warn"
+
+      - name: calculate tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_branches: main,stage
+          create_annotated_tag: true
+          tag_prefix: ""
+          dry_run: true
+
+      - name: create summary
+        run: |
+          echo "## 🦦 Changelog" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.tag_version.outputs.changelog }}" >> $GITHUB_STEP_SUMMARY
