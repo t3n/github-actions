@@ -81,5 +81,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "### 📝 Changelog" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "${{ steps.set_tag.outputs.changelog }}" >> $GITHUB_STEP_SUMMARY
+            cat << 'EOF' >> $GITHUB_STEP_SUMMARY
+            {{ steps.set_tag.outputs.changelog }}
+            EOF
           fi
