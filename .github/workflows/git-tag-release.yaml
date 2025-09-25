@@ -62,7 +62,7 @@ jobs:
 
       - name: release
         if: steps.tag_exists.outputs.exists == 'false'
-        uses: ncipollo/release-action@v1.16.0
+        uses: ncipollo/release-action@v1.20.0
         with:
           tag: ${{ steps.set_tag.outputs.new_tag }}
           name: ${{ steps.set_tag.outputs.new_tag }} - ${{ steps.fancy_name.outputs.release_name }}
