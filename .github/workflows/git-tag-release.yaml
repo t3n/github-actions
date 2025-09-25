@@ -18,7 +18,7 @@ jobs:
       CHANGELOG: ${{ steps.set_tag.outputs.changelog }}
       RELEASE_NAME: ${{ steps.fancy_name.outputs.release_name }}
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
 
       - name: calculate tag
         id: calc_tag

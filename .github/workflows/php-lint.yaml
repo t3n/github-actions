@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v5.0.0
       - uses: php-actions/composer@v6.1.2
         with:
           php_version: ${{inputs.COMPOSER_PHP_VERSION}}
