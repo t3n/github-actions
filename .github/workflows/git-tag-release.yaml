@@ -83,5 +83,5 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
             cat << 'EOF' >> $GITHUB_STEP_SUMMARY
             {{ steps.set_tag.outputs.changelog }}
-EOF
+          EOF
           fi
