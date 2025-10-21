@@ -3,6 +3,10 @@ name: Apollo GraphQL Validate and Push
 on:
   workflow_call:
     inputs:
+      PUBLISH:
+        type: boolean
+        required: false
+        default: false
       GRAPH_REF:
         type: string
         required: true
@@ -17,6 +21,14 @@ on:
         type: string
         required: false
         default: "app"
+      HAS_PUBLIC:
+        type: boolean
+        required: false
+        default: true
+      HAS_PRIVATE:
+        type: boolean
+        required: false
+        default: true
     secrets:
       APOLLO_KEY_PUBLIC:
         required: true
@@ -64,12 +76,16 @@ jobs:
             fi
           done
 
-      - name: fetch subgraph schema
-        run: |
-          rover subgraph introspect http://localhost:3000 > schema.public.graphql
-          rover subgraph introspect http://localhost:3001 > schema.private.graphql
+      - name: fetch subgraph schema (public)
+        if: ${{ inputs.HAS_PUBLIC }}
+        run: rover subgraph introspect http://localhost:3000 > schema.public.graphql
+
+      - name: fetch subgraph schema (private)
+        if: ${{ inputs.HAS_PRIVATE }}
+        run: rover subgraph introspect http://localhost:3001 > schema.private.graphql
 
       - name: check schema changes (public)
+        if: ${{ inputs.HAS_PUBLIC }}
         uses: apollographql-gh-actions/rover-subgraph-check@v1
         with:
           apollo-key: ${{ secrets.APOLLO_KEY_PUBLIC }}
@@ -78,6 +94,7 @@ jobs:
           schema: ./schema.public.graphql
 
       - name: check schema changes (private)
+        if: ${{ inputs.HAS_PRIVATE }}
         uses: apollographql-gh-actions/rover-subgraph-check@v1
         with:
           apollo-key: ${{ secrets.APOLLO_KEY_PRIVATE }}
@@ -86,6 +103,7 @@ jobs:
           schema: ./schema.private.graphql
 
       - name: publish schema (public)
+        if: ${{ inputs.PUBLISH && inputs.HAS_PUBLIC }}
         uses: apollographql-gh-actions/rover-subgraph-publish@v1
         with:
           apollo-key: ${{ secrets.APOLLO_KEY_PUBLIC }}
@@ -94,6 +112,7 @@ jobs:
           schema: ./schema.public.graphql
 
       - name: publish schema (private)
+        if: ${{ inputs.PUBLISH && inputs.HAS_PRIVATE }}
         uses: apollographql-gh-actions/rover-subgraph-publish@v1
         with:
           apollo-key: ${{ secrets.APOLLO_KEY_PRIVATE }}
