@@ -6,7 +6,7 @@ jobs:
   git-changelog:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
 
       - name: generate changelog
         uses: orhun/git-cliff-action@v4.5.1
