@@ -28,11 +28,12 @@ env:
   TERRAFORM_VERSION: 1.13.4
 
 concurrency:
-  group: terraform-${{ inputs.ENVIRONMENT }}
+  group: terraform-release-${{ inputs.ENVIRONMENT }}
   cancel-in-progress: false
 
 jobs:
   terraform-release:
+    environment: ${{ inputs.ENVIRONMENT }}
     defaults:
       run:
         working-directory: ${{ inputs.WORKING_DIRECTORY }}
