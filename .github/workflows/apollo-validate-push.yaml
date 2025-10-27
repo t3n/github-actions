@@ -3,6 +3,14 @@ name: Apollo GraphQL Validate and Push
 on:
   workflow_call:
     inputs:
+      PUBLIC_PORT:
+        type: string
+        required: false
+        default: "3000"
+      PRIVATE_PORT:
+        type: string
+        required: false
+        default: "3001"
       PUBLISH:
         type: boolean
         required: false
@@ -78,11 +86,11 @@ jobs:
 
       - name: fetch subgraph schema (public)
         if: ${{ inputs.HAS_PUBLIC }}
-        run: rover subgraph introspect http://localhost:3000 > schema.public.graphql
+        run: rover subgraph introspect http://localhost:${{ inputs.PUBLIC_PORT }} > schema.public.graphql
 
       - name: fetch subgraph schema (private)
         if: ${{ inputs.HAS_PRIVATE }}
-        run: rover subgraph introspect http://localhost:3001 > schema.private.graphql
+        run: rover subgraph introspect http://localhost:${{ inputs.PRIVATE_PORT }} > schema.private.graphql
 
       - name: check schema changes (public)
         if: ${{ inputs.HAS_PUBLIC }}
