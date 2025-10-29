@@ -1,0 +1,129 @@
+name: Apollo GraphQL Validate and Push
+
+on:
+  workflow_call:
+    inputs:
+      PUBLIC_PORT:
+        type: string
+        required: false
+        default: "3000"
+      PRIVATE_PORT:
+        type: string
+        required: false
+        default: "3001"
+      PUBLISH:
+        type: boolean
+        required: false
+        default: false
+      GRAPH_REF:
+        type: string
+        required: true
+      GRAPH_NAME:
+        type: string
+        required: true
+      NODE_VERSION:
+        type: string
+        required: false
+        default: "20"
+      WORKING_DIRECTORY:
+        type: string
+        required: false
+        default: "app"
+      HAS_PUBLIC:
+        type: boolean
+        required: false
+        default: true
+      HAS_PRIVATE:
+        type: boolean
+        required: false
+        default: true
+    secrets:
+      APOLLO_KEY_PUBLIC:
+        required: true
+      APOLLO_KEY_PRIVATE:
+        required: true
+
+jobs:
+  validate:
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.WORKING_DIRECTORY }}
+    runs-on: ubuntu-22.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: setup node
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version: ${{ inputs.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: install apollo rover cli
+        uses: apollographql-gh-actions/install-rover@v1.0.2
+        with:
+          version: 0.6.0
+
+      - name: npm install
+        run: npm ci
+
+      - name: start application
+        run: npm start &
+
+      - name: wait for application to be ready
+        run: |
+          for i in {1..30}; do
+            if curl -s http://localhost:3000 > /dev/null; then
+              echo "Application is ready"
+              exit 0
+            else
+              echo "Waiting for application to be ready..."
+              sleep 2
+            fi
+          done
+
+      - name: fetch subgraph schema (public)
+        if: ${{ inputs.HAS_PUBLIC }}
+        run: rover subgraph introspect http://localhost:${{ inputs.PUBLIC_PORT }} > schema.public.graphql
+
+      - name: fetch subgraph schema (private)
+        if: ${{ inputs.HAS_PRIVATE }}
+        run: rover subgraph introspect http://localhost:${{ inputs.PRIVATE_PORT }} > schema.private.graphql
+
+      - name: check schema changes (public)
+        if: ${{ inputs.HAS_PUBLIC }}
+        uses: apollographql-gh-actions/rover-subgraph-check@v1
+        with:
+          apollo-key: ${{ secrets.APOLLO_KEY_PUBLIC }}
+          graph-ref: ${{ inputs.GRAPH_REF }}
+          name: ${{ inputs.GRAPH_NAME }}
+          schema: ./schema.public.graphql
+
+      - name: check schema changes (private)
+        if: ${{ inputs.HAS_PRIVATE }}
+        uses: apollographql-gh-actions/rover-subgraph-check@v1
+        with:
+          apollo-key: ${{ secrets.APOLLO_KEY_PRIVATE }}
+          graph-ref: ${{ inputs.GRAPH_REF }}
+          name: ${{ inputs.GRAPH_NAME }}
+          schema: ./schema.private.graphql
+
+      - name: publish schema (public)
+        if: ${{ inputs.PUBLISH && inputs.HAS_PUBLIC }}
+        uses: apollographql-gh-actions/rover-subgraph-publish@v1
+        with:
+          apollo-key: ${{ secrets.APOLLO_KEY_PUBLIC }}
+          graph-ref: ${{ inputs.GRAPH_REF }}
+          name: ${{ inputs.GRAPH_NAME }}
+          schema: ./schema.public.graphql
+
+      - name: publish schema (private)
+        if: ${{ inputs.PUBLISH && inputs.HAS_PRIVATE }}
+        uses: apollographql-gh-actions/rover-subgraph-publish@v1
+        with:
+          apollo-key: ${{ secrets.APOLLO_KEY_PRIVATE }}
+          graph-ref: ${{ inputs.GRAPH_REF }}
+          name: ${{ inputs.GRAPH_NAME }}
+          schema: ./schema.private.graphql
