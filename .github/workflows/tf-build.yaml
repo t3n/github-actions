@@ -82,14 +82,14 @@ jobs:
           include-plan-job-summary: "true"
 
       - name: upload
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v5.0.0
         with:
           name: artifacts_${{inputs.ENVIRONMENT}}_${{github.sha}}
           path: ${{ inputs.WORKING_DIRECTORY }}/*_${{inputs.ENVIRONMENT}}_${{github.sha}}.*
           retention-days: 1
 
       - name: upload custom artifacts
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v5.0.0
         if: ${{ inputs.USE_CUSTOM_ARTIFACTS == true }}
         with:
           name: custom_artifacts_${{inputs.ENVIRONMENT}}_${{github.sha}}
