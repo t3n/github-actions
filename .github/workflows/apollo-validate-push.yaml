@@ -28,7 +28,7 @@ on:
       WORKING_DIRECTORY:
         type: string
         required: false
-        default: "app"
+        default: "."
       HAS_PUBLIC:
         type: boolean
         required: false
@@ -59,7 +59,7 @@ jobs:
         with:
           node-version: ${{ inputs.NODE_VERSION }}
           cache: "npm"
-          cache-dependency-path: package-lock.json
+          cache-dependency-path: ${{ inputs.WORKING_DIRECTORY }}/package-lock.json
 
       - name: install apollo rover cli
         uses: apollographql-gh-actions/install-rover@v1.0.2
