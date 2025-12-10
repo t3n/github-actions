@@ -52,7 +52,7 @@ jobs:
       elasticsearch:
         image: elasticsearch:8.15.0
         ports:
-          - 9200:9200
+          - 9222:9200
         env:
           discovery.type: single-node
           xpack.security.enabled: false
