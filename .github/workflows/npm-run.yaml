@@ -15,6 +15,18 @@ on:
         type: string
         required: true
         default: '["test", "lint", "prettier:check"]'
+      START_APPLICATION:
+        type: boolean
+        required: false
+        default: false
+      START_COMMAND:
+        type: string
+        required: false
+        default: "start:prod"
+      APPLICATION_PORT:
+        type: string
+        required: false
+        default: "3000"
 
 jobs:
   npm-run:
@@ -41,6 +53,17 @@ jobs:
 
       - name: npm install
         run: npm ci
+
+      - name: start application
+        if: ${{ inputs.START_APPLICATION }}
+        run: |
+          npm run ${{ inputs.START_COMMAND }} &
+          echo "Waiting for application to be ready on port ${{ inputs.APPLICATION_PORT }}..."
+          timeout 60 bash -c 'until nc -z localhost ${{ inputs.APPLICATION_PORT }}; do sleep 1; done' || {
+            echo "Application failed to start on port ${{ inputs.APPLICATION_PORT }}"
+            exit 1
+          }
+          echo "Application is ready on port ${{ inputs.APPLICATION_PORT }}"
 
       - name: run commands
         run: |
