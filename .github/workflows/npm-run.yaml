@@ -27,6 +27,14 @@ on:
         type: string
         required: false
         default: "3000"
+      BUILD_BEFORE_START:
+        type: boolean
+        required: false
+        default: false
+      BUILD_COMMAND:
+        type: string
+        required: false
+        default: "build"
 
 jobs:
   npm-run:
@@ -53,6 +61,10 @@ jobs:
 
       - name: npm install
         run: npm ci
+
+      - name: build application
+        if: ${{ inputs.BUILD_BEFORE_START }}
+        run: npm run ${{ inputs.BUILD_COMMAND }}
 
       - name: start application
         if: ${{ inputs.START_APPLICATION }}
