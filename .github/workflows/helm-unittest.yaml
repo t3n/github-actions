@@ -18,7 +18,7 @@ jobs:
           version: ${{env.HELM_VERSION}}
 
       - name: install helm-unittest plugin
-        run: helm plugin install https://github.com/helm-unittest/helm-unittest --version v1.0.3
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest --version v1.0.3 --verify=false
 
       - name: helm unittest
         run: helm unittest ./charts/*
