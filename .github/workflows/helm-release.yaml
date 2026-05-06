@@ -1,10 +1,20 @@
 name: Helm Release
 on:
   workflow_call:
+    inputs:
+      HELM_REPOS:
+        type: string
+        required: true
+        description: 'Helm repos, one per line as "name url"'
+      GCS_REPO_NAME:
+        type: string
+        required: false
+        default: yeebase
+        description: "Alias of the GCS repo (from HELM_REPOS) used for helm gcs push"
 
 env:
-  HELM_VERSION: 3.12.0
-  HELM_GCS_VERSION: 0.4.1
+  HELM_VERSION: 4.4.1
+  HELM_GCS_VERSION: 0.7.0
 
 jobs:
   helm-release:
@@ -15,13 +25,21 @@ jobs:
     steps:
       - uses: actions/checkout@v5.0.0
         with:
-          fetch-depth: '0'
+          fetch-depth: "0"
+
+      - name: tag version
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag_prefix: helm-v
+          default_bump: patch
 
       - name: authenticate to google cloud
-        id: 'auth'
+        id: "auth"
         uses: google-github-actions/auth@v3.0.0
         with:
-          credentials_json: '${{ secrets.GAR_HELM_REGISTRY_ACCOUNT }}'
+          credentials_json: "${{ secrets.GAR_HELM_REGISTRY_ACCOUNT }}"
 
       - name: set up cloud sdk
         uses: google-github-actions/setup-gcloud@v2.1.4
@@ -34,17 +52,40 @@ jobs:
       - name: install helm-gcs
         run: helm plugin install --version ${{env.HELM_GCS_VERSION}} https://github.com/hayorov/helm-gcs.git
 
+      - name: add helm repos
+        run: |
+          while IFS=' ' read -r name url; do
+            [ -z "$name" ] && continue
+            helm repo add "$name" "$url"
+          done <<< "${{ inputs.HELM_REPOS }}"
+          helm repo update
+
+      - name: helm dependency build
+        run: for d in ./charts/* ; do helm dependency build "${d}"; done
+
       - name: helm package
         id: helm-package
-        run: for d in ./charts/* ; do helm package --version ${{ steps.tag_version.outputs.new_tag }} "${d}"; done
+        run: |
+          version="${{ steps.tag_version.outputs.new_version }}"
+          version="${version#helm-}"
+          for d in ./charts/* ; do helm package --version "$version" "${d}"; done
 
       - name: registry login
         id: registry-login
         run: gcloud auth print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://${{ secrets.GAR_HELM_REGISTRY_URL }}
 
       - name: push chart to legacy gcs target
-        run: helm repo add yeebase gs://bucket/path && for c in $(ls ./*.tgz); do helm gcs push $c yeebase; done
+        run: for c in $(ls ./*.tgz); do helm gcs push $c ${{ inputs.GCS_REPO_NAME }}; done
 
       - name: push chart
         id: helm-push-chart
         run: for c in $(ls ./*.tgz); do helm push $c oci://${{ secrets.GAR_HELM_REGISTRY_URL }}; done
+
+      - name: create github release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
+          artifacts: "./*.tgz"
+          token: ${{ secrets.GITHUB_TOKEN }}
