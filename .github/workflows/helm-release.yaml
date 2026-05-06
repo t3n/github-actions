@@ -50,7 +50,7 @@ jobs:
           version: ${{env.HELM_VERSION}}
 
       - name: install helm-gcs
-        run: helm plugin install --version ${{env.HELM_GCS_VERSION}} https://github.com/hayorov/helm-gcs.git
+        run: helm plugin install --version ${{env.HELM_GCS_VERSION}} https://github.com/hayorov/helm-gcs.git --verify=false
 
       - name: add helm repos
         run: |
