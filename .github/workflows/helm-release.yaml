@@ -4,13 +4,9 @@ on:
     inputs:
       HELM_REPOS:
         type: string
-        required: true
-        description: 'Helm repos, one per line as "name url"'
-      GCS_REPO_NAME:
-        type: string
         required: false
-        default: yeebase
-        description: "Alias of the GCS repo (from HELM_REPOS) used for helm gcs push"
+        default: ''
+        description: 'Helm repos, one per line as "name url"'
 
 env:
   HELM_VERSION: 4.1.1
@@ -50,6 +46,7 @@ jobs:
           version: ${{env.HELM_VERSION}}
 
       - name: add helm repos
+        if: inputs.HELM_REPOS != ''
         run: |
           while IFS=' ' read -r name url; do
             [ -z "$name" ] && continue
