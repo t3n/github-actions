@@ -72,7 +72,7 @@ jobs:
 
       - name: registry login
         id: registry-login
-        run: gcloud auth print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://${{ secrets.GAR_HELM_REGISTRY_URL }}
+        run: gcloud auth print-access-token | helm registry login -u oauth2accesstoken --password-stdin ${{ secrets.GAR_HELM_REGISTRY_URL }}
 
       - name: push chart to legacy gcs target
         run: for c in $(ls ./*.tgz); do helm gcs push $c ${{ inputs.GCS_REPO_NAME }}; done
