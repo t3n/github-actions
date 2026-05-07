@@ -49,9 +49,6 @@ jobs:
         with:
           version: ${{env.HELM_VERSION}}
 
-      - name: install helm-gcs
-        run: helm plugin install --version ${{env.HELM_GCS_VERSION}} https://github.com/hayorov/helm-gcs.git --verify=false
-
       - name: add helm repos
         run: |
           while IFS=' ' read -r name url; do
@@ -73,9 +70,6 @@ jobs:
       - name: registry login
         id: registry-login
         run: gcloud auth print-access-token | helm registry login -u oauth2accesstoken --password-stdin ${{ secrets.GAR_HELM_REGISTRY_HOST }}
-
-      - name: push chart to legacy gcs target
-        run: for c in $(ls ./*.tgz); do helm gcs push $c ${{ inputs.GCS_REPO_NAME }}; done
 
       - name: push chart
         id: helm-push-chart
