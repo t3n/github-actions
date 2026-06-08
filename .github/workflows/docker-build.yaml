@@ -178,7 +178,7 @@ jobs:
             org.opencontainers.image.version=${{ (github.run_attempt == 1 && github.event_name != 'schedule') && steps.tag_version.outputs.new_tag || steps.tag_version.outputs.previous_tag }}
 
       - name: build
-        uses: docker/build-push-action@v6.18.0
+        uses: docker/build-push-action@v7.2.0
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         with:
@@ -198,7 +198,7 @@ jobs:
           target: ${{inputs.TARGET}}
 
       - name: build (outputs)
-        uses: docker/build-push-action@v6.18.0
+        uses: docker/build-push-action@v7.2.0
         if: ${{ inputs.BUILD_OUTPUTS }}
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
