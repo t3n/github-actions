@@ -130,7 +130,7 @@ jobs:
           username: _json_key
           password: ${{ secrets.GAR_HELM_REGISTRY_ACCOUNT }}
       - name: add key to ssh-agent
-        uses: webfactory/ssh-agent@v0.9.1
+        uses: webfactory/ssh-agent@v0.10.0
         if: "${{ env.SSH_KEY != ''}}"
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
