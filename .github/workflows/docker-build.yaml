@@ -69,6 +69,13 @@ on:
         type: boolean
         required: false
         default: false
+      SETUP_QEMU:
+        description: >-
+          Set up QEMU. Only needed to build for a platform other than the runner's
+          (linux/amd64), e.g. linux/arm64.
+        type: boolean
+        required: false
+        default: false
     secrets:
       SECRETS:
         required: false
@@ -110,6 +117,7 @@ jobs:
         uses: actions/checkout@v5.0.0
 
       - name: set up qemu
+        if: ${{ inputs.SETUP_QEMU }}
         uses: docker/setup-qemu-action@v4.0.0
 
       - name: set up docker buildx
@@ -189,7 +197,9 @@ jobs:
           file: ${{inputs.FILE}}
           labels: ${{ steps.meta.outputs.labels }}
           load: false
-          outputs: type=docker,dest=./image_${{steps.lowercase.outputs.project}}.tar
+          # Written outside the checkout: inside it, the tar would become part of the
+          # build context and invalidate the cache of the second (outputs) build.
+          outputs: type=docker,dest=${{ runner.temp }}/image_${{steps.lowercase.outputs.project}}.tar
           push: false
           secrets: ${{secrets.SECRETS}}
           secret-envs: ${{secrets.SECRET_ENVS}}
@@ -222,7 +232,7 @@ jobs:
         uses: actions/upload-artifact@v7.0.1
         with:
           name: artifacts_image_${{steps.lowercase.outputs.project}}
-          path: ./image_${{steps.lowercase.outputs.project}}.tar
+          path: ${{ runner.temp }}/image_${{steps.lowercase.outputs.project}}.tar
           retention-days: 1
       - name: upload (outputs)
         id: upload-outputs
