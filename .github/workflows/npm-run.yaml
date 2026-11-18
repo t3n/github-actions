@@ -35,6 +35,29 @@ on:
         type: string
         required: false
         default: "build"
+      CACHE_NODE_MODULES:
+        description: >-
+          Cache node_modules, including the node_modules of npm workspaces, keyed on
+          the OS, the exact Node version and the hash of package-lock.json. On an exact
+          hit npm ci is skipped.
+        type: boolean
+        required: false
+        default: false
+      CACHE_PATHS:
+        description: >-
+          Additional paths to cache per matrix command, one per line, relative to
+          WORKING_DIRECTORY (e.g. a build tool cache such as .nx/cache). Every run saves
+          a new entry and restores the latest one of the same command.
+        type: string
+        required: false
+        default: ""
+      CACHE_KEY_PREFIX:
+        description: >-
+          Key prefix for CACHE_PATHS. Set it when a repository calls this workflow
+          more than once with different CACHE_PATHS or WORKING_DIRECTORY.
+        type: string
+        required: false
+        default: ""
 
 jobs:
   npm-run:
@@ -53,14 +76,81 @@ jobs:
         uses: actions/checkout@v5.0.0
 
       - name: setup node
+        id: setup-node
         uses: actions/setup-node@v6.4.0
         with:
           node-version: ${{ inputs.NODE_VERSION }}
           cache: "npm"
           cache-dependency-path: ${{ inputs.WORKING_DIRECTORY }}/package-lock.json
 
+      # actions/cache paths are relative to the repository root and must be the same
+      # on restore and save. The node_modules folders of npm workspaces are read from
+      # the lockfile, so they are known before npm ci runs.
+      - name: resolve cache paths
+        id: cache-paths
+        if: ${{ inputs.CACHE_NODE_MODULES || inputs.CACHE_PATHS != '' }}
+        env:
+          WORKING_DIRECTORY: ${{ inputs.WORKING_DIRECTORY }}
+          CACHE_NODE_MODULES: ${{ inputs.CACHE_NODE_MODULES }}
+          CACHE_PATHS: ${{ inputs.CACHE_PATHS }}
+        run: |
+          {
+            if [ "$CACHE_NODE_MODULES" = "true" ]; then
+              echo "node_modules<<CACHE_PATHS_EOF"
+              node -e '
+                const lock = require(require("path").resolve("package-lock.json"));
+                const dirs = new Set(["node_modules"]);
+                for (const key of Object.keys(lock.packages || {})) {
+                  const i = key.indexOf("node_modules/");
+                  if (i > 0) dirs.add(key.slice(0, i) + "node_modules");
+                }
+                for (const dir of [...dirs].sort()) {
+                  console.log(process.env.WORKING_DIRECTORY + "/" + dir);
+                }
+              '
+              echo "CACHE_PATHS_EOF"
+            fi
+            if [ -n "$CACHE_PATHS" ]; then
+              echo "extra<<CACHE_PATHS_EOF"
+              while IFS= read -r path; do
+                [ -n "$path" ] && echo "${WORKING_DIRECTORY}/${path}"
+              done <<< "$CACHE_PATHS"
+              echo "CACHE_PATHS_EOF"
+            fi
+          } >> "$GITHUB_OUTPUT"
+
+      - name: restore node_modules
+        id: node-modules-cache
+        if: ${{ inputs.CACHE_NODE_MODULES }}
+        uses: actions/cache/restore@v6.1.0
+        with:
+          path: ${{ steps.cache-paths.outputs.node_modules }}
+          key: npm-run-node-modules-${{ runner.os }}-${{ runner.arch }}-node${{ steps.setup-node.outputs.node-version }}-${{ hashFiles(format('{0}/package-lock.json', inputs.WORKING_DIRECTORY)) }}
+
       - name: npm install
+        if: ${{ steps.node-modules-cache.outputs.cache-hit != 'true' }}
         run: npm ci
+
+      # Saved right after npm ci, before the commands can write into node_modules
+      # (e.g. node_modules/.cache). The parallel matrix jobs race for the same key;
+      # the first one wins, the others only log a warning.
+      - name: save node_modules
+        if: ${{ inputs.CACHE_NODE_MODULES && steps.node-modules-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v6.1.0
+        with:
+          path: ${{ steps.cache-paths.outputs.node_modules }}
+          key: ${{ steps.node-modules-cache.outputs.cache-primary-key }}
+
+      # Cache entries are immutable, so every run saves under a new key and the next
+      # run restores the latest entry of the same command via the key prefix.
+      - name: restore additional cache
+        if: ${{ inputs.CACHE_PATHS != '' }}
+        uses: actions/cache/restore@v6.1.0
+        with:
+          path: ${{ steps.cache-paths.outputs.extra }}
+          key: ${{ inputs.CACHE_KEY_PREFIX || 'npm-run-extra' }}-${{ runner.os }}-${{ runner.arch }}-${{ matrix.COMMANDS }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            ${{ inputs.CACHE_KEY_PREFIX || 'npm-run-extra' }}-${{ runner.os }}-${{ runner.arch }}-${{ matrix.COMMANDS }}-
 
       - name: build application
         if: ${{ inputs.BUILD_BEFORE_START }}
@@ -80,3 +170,12 @@ jobs:
       - name: run commands
         run: |
           npm run ${{ matrix.COMMANDS }}
+
+      # Also saved when the command fails: tools like NX only cache successful tasks,
+      # so the results of the passing ones are kept for the next run.
+      - name: save additional cache
+        if: ${{ !cancelled() && inputs.CACHE_PATHS != '' }}
+        uses: actions/cache/save@v6.1.0
+        with:
+          path: ${{ steps.cache-paths.outputs.extra }}
+          key: ${{ inputs.CACHE_KEY_PREFIX || 'npm-run-extra' }}-${{ runner.os }}-${{ runner.arch }}-${{ matrix.COMMANDS }}-${{ github.run_id }}-${{ github.run_attempt }}
